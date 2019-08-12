@@ -1,2 +1,2 @@
-# Naftikos
-Ναυτικός: An elegant Android news app.
+# Naftikos (Greek: Ναυτικός)
+An elegant Android news app.

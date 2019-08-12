@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_latest"
+            android:icon="@drawable/ic_access_time_black_24dp"
+            android:title="Latest" />
+        <item
+            android:id="@+id/nav_personal"
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="Persenal Feeds" />
+        <item
+            android:id="@+id/nav_random"
+            android:icon="@drawable/ic_casino_black_24dp"
+            android:title="Random Topic" />
+    </group>
+
+
+        <item android:title="Topics">
+            <menu>
+                <item
+                    android:id="@+id/nav_finance"
+                    android:icon="@drawable/ic_timeline_black_24dp"
+                    android:title="Finance" />
+                <item
+                    android:id="@+id/nav_education"
+                    android:icon="@drawable/ic_school_black_24dp"
+                    android:title="Education" />
+                <item
+                    android:id="@+id/nav_entertainment"
+                    android:icon="@drawable/ic_beach_access_black_24dp"
+                    android:title="Entertainment" />
+                <item
+                    android:id="@+id/nav_sports"
+                    android:icon="@drawable/ic_pool_black_24dp"
+                    android:visible="false"
+                    android:title="Sports" />
+                <item
+                    android:id="@+id/nav_technology"
+                    android:icon="@drawable/ic_developer_board_black_24dp"
+                    android:visible="false"
+                    android:title="Technology" />
+                <item
+                    android:id="@+id/nav_military"
+                    android:icon="@drawable/ic_my_location_black_24dp"
+                    android:visible="false"
+                    android:title="Military" />
+                <item
+                    android:id="@+id/nav_autos"
+                    android:icon="@drawable/ic_directions_car_black_24dp"
+                    android:visible="false"
+                    android:title="Autos" />
+                <item
+                    android:id="@+id/nav_customization"
+                    android:title=""
+                    android:icon="@drawable/ic_add_black_24dp" />
+            </menu>
+        </item>
+
+
+</menu>

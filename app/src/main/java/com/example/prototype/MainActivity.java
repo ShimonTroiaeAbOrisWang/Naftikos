@@ -1,11 +1,14 @@
 package com.example.prototype;
 
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.internal.NavigationMenu;
 import com.google.android.material.internal.NavigationMenuItemView;
@@ -14,12 +17,16 @@ import com.google.android.material.snackbar.Snackbar;
 
 import android.view.View;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -27,6 +34,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
@@ -40,6 +50,9 @@ public class MainActivity extends AppCompatActivity
     Typeface ubuntuMidItalic;
     boolean isAfterSearch;
     String searchString;
+    AlertDialog searchDialog;
+    TextInputEditText searchDialogText;
+    MaterialCardView newsCardModelFirst, newsCardModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +60,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
 
         /*
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +81,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         title = findViewById(R.id.home_title);
+
         /* add fonts */
         ubuntuMidItalic = Typeface.createFromAsset(getAssets(), "Ubuntu-MediumItalic.ttf");
         title.setTypeface(ubuntuMidItalic);
@@ -88,6 +102,55 @@ public class MainActivity extends AppCompatActivity
             homePageMode = "Latest";
             title.setText (homePageMode + ' ');
         }
+
+
+        MaterialCardView titleCard = findViewById(R.id.title_material_card);
+
+        titleCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View _v) {
+                /* when title is clicked, open the navigation drawer */
+                DrawerLayout _drawer = findViewById(R.id.drawer_layout);
+                _drawer.openDrawer(GravityCompat.START);
+            }
+        });
+
+
+        /* build search dialog */
+
+        AlertDialog.Builder searchDialogBuilder = new AlertDialog.Builder(this);
+        searchDialogBuilder.setTitle("News Search");
+
+        searchDialogText = new TextInputEditText (this);
+        searchDialogText.setHint("Find news with...");
+
+        searchDialogBuilder.setView(searchDialogText);
+        searchDialogBuilder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                /* search */
+                searchString = searchDialogText.getText().toString();
+                if (searchString.isEmpty()) {
+                    return;
+                }
+                isAfterSearch = true;
+                homePageMode = "";
+                title.setText ("Search: " + searchString + ' ');
+            }
+        });
+
+        searchDialogBuilder.setNegativeButton("Advanced", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                advancedSearch ();
+            }
+        });
+
+        searchDialog = searchDialogBuilder.create();
+
+        /* set the style of a news card for future creation */
+        newsCardModelFirst = findViewById(R.id.news_card_01);
+        newsCardModel = findViewById(R.id.news_card_02);
 
     }
 
@@ -118,8 +181,6 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        } else if (id == R.id.action_about) {
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -145,6 +206,10 @@ public class MainActivity extends AppCompatActivity
 
             // TODO: 19.8.12 redesign the function of navigation menu customization
 
+        } else if (id == R.id.nav_preferences) {
+            /* preferences page */
+        } else if (id == R.id.nav_about) {
+            /* about page */
         } else {
             if (id == R.id.nav_latest) {
                 homePageMode = "Latest";
@@ -152,6 +217,7 @@ public class MainActivity extends AppCompatActivity
                 homePageMode = "Random";
             } else if (id == R.id.nav_personal) {
                 homePageMode = "Personal Feeds";
+                loadNews(10);
             } else if (id == R.id.nav_finance) {
                 homePageMode = "Finance";
             } else if (id == R.id.nav_education) {
@@ -179,7 +245,52 @@ public class MainActivity extends AppCompatActivity
 
     public void showSearchPage (View view) {
         /* search button pressed */
+        searchDialog.show();
+
+        /*
+        advanced search:
+
         Intent intent = new Intent (this, SearchActivity.class);
         startActivity(intent);
+        */
+    }
+
+    public void advancedSearch () {
+        Intent intent = new Intent (this, SearchActivity.class);
+        startActivity(intent);
+    }
+
+    public void onTitleClick (View view) {
+        /* when title is clicked, open the navigation drawer */
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.openDrawer(GravityCompat.START);
+    }
+
+    public void loadNews (int numOfNews) {
+        /* load news into home screen */
+        LinearLayout newsContainer = findViewById(R.id.home_news_container);
+        newsContainer.removeAllViews();
+        for (int i = 0; i < numOfNews; i += 1) {
+            newsContainer.addView(generateHomeNewsCard(i == 0));
+            // TODO: 19.8.15 specify params for news cards
+        }
+    }
+
+    private MaterialCardView generateHomeNewsCard (boolean isFirstCard) {
+        MaterialCardView newCard = new MaterialCardView(this);
+        // modelCard: pre-drawn news card (created with XML but removed in run time)
+        MaterialCardView modelCard = isFirstCard ? newsCardModelFirst : newsCardModel;
+
+        /* it is fucking stupid that Android view does not support cloning! */
+        newCard.setLayoutParams(modelCard.getLayoutParams());
+        newCard.setCardElevation(modelCard.getCardElevation());
+        newCard.setCardBackgroundColor(modelCard.getCardBackgroundColor());
+        newCard.setBackground(modelCard.getBackground());
+        newCard.setForegroundGravity(modelCard.getForegroundGravity());
+
+        TextView textInCard = new TextView(this);
+        textInCard.setText("Arma virumque cano.");
+        newCard.addView(textInCard);
+        return newCard;
     }
 }

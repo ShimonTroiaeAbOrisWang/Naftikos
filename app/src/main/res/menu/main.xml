@@ -5,17 +5,14 @@
 
 
     <item
+        android:id="@+id/action_toggle_dark"
         android:title="Toggle Dark Mode"
-        app:actionViewClass="android.widget.CheckBox"
-        app:showAsAction="never" />
+        app:showAsAction="always"
+        android:icon="@drawable/ic_brightness_6_black_24dp"/>
 
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_about"
-        android:title="About"
-        app:showAsAction="never"
-        />
+        app:showAsAction="always"
+        android:icon="@drawable/ic_settings_black_24dp"/>
 </menu>

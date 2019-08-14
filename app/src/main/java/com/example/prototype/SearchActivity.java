@@ -17,6 +17,10 @@ import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+
+/* ADVANCED search page */
+
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.

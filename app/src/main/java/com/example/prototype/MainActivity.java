@@ -39,6 +39,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -53,6 +56,9 @@ public class MainActivity extends AppCompatActivity
     AlertDialog searchDialog;
     TextInputEditText searchDialogText;
     MaterialCardView newsCardModelFirst, newsCardModel;
+
+    ArrayList<News> newsList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
         */
+
+        newsList = new ArrayList<News>();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -136,6 +144,8 @@ public class MainActivity extends AppCompatActivity
                 isAfterSearch = true;
                 homePageMode = "";
                 title.setText ("Search: " + searchString + ' ');
+                getNewsFromServer();
+                loadNews();
             }
         });
 
@@ -152,6 +162,9 @@ public class MainActivity extends AppCompatActivity
         newsCardModelFirst = findViewById(R.id.news_card_01);
         newsCardModel = findViewById(R.id.news_card_02);
 
+
+        getNewsFromServer();
+        loadNews();
     }
 
     @Override
@@ -217,7 +230,6 @@ public class MainActivity extends AppCompatActivity
                 homePageMode = "Random";
             } else if (id == R.id.nav_personal) {
                 homePageMode = "Personal Feeds";
-                loadNews(10);
             } else if (id == R.id.nav_finance) {
                 homePageMode = "Finance";
             } else if (id == R.id.nav_education) {
@@ -238,6 +250,11 @@ public class MainActivity extends AppCompatActivity
 
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
+
+            isAfterSearch = false;
+            getNewsFromServer();
+            loadNews();
+
         }
 
         return true;
@@ -246,13 +263,6 @@ public class MainActivity extends AppCompatActivity
     public void showSearchPage (View view) {
         /* search button pressed */
         searchDialog.show();
-
-        /*
-        advanced search:
-
-        Intent intent = new Intent (this, SearchActivity.class);
-        startActivity(intent);
-        */
     }
 
     public void advancedSearch () {
@@ -260,23 +270,37 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    public void onTitleClick (View view) {
-        /* when title is clicked, open the navigation drawer */
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.openDrawer(GravityCompat.START);
+    public void getNewsFromServer () {
+        // TODO: 19.8.15  fill newsList with news according to homePageMode, searchString, etc.
+        newsList.clear();
+        /* demo */
+        News news = null;
+        for (int i = 0; i < 50; i += 1) {
+            if (isAfterSearch) {
+                news = new News("Search Result #" + (i + 1), "Arma virumque cano.");
+            } else {
+                news = new News(homePageMode + " News #" + (i + 1), "Arma virumque cano.");
+            }
+            newsList.add(news);
+        }
+
     }
 
-    public void loadNews (int numOfNews) {
+    public void loadNews () {
         /* load news into home screen */
         LinearLayout newsContainer = findViewById(R.id.home_news_container);
         newsContainer.removeAllViews();
-        for (int i = 0; i < numOfNews; i += 1) {
-            newsContainer.addView(generateHomeNewsCard(i == 0));
+
+        boolean firstFlag = true;
+        for (News newsItem: newsList) {
+            newsContainer.addView(generateHomeNewsCard(firstFlag, newsItem));
+            firstFlag = false;
             // TODO: 19.8.15 specify params for news cards
         }
+
     }
 
-    private MaterialCardView generateHomeNewsCard (boolean isFirstCard) {
+    private MaterialCardView generateHomeNewsCard (boolean isFirstCard, News newsItem) {
         MaterialCardView newCard = new MaterialCardView(this);
         // modelCard: pre-drawn news card (created with XML but removed in run time)
         MaterialCardView modelCard = isFirstCard ? newsCardModelFirst : newsCardModel;
@@ -289,7 +313,8 @@ public class MainActivity extends AppCompatActivity
         newCard.setForegroundGravity(modelCard.getForegroundGravity());
 
         TextView textInCard = new TextView(this);
-        textInCard.setText("Arma virumque cano.");
+        // TODO: 19.8.15 put content, image, etc. to the card
+        textInCard.setText(newsItem.getTitle());
         newCard.addView(textInCard);
         return newCard;
     }

@@ -8,6 +8,8 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
 
+import com.example.prototype.ui.login.LoginActivity;
+import com.example.prototype.ui.login.LoginViewModel;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.internal.NavigationMenu;
@@ -36,6 +38,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -122,7 +125,6 @@ public class MainActivity extends AppCompatActivity
                 _drawer.openDrawer(GravityCompat.START);
             }
         });
-
 
         /* build search dialog */
 
@@ -267,6 +269,11 @@ public class MainActivity extends AppCompatActivity
 
     public void advancedSearch () {
         Intent intent = new Intent (this, SearchActivity.class);
+        startActivity(intent);
+    }
+
+    public void showLogin (View view) {
+        Intent intent = new Intent (this, LoginActivity.class);
         startActivity(intent);
     }
 

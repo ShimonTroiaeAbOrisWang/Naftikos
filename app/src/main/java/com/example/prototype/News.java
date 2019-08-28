@@ -25,4 +25,5 @@ public class News {
     public String getContent() {
         return content;
     }
+
 }

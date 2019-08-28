@@ -38,18 +38,20 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     /* constants strings as keys in key-value pairs */
     public static final String EXTRA_SEARCH_WORDS = "com.naftikos.SEARCH_WORDS";
+    public static final String EXTRA_NEWS_TITLE = "com.naftikos.NEWS_TITLE";
+    public static final String EXTRA_NEWS_TEXT = "com.naftikos.NEWS_TEXT";
 
     TextView title;
     String homePageMode;
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity
     TextInputEditText searchDialogText;
     MaterialCardView newsCardModelFirst, newsCardModel;
 
-    ArrayList<News> newsList;
+    Vector<News> newsList;
 
 
     @Override
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         });
         */
 
-        newsList = new ArrayList<News>();
+        newsList = new Vector<News>();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -134,7 +136,14 @@ public class MainActivity extends AppCompatActivity
         searchDialogText = new TextInputEditText (this);
         searchDialogText.setHint("Find news with...");
 
-        searchDialogBuilder.setView(searchDialogText);
+        FrameLayout searchContainer = new FrameLayout(this);
+        FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(30, 30, 30, 20);
+        searchDialogText.setSingleLine();
+        searchDialogText.setLayoutParams(params);
+        searchContainer.addView(searchDialogText);
+
+        searchDialogBuilder.setView(searchContainer);
         searchDialogBuilder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -265,6 +274,7 @@ public class MainActivity extends AppCompatActivity
     public void showSearchPage (View view) {
         /* search button pressed */
         searchDialog.show();
+        return;
     }
 
     public void advancedSearch () {
@@ -284,9 +294,9 @@ public class MainActivity extends AppCompatActivity
         News news = null;
         for (int i = 0; i < 50; i += 1) {
             if (isAfterSearch) {
-                news = new News("Search Result #" + (i + 1), "Arma virumque cano.");
+                news = new News("Search Result #" + (i + 1), getString(R.string.sample_news_text));
             } else {
-                news = new News(homePageMode + " News #" + (i + 1), "Arma virumque cano.");
+                news = new News(homePageMode + " News #" + (i + 1), getString(R.string.sample_news_text));
             }
             newsList.add(news);
         }
@@ -299,18 +309,19 @@ public class MainActivity extends AppCompatActivity
         newsContainer.removeAllViews();
 
         boolean firstFlag = true;
+        int newsCounter = 0;
         for (News newsItem: newsList) {
-            newsContainer.addView(generateHomeNewsCard(firstFlag, newsItem));
-            firstFlag = false;
+            newsContainer.addView(generateHomeNewsCard(newsCounter, newsItem));
+            newsCounter += 1;
             // TODO: 19.8.15 specify params for news cards
         }
 
     }
 
-    private MaterialCardView generateHomeNewsCard (boolean isFirstCard, News newsItem) {
+    private MaterialCardView generateHomeNewsCard (final int newsCounter, News newsItem) {
         MaterialCardView newCard = new MaterialCardView(this);
         // modelCard: pre-drawn news card (created with XML but removed in run time)
-        MaterialCardView modelCard = isFirstCard ? newsCardModelFirst : newsCardModel;
+        MaterialCardView modelCard = (newsCounter == 0) ? newsCardModelFirst : newsCardModel;
 
         /* it is fucking stupid that Android view does not support cloning! */
         newCard.setLayoutParams(modelCard.getLayoutParams());
@@ -323,6 +334,21 @@ public class MainActivity extends AppCompatActivity
         // TODO: 19.8.15 put content, image, etc. to the card
         textInCard.setText(newsItem.getTitle());
         newCard.addView(textInCard);
+
+        newCard.setClickable(true);
+        newCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openNewsByNumber(newsCounter, view);
+            }
+        });
         return newCard;
+    }
+
+    private void openNewsByNumber (int newsNumber, View view) {
+        Intent intent = new Intent (this, NewsPage.class);
+        intent.putExtra (MainActivity.EXTRA_NEWS_TITLE, newsList.elementAt(newsNumber).getTitle());
+        intent.putExtra (MainActivity.EXTRA_NEWS_TEXT, newsList.elementAt(newsNumber).getContent());
+        startActivity(intent);
     }
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -33,6 +34,29 @@ public class NewsPage extends AppCompatActivity {
             actionBar.hide();
         }
 
+        /* hide title in expanded view */
+        final CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.news_layout);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.news_page_app_bar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = true;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbarLayout.setTitle(newsTitle);
+                    isShow = true;
+                } else if(isShow) {
+                    collapsingToolbarLayout.setTitle("Troy, Turkey. Jul 20 2014."); // maybe time and location?
+                    isShow = false;
+                }
+            }
+        });
+
+
         not_added_icon = getResources().getDrawable(R.drawable.ic_star_border_black_24dp);
         added_icon = getResources().getDrawable(R.drawable.ic_star_black_24dp);
 
@@ -40,8 +64,7 @@ public class NewsPage extends AppCompatActivity {
         newsTitle = intent.getStringExtra(MainActivity.EXTRA_NEWS_TITLE);
         newsText = intent.getStringExtra(MainActivity.EXTRA_NEWS_TEXT);
 
-        CollapsingToolbarLayout newsLayout = findViewById(R.id.news_layout);
-        newsLayout.setTitle(newsTitle);
+
         TextView textView = findViewById(R.id.news_text);
         textView.setText(newsText);
 

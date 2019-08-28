@@ -14,6 +14,11 @@ public class News {
         content = "Arma virumque cano.";
     }
 
+    public News (String _title, String _content) {
+        title = _title;
+        content = _content;
+    }
+
     public News(String _newsID, String _title, String _content, String _publishTime, String _language, String _url, String _crawlTime, String _publisher, String _category, Vector<String> _keywords) {
         newsID = _newsID;
         title = _title;

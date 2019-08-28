@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity
         News news = null;
         for (int i = 0; i < 50; i += 1) {
             if (isAfterSearch) {
-                news = new News("Search Result #" + (i + 1), getString(R.string.sample_news_text));
+                news = new News("Search Result #" + (i + 1) + "  我们需要兼容更长的标题，比如这个字符串", getString(R.string.sample_news_text));
             } else {
                 news = new News(homePageMode + " News #" + (i + 1), getString(R.string.sample_news_text));
             }

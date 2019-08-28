@@ -19,6 +19,9 @@
             app:contentScrim="@color/colorPrimary"
             app:title="Generic News"
             android:id="@+id/news_layout"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline.Shadow"
+            app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:expandedTitleMarginBottom="35dp"
             >
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -42,7 +45,7 @@
         android:src="@drawable/ic_star_border_black_24dp"
         app:layout_anchor="@id/news_page_app_bar"
         app:layout_anchorGravity="bottom|right|end"
-        android:layout_marginEnd="45dp"
+        android:layout_marginEnd="30dp"
         android:id="@+id/news_favourite"
         android:onClick="toggleFavourite"
         app:backgroundTint="@color/colorPrimaryDark"
@@ -58,9 +61,9 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sample_news_text"
+            android:text="[Text of the news not loaded.]"
             android:lineSpacingExtra="6sp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="9dp"
             android:textSize="20dp"
             android:padding="16dp"
             android:id="@+id/news_text"/>

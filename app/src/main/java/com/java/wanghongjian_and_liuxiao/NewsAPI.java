@@ -56,6 +56,7 @@ public class NewsAPI {
 
         JSONObject news = parseNews(request); // FIXME: 19.8.29 crash!
 
+
         if (news == null)
             return news_list;
         try {
@@ -64,12 +65,15 @@ public class NewsAPI {
                 JSONObject n = new JSONObject(data.get(i).toString());
                 JSONArray keywords_json = n.getJSONArray("keywords");
                 Vector<String> keywords = new Vector<>();
-                for (int j = 0; j < keywords_json.length(); j++)
+                for (int j = 0; j < keywords_json.length(); j++) {
                     keywords.add(keywords_json.get(j).toString());
+                }
                 news_list.add(new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("category"), keywords));
             }
         } catch (JSONException e) {
         }
+
+
         
         return news_list;
     }
@@ -77,20 +81,23 @@ public class NewsAPI {
     private JSONObject parseNews(String new_request) {
         URL url;
         BufferedReader in;
-        JSONObject parsedNews;
+        JSONObject parsedNews = null;
+
         try {
             url = new URL(new_request);
             URLConnection tc = url.openConnection();
-            in = new BufferedReader(new InputStreamReader(tc.getInputStream(), "UTF-8"));
-            String inputLine = in.readLine();
-            parsedNews = new JSONObject(inputLine);
+            //in = new BufferedReader(new InputStreamReader(tc.getInputStream(), "UTF-8"));
+            //String inputLine = in.readLine();
+            //parsedNews = new JSONObject(inputLine);
         } catch (MalformedURLException e) {
             parsedNews = null;
         } catch (IOException e) {
             parsedNews = null;
-        } catch (JSONException e) {
+        } /*catch (JSONException e) {
             parsedNews = null;
         }
+        */
+
         return parsedNews;
     }
 }

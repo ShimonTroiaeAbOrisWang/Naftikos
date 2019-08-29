@@ -33,7 +33,7 @@ public class NewsAPI implements Runnable{
         df = new SimpleDateFormat("yyyy-MM-dd%20HH:mm:ss");
         df.setTimeZone(tz);
         endDate = df.format(new Date());
-        size = 1;
+        size = 15;
     }
 
     private String formRequest(String keyword, String category) {

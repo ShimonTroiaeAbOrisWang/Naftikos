@@ -54,6 +54,21 @@
                     android:visible="false"
                     android:title="Autos" />
                 <item
+                    android:id="@+id/nav_culture"
+                    android:icon="@drawable/ic_public_black_24dp"
+                    android:visible="false"
+                    android:title="Culture" />
+                <item
+                    android:id="@+id/nav_society"
+                    android:icon="@drawable/ic_poll_black_24dp"
+                    android:visible="false"
+                    android:title="Society" />
+                <item
+                    android:id="@+id/nav_health"
+                    android:icon="@drawable/ic_fitness_center_black_24dp"
+                    android:visible="false"
+                    android:title="Health" />
+                <item
                     android:id="@+id/nav_customization"
                     android:title=""
                     android:icon="@drawable/ic_add_black_24dp" />

@@ -1,10 +1,12 @@
 package com.java.wanghongjian_and_liuxiao;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.nfc.tech.TagTechnology;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
@@ -31,6 +33,7 @@ import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -189,7 +192,7 @@ public class MainActivity extends AppCompatActivity
         newsCardModel = findViewById(R.id.news_card_02);
 
         getNewsFromServer();
-        loadNews();
+        // loadNews();  // no longer needed
     }
 
     @Override
@@ -235,12 +238,20 @@ public class MainActivity extends AppCompatActivity
             Menu nav_menu = v.getMenu();
 
             /* the following lines are only a demo */
-            MenuItem sport_item = nav_menu.findItem(R.id.nav_sports);
-            sport_item.setVisible(!sport_item.isVisible());
-            MenuItem tech_item = nav_menu.findItem(R.id.nav_technology);
-            tech_item.setVisible(!tech_item.isVisible());
-            MenuItem autos_item = nav_menu.findItem(R.id.nav_autos);
-            autos_item.setVisible(!autos_item.isVisible());
+            MenuItem vItem = nav_menu.findItem(R.id.nav_sports);
+            vItem.setVisible(!vItem.isVisible());
+            vItem = nav_menu.findItem(R.id.nav_technology);
+            vItem.setVisible(!vItem.isVisible());
+            vItem = nav_menu.findItem(R.id.nav_autos);
+            vItem.setVisible(!vItem.isVisible());
+            vItem = nav_menu.findItem(R.id.nav_military);
+            vItem.setVisible(!vItem.isVisible());
+            vItem = nav_menu.findItem(R.id.nav_society);
+            vItem.setVisible(!vItem.isVisible());
+            vItem = nav_menu.findItem(R.id.nav_culture);
+            vItem.setVisible(!vItem.isVisible());
+            vItem = nav_menu.findItem(R.id.nav_health);
+            vItem.setVisible(!vItem.isVisible());
 
             // TODO: 19.8.12 redesign the function of navigation menu customization
 
@@ -267,6 +278,14 @@ public class MainActivity extends AppCompatActivity
                 homePageMode = HOME_TECH;
             } else if (id == R.id.nav_autos) {
                 homePageMode = HOME_AUTOS;
+            } else if (id == R.id.nav_military) {
+                homePageMode = HOME_MILITARY;
+            } else if (id == R.id.nav_culture) {
+                homePageMode = HOME_CULTURE;
+            } else if (id == R.id.nav_society) {
+                homePageMode = HOME_SOCIETY;
+            } else if (id == R.id.nav_health) {
+                homePageMode = HOME_HEALTH;
             }
 
             /* change home page according to mode */
@@ -279,7 +298,7 @@ public class MainActivity extends AppCompatActivity
             isAfterSearch = false;
 
             getNewsFromServer();
-            loadNews();
+            // loadNews();  // no longer needed
         }
 
         return true;
@@ -304,15 +323,10 @@ public class MainActivity extends AppCompatActivity
     public void getNewsFromServer () {
         // TODO: 19.8.15  fill newsList with news according to homePageMode, searchString, etc.
         newsList.clear();
-
+        AsyncNewsRetriever retriever = new AsyncNewsRetriever();
+        retriever.execute("");
         // FIXME: 19.8.29 this leads to crash!
-        NewsAPI api = new NewsAPI();
-        if (isAfterSearch) {
-            newsList = api.getNews(searchString, null, OTHERS);
-        } else {
-            String [] categories = { "", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康" };
-            newsList = api.getNews("", categories[homePageMode], OTHERS);     // refer to the top for modes
-        }
+
         //testGetNews ("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2019-07-01&endDate=2019-07-03&words=%E7%89%B9%E6%9C%97%E6%99%AE&categories=%E7%A7%91%E6%8A%80");
 
         /*
@@ -333,6 +347,9 @@ public class MainActivity extends AppCompatActivity
         /* load news into home screen */
         LinearLayout newsContainer = findViewById(R.id.home_news_container);
         newsContainer.removeAllViews();
+
+        ScrollView mainScroll = findViewById(R.id.main_scroll_view);
+        mainScroll.scrollTo(0, 0);
 
         int newsCounter = 0;
         for (News newsItem: newsList) {
@@ -375,6 +392,46 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent (this, NewsPage.class);
         intent.putExtra (EXTRA_NEWS_SERIAL, newsList.elementAt(newsNumber));
         startActivity(intent);
+    }
+
+
+    /* load news in background to improve UI smoothness */
+    private class AsyncNewsRetriever extends AsyncTask<String, String, Vector<News>> {
+
+        private String resp;
+        ProgressDialog progressDialog;
+
+        @Override
+        protected Vector<News> doInBackground (String... params) {
+            publishProgress("Loading..."); // Calls onProgressUpdate()
+            try {
+                NewsAPI api = new NewsAPI();
+                if (isAfterSearch) {
+                    return api.getNews(searchString, null, OTHERS);
+                } else {
+                    String [] categories = { "", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康" };
+                    return api.getNews("", categories[homePageMode], OTHERS);     // refer to the top for modes
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp = e.getMessage();
+            }
+            return null;
+        }
+
+
+        protected void onPostExecute(Vector<News> v) {
+            // execution of result of Long time consuming operation
+            progressDialog.dismiss();
+            newsList = v;
+            loadNews();
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = ProgressDialog.show(MainActivity.this, "Loading", "Refreshing News...");
+        }
     }
 
 

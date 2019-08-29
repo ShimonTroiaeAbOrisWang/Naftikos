@@ -20,7 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Vector;
 
-public class News /*implements java.io.Serializable*/ {
+public class News implements java.io.Serializable {
     String newsID;
     String title, content, publishTime, language, url, crawlTime, publisher, category;
     String video;

@@ -58,7 +58,7 @@ public class NewsPage extends AppCompatActivity {
                     collapsingToolbarLayout.setTitle(news.title);
                     isShow = true;
                 } else if(isShow) {
-                    collapsingToolbarLayout.setTitle("Troy, Turkey. Jul 20 2014."); // maybe time and location?
+                    collapsingToolbarLayout.setTitle(news.publishTime); // maybe time and location?
                     isShow = false;
                 }
             }

@@ -1,9 +1,10 @@
 package com.example.prototype;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Vector;
 
-public class News {
+public class News implements Serializable {
     String newsID;
     String title, content, publishTime, language, url, crawlTime, publisher, category;
     String image, video;

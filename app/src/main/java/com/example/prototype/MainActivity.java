@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity
 
     /* constants strings as keys in key-value pairs */
     public static final String EXTRA_SEARCH_WORDS = "com.naftikos.SEARCH_WORDS";
-    public static final String EXTRA_NEWS_TITLE = "com.naftikos.NEWS_TITLE";
-    public static final String EXTRA_NEWS_TEXT = "com.naftikos.NEWS_TEXT";
+    public static final String EXTRA_NEWS_SERIAL = "com.naftikos.NEWS_SERIAL";
 
     public static Context context;
     TextView title;
@@ -297,9 +296,9 @@ public class MainActivity extends AppCompatActivity
         News news = null;
         for (int i = 0; i < 50; i += 1) {
             if (isAfterSearch) {
-                news = new News("Search Result #" + (i + 1) + "  我们需要兼容更长的标题，比如这个字符串", getString(R.string.sample_news_text), null, null, null, null);
+                news = new News(null, "Search Result #" + (i + 1) + "  我们需要兼容更长的标题，比如这个字符串", getString(R.string.sample_news_text), null, null, null);
             } else {
-                news = new News(homePageMode + " News #" + (i + 1), getString(R.string.sample_news_text), null, null, null, null);
+                news = new News(null,homePageMode + " News #" + (i + 1), getString(R.string.sample_news_text), null, null, null);
             }
             newsList.add(news);
         }
@@ -348,10 +347,10 @@ public class MainActivity extends AppCompatActivity
         return newCard;
     }
 
+    /* open news page according to the number of the news (in newsList) */
     private void openNewsByNumber (int newsNumber, View view) {
         Intent intent = new Intent (this, NewsPage.class);
-        intent.putExtra (MainActivity.EXTRA_NEWS_TITLE, newsList.elementAt(newsNumber).getTitle());
-        intent.putExtra (MainActivity.EXTRA_NEWS_TEXT, newsList.elementAt(newsNumber).getContent());
+        intent.putExtra (EXTRA_NEWS_SERIAL, newsList.elementAt(newsNumber));
         startActivity(intent);
     }
 

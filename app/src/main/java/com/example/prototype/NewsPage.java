@@ -20,8 +20,8 @@ public class NewsPage extends AppCompatActivity {
     boolean addedToFavourite = false;
     Drawable not_added_icon;
     Drawable added_icon;
-    String newsTitle;
-    String newsText;
+    News news;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +33,18 @@ public class NewsPage extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
+
+
+
+        not_added_icon = getResources().getDrawable(R.drawable.ic_star_border_black_24dp);
+        added_icon = getResources().getDrawable(R.drawable.ic_star_black_24dp);
+
+        /* get news */
+        Intent intent = getIntent();
+        news = (News) intent.getSerializableExtra(MainActivity.EXTRA_NEWS_SERIAL);
+
+        TextView textView = findViewById(R.id.news_text);
+        textView.setText(news.content);
 
         /* hide title in expanded view */
         final CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.news_layout);
@@ -47,7 +59,7 @@ public class NewsPage extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.setTitle(newsTitle);
+                    collapsingToolbarLayout.setTitle(news.title);
                     isShow = true;
                 } else if(isShow) {
                     collapsingToolbarLayout.setTitle("Troy, Turkey. Jul 20 2014."); // maybe time and location?
@@ -55,18 +67,6 @@ public class NewsPage extends AppCompatActivity {
                 }
             }
         });
-
-
-        not_added_icon = getResources().getDrawable(R.drawable.ic_star_border_black_24dp);
-        added_icon = getResources().getDrawable(R.drawable.ic_star_black_24dp);
-
-        Intent intent = getIntent();
-        newsTitle = intent.getStringExtra(MainActivity.EXTRA_NEWS_TITLE);
-        newsText = intent.getStringExtra(MainActivity.EXTRA_NEWS_TEXT);
-
-
-        TextView textView = findViewById(R.id.news_text);
-        textView.setText(newsText);
 
 
     }

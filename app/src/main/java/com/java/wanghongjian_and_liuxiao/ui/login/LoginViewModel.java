@@ -1,4 +1,4 @@
-package com.example.prototype.ui.login;
+package com.java.wanghongjian_and_liuxiao.ui.login;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel;
 
 import android.util.Patterns;
 
-import com.example.prototype.data.LoginRepository;
-import com.example.prototype.data.Result;
-import com.example.prototype.data.model.LoggedInUser;
-import com.example.prototype.R;
+import com.java.wanghongjian_and_liuxiao.data.LoginRepository;
+import com.java.wanghongjian_and_liuxiao.data.Result;
+import com.java.wanghongjian_and_liuxiao.data.model.LoggedInUser;
+import com.java.wanghongjian_and_liuxiao.R;
 
 public class LoginViewModel extends ViewModel {
 

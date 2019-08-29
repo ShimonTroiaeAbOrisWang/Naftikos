@@ -1,4 +1,4 @@
-package com.example.prototype.data.model;
+package com.java.wanghongjian_and_liuxiao.data.model;
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository

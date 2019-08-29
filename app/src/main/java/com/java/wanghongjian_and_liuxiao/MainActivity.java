@@ -1,27 +1,17 @@
-package com.example.prototype;
+package com.java.wanghongjian_and_liuxiao;
 
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Icon;
 import android.os.Bundle;
 
-import com.example.prototype.ui.login.LoginActivity;
-import com.example.prototype.ui.login.LoginViewModel;
+import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.internal.NavigationMenu;
-import com.google.android.material.internal.NavigationMenuItemView;
-import com.google.android.material.internal.NavigationMenuView;
-import com.google.android.material.snackbar.Snackbar;
 
 import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
@@ -29,7 +19,6 @@ import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -38,9 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

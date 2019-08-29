@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.prototype">
+    package="com.java.wanghongjian_and_liuxiao">
 
     <application
         android:allowBackup="true"
@@ -9,22 +9,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewsPage"></activity>
+        <activity android:name="com.java.wanghongjian_and_liuxiao.NewsPage"></activity>
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name="com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity"
             android:label="Ναυτικός Sign in"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="com.java.wanghongjian_and_liuxiao.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.prototype.MainActivity" />
+                android:value="com.java.wanghongjian_and_liuxiao.MainActivity" />
         </activity>
         <activity
-            android:name=".SearchActivity"
+            android:name="com.java.wanghongjian_and_liuxiao.SearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Ναυτικός Search"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.java.wanghongjian_and_liuxiao.MainActivity"
             android:label="Ναυτικός"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

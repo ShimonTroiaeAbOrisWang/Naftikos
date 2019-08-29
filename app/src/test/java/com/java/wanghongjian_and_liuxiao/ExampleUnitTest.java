@@ -1,10 +1,7 @@
-package com.example.prototype;
+package com.java.wanghongjian_and_liuxiao;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Example local unit test, which will execute on the development machine (host).

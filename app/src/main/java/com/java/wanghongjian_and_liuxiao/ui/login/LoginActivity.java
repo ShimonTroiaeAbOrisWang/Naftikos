@@ -1,4 +1,4 @@
-package com.example.prototype.ui.login;
+package com.java.wanghongjian_and_liuxiao.ui.login;
 
 import android.app.Activity;
 
@@ -24,9 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.prototype.R;
-import com.example.prototype.ui.login.LoginViewModel;
-import com.example.prototype.ui.login.LoginViewModelFactory;
+import com.java.wanghongjian_and_liuxiao.R;
 
 public class LoginActivity extends AppCompatActivity {
 

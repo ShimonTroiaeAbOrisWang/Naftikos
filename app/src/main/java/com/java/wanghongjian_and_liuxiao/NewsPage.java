@@ -1,4 +1,4 @@
-package com.example.prototype;
+package com.java.wanghongjian_and_liuxiao;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,9 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -34,8 +32,6 @@ public class NewsPage extends AppCompatActivity {
             actionBar.hide();
         }
 
-
-
         not_added_icon = getResources().getDrawable(R.drawable.ic_star_border_black_24dp);
         added_icon = getResources().getDrawable(R.drawable.ic_star_black_24dp);
 
@@ -48,7 +44,7 @@ public class NewsPage extends AppCompatActivity {
 
         /* hide title in expanded view */
         final CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.news_layout);
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.news_page_app_bar);
+        AppBarLayout appBarLayout = findViewById(R.id.news_page_app_bar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = true;
             int scrollRange = -1;

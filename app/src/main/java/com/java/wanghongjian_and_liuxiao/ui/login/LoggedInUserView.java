@@ -1,4 +1,4 @@
-package com.example.prototype.ui.login;
+package com.java.wanghongjian_and_liuxiao.ui.login;
 
 /**
  * Class exposing authenticated user details to the UI.

@@ -1,10 +1,8 @@
-package com.example.prototype;
+package com.java.wanghongjian_and_liuxiao;
 
-import java.io.Serializable;
-import java.util.Date;
 import java.util.Vector;
 
-public class News implements Serializable {
+public class News implements java.io.Serializable {
     String newsID;
     String title, content, publishTime, language, url, crawlTime, publisher, category;
     String image, video;

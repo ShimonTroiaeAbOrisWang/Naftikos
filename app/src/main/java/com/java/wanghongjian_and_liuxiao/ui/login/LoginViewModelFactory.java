@@ -1,11 +1,11 @@
-package com.example.prototype.ui.login;
+package com.java.wanghongjian_and_liuxiao.ui.login;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
-import com.example.prototype.data.LoginDataSource;
-import com.example.prototype.data.LoginRepository;
+import com.java.wanghongjian_and_liuxiao.data.LoginDataSource;
+import com.java.wanghongjian_and_liuxiao.data.LoginRepository;
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

@@ -1,6 +1,6 @@
-package com.example.prototype.data;
+package com.java.wanghongjian_and_liuxiao.data;
 
-import com.example.prototype.data.model.LoggedInUser;
+import com.java.wanghongjian_and_liuxiao.data.model.LoggedInUser;
 
 /**
  * Class that requests authentication and user information from the remote data source and

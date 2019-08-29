@@ -1,4 +1,4 @@
-package com.example.prototype.data;
+package com.java.wanghongjian_and_liuxiao.data;
 
 /**
  * A generic class that holds a result success w/ data or an error exception.

@@ -1,4 +1,4 @@
-package com.example.prototype;
+package com.java.wanghongjian_and_liuxiao;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;

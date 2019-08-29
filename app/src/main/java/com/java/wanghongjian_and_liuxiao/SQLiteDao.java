@@ -1,4 +1,4 @@
-package com.example.prototype;
+package com.java.wanghongjian_and_liuxiao;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -17,11 +18,13 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 
-public class NewsAPI {
+public class NewsAPI implements Runnable{
     private final String rawAPI = "https://api2.newsminer.net/svc/news/queryNewsList?";
     private Vector<String> search_history = new Vector<>();
     private Integer size;
     private String endDate, startDate, words, categories;
+    private JSONObject last_json;
+    private String last_request;
 
     DateFormat df;
 
@@ -30,7 +33,7 @@ public class NewsAPI {
         df = new SimpleDateFormat("yyyy-MM-dd%20HH:mm:ss");
         df.setTimeZone(tz);
         endDate = df.format(new Date());
-        size = 1;
+        size = 15;
     }
 
     private String formRequest(String keyword, String category) {
@@ -50,11 +53,21 @@ public class NewsAPI {
         return request.toString();
     }
 
-    public Vector<News> getNews(String keyword, String category) {
-        Vector<News> news_list = new Vector<>();
-        String request = formRequest(keyword, category);
+    @Override
+    public void run() {
+        parseNews(last_request);
+    }
 
-        JSONObject news = parseNews(request); // FIXME: 19.8.29 crash!
+    public Vector<News> getNews(String keyword, String category) {
+        Thread connect = new Thread(this);
+        Vector<News> news_list = new Vector<>();
+        last_request = formRequest(keyword, category);
+        connect.start();
+        try {
+            connect.join();
+        }catch (InterruptedException e){ }
+
+        JSONObject news = last_json; // FIXME: 19.8.29 crash!
 
 
         if (news == null)
@@ -78,17 +91,17 @@ public class NewsAPI {
         return news_list;
     }
 
-    private JSONObject parseNews(String new_request) {
+    private void parseNews(String new_request) {
         URL url;
         BufferedReader in;
         JSONObject parsedNews = null;
 
         try {
             url = new URL(new_request);
-            URLConnection tc = url.openConnection();
-            //in = new BufferedReader(new InputStreamReader(tc.getInputStream(), "UTF-8"));
-            //String inputLine = in.readLine();
-            //parsedNews = new JSONObject(inputLine);
+            HttpURLConnection tc = (HttpURLConnection) url.openConnection();
+            in = new BufferedReader(new InputStreamReader(tc.getInputStream(), "UTF-8"));
+            String inputLine = in.readLine();
+            parsedNews = new JSONObject(inputLine);
         } catch (MalformedURLException e) {
             parsedNews = null;
         } catch (IOException e) {
@@ -96,8 +109,6 @@ public class NewsAPI {
         } /*catch (JSONException e) {
             parsedNews = null;
         }
-        */
-
-        return parsedNews;
+        last_json = parsedNews;
     }
 }

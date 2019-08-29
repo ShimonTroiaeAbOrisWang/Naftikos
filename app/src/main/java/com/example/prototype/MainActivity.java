@@ -3,6 +3,7 @@ package com.example.prototype;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Icon;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_NEWS_TITLE = "com.naftikos.NEWS_TITLE";
     public static final String EXTRA_NEWS_TEXT = "com.naftikos.NEWS_TEXT";
 
+    public static Context context;
     TextView title;
     String homePageMode;
     Typeface ubuntuMidItalic;
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity
         */
 
         newsList = new Vector<News>();
+        context = this;
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -294,9 +297,9 @@ public class MainActivity extends AppCompatActivity
         News news = null;
         for (int i = 0; i < 50; i += 1) {
             if (isAfterSearch) {
-                news = new News("Search Result #" + (i + 1) + "  我们需要兼容更长的标题，比如这个字符串", getString(R.string.sample_news_text));
+                news = new News("Search Result #" + (i + 1) + "  我们需要兼容更长的标题，比如这个字符串", getString(R.string.sample_news_text), null, null, null, null);
             } else {
-                news = new News(homePageMode + " News #" + (i + 1), getString(R.string.sample_news_text));
+                news = new News(homePageMode + " News #" + (i + 1), getString(R.string.sample_news_text), null, null, null, null);
             }
             newsList.add(news);
         }
@@ -350,5 +353,9 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra (MainActivity.EXTRA_NEWS_TITLE, newsList.elementAt(newsNumber).getTitle());
         intent.putExtra (MainActivity.EXTRA_NEWS_TEXT, newsList.elementAt(newsNumber).getContent());
         startActivity(intent);
+    }
+
+    public static Context getContext() {
+        return context;
     }
 }

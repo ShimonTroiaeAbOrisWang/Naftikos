@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,10 +28,10 @@ public class NewsAPI {
 
     NewsAPI() {
         TimeZone tz = TimeZone.getTimeZone("UTC");
-        df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        df = new SimpleDateFormat("yyyy-MM-dd%20HH:mm:ss");
         df.setTimeZone(tz);
         endDate = df.format(new Date());
-        size = 15;
+        size = 1;
     }
 
     private String formRequest(String keyword, String category) {
@@ -64,7 +65,7 @@ public class NewsAPI {
                 Vector<String> keywords = new Vector<>();
                 for (int j = 0; j < keywords_json.length(); j++)
                     keywords.add(keywords_json.get(j).toString());
-                news_list.add(new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("language"), n.getString("url"), n.getString("crawlTime"), n.getString("publisher"), n.getString("category"), keywords));
+                news_list.add(new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("category"), keywords));
             }
         } catch (JSONException e) {
         }
@@ -77,7 +78,8 @@ public class NewsAPI {
         JSONObject parsedNews;
         try {
             url = new URL(new_request);
-            in = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+            URLConnection tc = url.openConnection();
+            in = new BufferedReader(new InputStreamReader(tc.getInputStream(), "UTF-8"));
             String inputLine = in.readLine();
             parsedNews = new JSONObject(inputLine);
         } catch (MalformedURLException e) {

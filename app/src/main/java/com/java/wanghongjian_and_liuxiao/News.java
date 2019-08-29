@@ -2,13 +2,17 @@ package com.java.wanghongjian_and_liuxiao;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Environment;
+
+import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,10 +46,10 @@ public class News implements java.io.Serializable {
     public void setImage(String _url) {
         image = new Vector<>();
         String[] urls = _url.split(", ");
-        for (String u: urls){
-            Image img = new Image(u, newsID, dir);
-            Thread connect = new Thread(img);
-            connect.start();
+        for (int i = 0; i < urls.length; i++) {
+            Image img = new Image(urls[i], i, newsID, dir);
+            if (i == 0)
+                img.getImage();
             image.add(img);
         }
     }
@@ -63,18 +67,24 @@ public class News implements java.io.Serializable {
     }
 }
 
-class Image implements Runnable{
-    String imageURL, newsID, dir;
+class Image implements Runnable, java.io.Serializable {
+    String imageURL, newsID, dir, file_dir=null;
+    int index;
     Bitmap image;
-    Image(String url, String _newsID, String _dir){
+
+    Image(String url, int _index, String _newsID, String _dir) {
         imageURL = url;
         newsID = _newsID;
         dir = _dir;
+        index = _index;
+        file_dir = dir + newsID + "_" + index + ".png";
     }
 
     @Override
     public void run() {
         try {
+            if (file_dir != null)
+                return;
             if (imageURL.substring(0, 5).equals("http:"))
                 imageURL = "https" + imageURL.substring(4);
             URL url = new URL(imageURL);
@@ -82,7 +92,7 @@ class Image implements Runnable{
             InputStream in = tc.getInputStream();
             image = BitmapFactory.decodeStream(in);
             in.close();
-            File file = new File(dir + newsID + ".png");
+            File file = new File(file_dir);
             FileOutputStream out = new FileOutputStream(file);
             image.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
@@ -90,5 +100,25 @@ class Image implements Runnable{
         } catch (MalformedURLException e) {
         } catch (IOException e) {
         }
+    }
+
+    public Bitmap getImage(){
+        File file = new File(file_dir);
+        if (!file.exists()){
+            Thread connect = new Thread(this);
+            connect.start();
+        }else{
+            try {
+                FileInputStream in = new FileInputStream(file);
+                image = BitmapFactory.decodeStream(in);
+            }catch (IOException e) {}
+        }
+        return image;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return file_dir;
     }
 }

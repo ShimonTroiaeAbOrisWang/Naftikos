@@ -7,7 +7,6 @@ import android.os.Environment;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,7 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Vector;
 
-public class News implements java.io.Serializable {
+public class News /*implements java.io.Serializable*/ {
     String newsID;
     String title, content, publishTime, language, url, crawlTime, publisher, category;
     String video;

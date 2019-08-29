@@ -34,7 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
-import java.util.Random;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity
@@ -308,7 +307,12 @@ public class MainActivity extends AppCompatActivity
 
         // FIXME: 19.8.29 this leads to crash!
         NewsAPI api = new NewsAPI();
-        newsList = api.getNews("教育", null, OTHERS);     // refer to the top for modes
+        if (isAfterSearch) {
+            newsList = api.getNews(searchString, null, OTHERS);
+        } else {
+            String [] categories = { "", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康" };
+            newsList = api.getNews("", categories[homePageMode], OTHERS);     // refer to the top for modes
+        }
         //testGetNews ("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2019-07-01&endDate=2019-07-03&words=%E7%89%B9%E6%9C%97%E6%99%AE&categories=%E7%A7%91%E6%8A%80");
 
         /*
@@ -372,6 +376,8 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra (EXTRA_NEWS_SERIAL, newsList.elementAt(newsNumber));
         startActivity(intent);
     }
+
+
 
     public static Context getContext() {
         return context;

@@ -12,6 +12,6 @@ public class ExampleUnitTest {
     @Test
     public void testNewsAPI() throws JSONException {
         NewsAPI api = new NewsAPI();
-        api.getNews(null, null);
+        api.getNews("教育", null, 3);
     }
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
 import com.google.android.material.card.MaterialCardView;
 
+import android.os.Environment;
 import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
@@ -31,6 +32,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     /* constants strings as keys in key-value pairs */
     public static final String EXTRA_SEARCH_WORDS = "com.naftikos.SEARCH_WORDS";
     public static final String EXTRA_NEWS_SERIAL = "com.naftikos.NEWS_SERIAL";
+    public static final int UPDATE_NEWS = 1, LOAD_NEWS_BEFORE = 2, OTHERS = 3;
 
     public static Context context;
     TextView title;
@@ -70,6 +73,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
         */
+
+        File external_dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/wanghongjian_and_liuxiao/");
+        if (!external_dir.exists())
+            external_dir.mkdirs();
 
         newsList = new Vector<News>();
         context = this;
@@ -282,7 +289,8 @@ public class MainActivity extends AppCompatActivity
 
         // FIXME: 19.8.29 this leads to crash!
         NewsAPI api = new NewsAPI();
-        newsList = api.getNews ("新闻", "");
+        newsList = api.getNews("教育", null, OTHERS);     // refer to the top for modes
+        //testGetNews ("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2019-07-01&endDate=2019-07-03&words=%E7%89%B9%E6%9C%97%E6%99%AE&categories=%E7%A7%91%E6%8A%80");
 
         /*
         News news = null;

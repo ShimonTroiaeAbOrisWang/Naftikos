@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.nfc.tech.TagTechnology;
 import android.os.Bundle;
 
 import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
@@ -31,6 +32,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Random;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity
@@ -40,9 +42,27 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_SEARCH_WORDS = "com.naftikos.SEARCH_WORDS";
     public static final String EXTRA_NEWS_SERIAL = "com.naftikos.NEWS_SERIAL";
 
+    /* constants for home page mode */
+    private static final int HOME_SEARCH = -1;
+    private static final int HOME_LATEST = 0;
+    private static final int HOME_RAND = 1;
+    private static final int HOME_PERSONAL = 2;
+    private static final int HOME_FINANCE = 3;
+    private static final int HOME_EDUCATION = 4;
+    private static final int HOME_ENT = 5;
+    private static final int HOME_SPORTS = 6;
+    private static final int HOME_TECH = 7;
+    private static final int HOME_AUTOS = 8;
+    private static final int HOME_MILITARY = 9;
+    private static final int HOME_CULTURE = 10;
+    private static final int HOME_SOCIETY = 11;
+    private static final int HOME_HEALTH = 12;
+
+    private static final String [] homepageModeTitles = { "Latest", "Random", "Personal Feeds", "Finance", "Education", "Entertainment", "Sports", "Technology", "Autos", "Military", "Culture", "Society", "Health" };
+
     public static Context context;
     TextView title;
-    String homePageMode;
+    int homePageMode;
     Typeface ubuntuMidItalic;
     boolean isAfterSearch;
     String searchString;
@@ -93,7 +113,7 @@ public class MainActivity extends AppCompatActivity
             // this means this page is created after search
             isAfterSearch = true;
             searchString = intent.getStringExtra(EXTRA_SEARCH_WORDS);
-            homePageMode = "";
+            homePageMode = HOME_SEARCH;
             title.setText ("Search: " + searchString + ' ');
 
             // TODO: 19.8.12 dynamically change the size of the title bar w.r.t the length of the title string
@@ -101,8 +121,8 @@ public class MainActivity extends AppCompatActivity
         } else {
             isAfterSearch = false;
             searchString = "";
-            homePageMode = "Latest";
-            title.setText (homePageMode + ' ');
+            homePageMode = HOME_LATEST;
+            title.setText (homepageModeTitles[homePageMode] + ' ');
         }
 
 
@@ -142,7 +162,7 @@ public class MainActivity extends AppCompatActivity
                     return;
                 }
                 isAfterSearch = true;
-                homePageMode = "";
+                homePageMode = HOME_SEARCH;
                 title.setText ("Search: " + searchString + ' ');
                 getNewsFromServer();
                 loadNews();
@@ -161,7 +181,6 @@ public class MainActivity extends AppCompatActivity
         /* set the style of a news card for future creation */
         newsCardModelFirst = findViewById(R.id.news_card_01);
         newsCardModel = findViewById(R.id.news_card_02);
-
 
         getNewsFromServer();
         loadNews();
@@ -225,36 +244,36 @@ public class MainActivity extends AppCompatActivity
             /* about page */
         } else {
             if (id == R.id.nav_latest) {
-                homePageMode = "Latest";
+                homePageMode = HOME_LATEST;
             } else if (id == R.id.nav_random) {
-                homePageMode = "Random";
+                homePageMode = HOME_RAND;
             } else if (id == R.id.nav_personal) {
-                homePageMode = "Personal Feeds";
+                homePageMode = HOME_PERSONAL;
             } else if (id == R.id.nav_finance) {
-                homePageMode = "Finance";
+                homePageMode = HOME_FINANCE;
             } else if (id == R.id.nav_education) {
-                homePageMode = "Education";
+                homePageMode = HOME_EDUCATION;
             } else if (id == R.id.nav_entertainment) {
-                homePageMode = "Entertainment";
+                homePageMode = HOME_ENT;
             } else if (id == R.id.nav_sports) {
-                homePageMode = "Sports";
+                homePageMode = HOME_SPORTS;
             } else if (id == R.id.nav_technology) {
-                homePageMode = "Technology";
+                homePageMode = HOME_TECH;
             } else if (id == R.id.nav_autos) {
-                homePageMode = "Autos";
+                homePageMode = HOME_AUTOS;
             }
 
             /* change home page according to mode */
             TextView title = findViewById(R.id.home_title);
-            title.setText (homePageMode + ' ');
+            title.setText (homepageModeTitles[homePageMode] + ' ');
 
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
 
             isAfterSearch = false;
+
             getNewsFromServer();
             loadNews();
-
         }
 
         return true;
@@ -282,8 +301,11 @@ public class MainActivity extends AppCompatActivity
 
         // FIXME: 19.8.29 this leads to crash!
         NewsAPI api = new NewsAPI();
-        newsList = api.getNews ("新闻", "");
-
+        if (isAfterSearch) {
+            newsList = api.getNews(searchString, "");
+        } else {
+            newsList = api.getNews("", "");
+        }
         /*
         News news = null;
         for (int i = 0; i < 50; i += 1) {

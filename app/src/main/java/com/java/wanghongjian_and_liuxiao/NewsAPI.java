@@ -106,7 +106,7 @@ public class NewsAPI implements Runnable{
             parsedNews = null;
         } catch (IOException e) {
             parsedNews = null;
-        } /*catch (JSONException e) {
+        } catch (JSONException e) {
             parsedNews = null;
         }
         last_json = parsedNews;

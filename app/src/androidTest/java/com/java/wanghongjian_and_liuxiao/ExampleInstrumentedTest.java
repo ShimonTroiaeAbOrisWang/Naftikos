@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
+import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,5 +24,11 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("com.example.prototype", appContext.getPackageName());
+    }
+
+    @Test
+    public void testNewsAPI(){
+        NewsAPI api = new NewsAPI();
+        api.testGetNews("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2019-07-01&endDate=2019-07-03&words=%E7%89%B9%E6%9C%97%E6%99%AE&categories=%E7%A7%91%E6%8A%80");
     }
 }

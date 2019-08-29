@@ -279,7 +279,12 @@ public class MainActivity extends AppCompatActivity
     public void getNewsFromServer () {
         // TODO: 19.8.15  fill newsList with news according to homePageMode, searchString, etc.
         newsList.clear();
-        /* demo */
+
+        // FIXME: 19.8.29 this leads to crash!
+        NewsAPI api = new NewsAPI();
+        newsList = api.getNews ("新闻", "");
+
+        /*
         News news = null;
         for (int i = 0; i < 50; i += 1) {
             if (isAfterSearch) {
@@ -289,6 +294,7 @@ public class MainActivity extends AppCompatActivity
             }
             newsList.add(news);
         }
+        */
 
     }
 
@@ -297,7 +303,6 @@ public class MainActivity extends AppCompatActivity
         LinearLayout newsContainer = findViewById(R.id.home_news_container);
         newsContainer.removeAllViews();
 
-        boolean firstFlag = true;
         int newsCounter = 0;
         for (News newsItem: newsList) {
             newsContainer.addView(generateHomeNewsCard(newsCounter, newsItem));

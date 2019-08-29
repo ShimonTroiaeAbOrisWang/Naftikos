@@ -51,9 +51,11 @@ public class NewsAPI {
     }
 
     public Vector<News> getNews(String keyword, String category) {
-        String request = formRequest(keyword, category);
-        JSONObject news = parseNews(request);
         Vector<News> news_list = new Vector<>();
+        String request = formRequest(keyword, category);
+
+        JSONObject news = parseNews(request); // FIXME: 19.8.29 crash!
+
         if (news == null)
             return news_list;
         try {
@@ -68,6 +70,7 @@ public class NewsAPI {
             }
         } catch (JSONException e) {
         }
+        
         return news_list;
     }
 

@@ -70,13 +70,12 @@ public class MainActivity extends AppCompatActivity
     TextView title;
     int homePageMode;
     Typeface ubuntuMidItalic;
-    boolean isAfterSearch;
+    boolean isAfterSearch = false;
     String searchString;
     AlertDialog searchDialog;
     TextInputEditText searchDialogText;
     MaterialCardView newsCardModelFirst, newsCardModel;
 
-    NewsAPI api;
     Vector<News> newsList;
 
 
@@ -198,15 +197,7 @@ public class MainActivity extends AppCompatActivity
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //getNewsFromServer();  // so as not to invoke a loading dialog
-                NewsAPI api = new NewsAPI();
-                if (isAfterSearch) {
-                    newsList = api.getNews(searchString, null, OTHERS);
-                } else {
-                    String [] categories = { "", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康" };
-                    newsList = api.getNews("", categories[homePageMode], OTHERS);     // refer to the top for modes
-                }
-                loadNews();
+                getNewsFromServer(UPDATE_NEWS);
             }
         });
 
@@ -341,27 +332,20 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    public void getNewsFromServer() {
+    public void getNewsFromServer () {getNewsFromServer(OTHERS);}
+
+    public void getNewsFromServer(int getMode) {
         // TODO: 19.8.15  fill newsList with news according to homePageMode, searchString, etc.
         newsList.clear();
         AsyncNewsRetriever retriever = new AsyncNewsRetriever();
+        if (getMode == UPDATE_NEWS) {
+            retriever.hasDialog = false;
+        }
+        // FIXME: 19.8.30 getMode = UPDATE_NEWES does not work!
+        // retriever.mode = getMode;
         retriever.execute("");
-        // FIXME: 19.8.29 this leads to crash!
 
         //testGetNews ("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2019-07-01&endDate=2019-07-03&words=%E7%89%B9%E6%9C%97%E6%99%AE&categories=%E7%A7%91%E6%8A%80");
-
-        /*
-        News news = null;
-        for (int i = 0; i < 50; i += 1) {
-            if (isAfterSearch) {
-                news = new News(null, "Search Result #" + (i + 1) + "  我们需要兼容更长的标题，比如这个字符串", getString(R.string.sample_news_text), null, null, null);
-            } else {
-                news = new News(null,homePageMode + " News #" + (i + 1), getString(R.string.sample_news_text), null, null, null);
-            }
-            newsList.add(news);
-        }
-        */
-
     }
 
     public void loadNews() {
@@ -425,6 +409,8 @@ public class MainActivity extends AppCompatActivity
 
         private String resp;
         ProgressDialog progressDialog;
+        public int mode = OTHERS;
+        public boolean hasDialog = true;
 
         @Override
         protected Vector<News> doInBackground(String... params) {
@@ -436,7 +422,7 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     String[] categories = {"", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康"};
                     //return api.testGetNews("https://api2.newsminer.net/svc/news/queryNewsList?words=野熊&size=1&startDate=2018-08-15&endDate=2018-08-21");
-                    return api.getNews("", categories[homePageMode], OTHERS);     // refer to the top for modes
+                    return api.getNews("", categories[homePageMode], mode);     // refer to the top for modes
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -448,7 +434,9 @@ public class MainActivity extends AppCompatActivity
 
         protected void onPostExecute(Vector<News> v) {
             // execution of result of Long time consuming operation
-            progressDialog.dismiss();
+            if (hasDialog) {
+                progressDialog.dismiss();
+            }
             newsList = v;
             loadNews();
         }
@@ -456,7 +444,9 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPreExecute() {
-            progressDialog = ProgressDialog.show(MainActivity.this, "Loading", "Refreshing News...");
+            if (hasDialog) {
+                progressDialog = ProgressDialog.show(MainActivity.this, "Loading", "Ναυτικός is updating news...");
+            }
         }
     }
 

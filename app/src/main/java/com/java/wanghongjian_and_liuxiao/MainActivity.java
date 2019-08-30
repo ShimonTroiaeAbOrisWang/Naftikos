@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity
 
     /* constants strings as keys in key-value pairs */
     public static final String EXTRA_SEARCH_WORDS = "com.naftikos.SEARCH_WORDS";
-    public static final String EXTRA_NEWS_SERIAL = "com.naftikos.NEWS_SERIAL";
     public static final int UPDATE_NEWS = 1, LOAD_NEWS_BEFORE = 2, OTHERS = 3;
 
     /* constants for home page mode */
@@ -77,6 +76,7 @@ public class MainActivity extends AppCompatActivity
     MaterialCardView newsCardModelFirst, newsCardModel;
 
     Vector<News> newsList;
+    static News newsToDisplay;
 
 
     @Override
@@ -335,7 +335,6 @@ public class MainActivity extends AppCompatActivity
     public void getNewsFromServer () {getNewsFromServer(OTHERS);}
 
     public void getNewsFromServer(int getMode) {
-        // TODO: 19.8.15  fill newsList with news according to homePageMode, searchString, etc.
         newsList.clear();
         AsyncNewsRetriever retriever = new AsyncNewsRetriever();
         if (getMode == UPDATE_NEWS) {
@@ -344,8 +343,6 @@ public class MainActivity extends AppCompatActivity
         // FIXME: 19.8.30 getMode = UPDATE_NEWES does not work!
         // retriever.mode = getMode;
         retriever.execute("");
-
-        //testGetNews ("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2019-07-01&endDate=2019-07-03&words=%E7%89%B9%E6%9C%97%E6%99%AE&categories=%E7%A7%91%E6%8A%80");
     }
 
     public void loadNews() {
@@ -399,7 +396,7 @@ public class MainActivity extends AppCompatActivity
     /* open news page according to the number of the news (in newsList) */
     private void openNewsByNumber(int newsNumber, View view) {
         Intent intent = new Intent(this, NewsPage.class);
-        intent.putExtra(EXTRA_NEWS_SERIAL, newsList.elementAt(newsNumber));
+        newsToDisplay = newsList.elementAt(newsNumber);
         startActivity(intent);
     }
 

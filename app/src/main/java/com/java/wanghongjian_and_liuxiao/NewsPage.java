@@ -36,9 +36,7 @@ public class NewsPage extends AppCompatActivity {
         added_icon = getResources().getDrawable(R.drawable.ic_star_black_24dp);
 
         /* get news */
-        Intent intent = getIntent();
-        news = (News) intent.getSerializableExtra(MainActivity.EXTRA_NEWS_SERIAL);
-
+        news = MainActivity.newsToDisplay;
         TextView textView = findViewById(R.id.news_text);
         textView.setText(news.content);
 

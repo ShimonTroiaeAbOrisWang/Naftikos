@@ -21,7 +21,7 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 
-public class NewsAPI implements Runnable{
+public class NewsAPI{
     private final String rawAPI = "https://api2.newsminer.net/svc/news/queryNewsList?";
     private Vector<String> search_history = new Vector<>();
     private Integer size;
@@ -30,6 +30,7 @@ public class NewsAPI implements Runnable{
     private JSONObject last_json;
     private String last_request;
     private Calendar cal;
+    private SQLiteDao db;
 
     DateFormat df;
 
@@ -44,16 +45,14 @@ public class NewsAPI implements Runnable{
         cal.add(Calendar.DATE, -5);
         startDate = cal.getTime();
         size = 15;
+        db = new SQLiteDao();
     }
 
     public Vector<News> getNews(String keyword, String category, int mode) {
-        Thread connect = new Thread(this);
+        //Thread connect = new Thread(this);
         Vector<News> news_list = new Vector<>();
         last_request = formRequest(keyword, category, mode);
-        connect.start();
-        try {
-            connect.join();
-        }catch (InterruptedException e){ }
+        parseNews(last_request);
 
         JSONObject news = last_json;
 
@@ -75,19 +74,16 @@ public class NewsAPI implements Runnable{
                 if (n.getString("video") != null)
                     _news.setVideo(n.getString("video"));
                 news_list.add(_news);
+                db.add(_news);
             }
         } catch (JSONException e) { }
         return news_list;
     }
 
     public Vector<News> testGetNews(String request) {
-        Thread connect = new Thread(this);
         Vector<News> news_list = new Vector<>();
         last_request = request;
-        connect.start();
-        try {
-            connect.join();
-        }catch (InterruptedException e){ }
+        parseNews(last_request);
 
         JSONObject news = last_json;
 
@@ -102,13 +98,14 @@ public class NewsAPI implements Runnable{
                 for (int j = 0; j < keywords_json.length(); j++)
                     keywords.add(keywords_json.getJSONObject(j).getString("word"));
                 News _news = new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("category"), keywords);
-                if (n.getString("image") != null && !n.getString("image").equals("[]")){
+                if (n.getString("image") != null && !n.getString("image").equals("[]") && !n.getString("image").equals("")){
                     String image = n.getString("image");
                     _news.setImage(image.substring(1, image.length() - 1));
                 }
                 if (n.getString("video") != null)
                     _news.setVideo(n.getString("video"));
                 news_list.add(_news);
+                db.add(_news);
             }
         } catch (JSONException e) { }
         return news_list;
@@ -146,11 +143,6 @@ public class NewsAPI implements Runnable{
 
         startDate = endDate;
         return request.toString();
-    }
-
-    @Override
-    public void run() {
-        parseNews(last_request);
     }
 
     private void parseNews(String new_request) {

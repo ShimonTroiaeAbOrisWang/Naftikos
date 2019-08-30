@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
     private static final int HOME_SOCIETY = 11;
     private static final int HOME_HEALTH = 12;
 
-    private static final String [] homepageModeTitles = { "Latest", "Random", "Personal Feeds", "Finance", "Education", "Entertainment", "Sports", "Technology", "Autos", "Military", "Culture", "Society", "Health" };
+    private static final String[] homepageModeTitles = {"Latest", "Random", "Personal Feeds", "Finance", "Education", "Entertainment", "Sports", "Technology", "Autos", "Military", "Culture", "Society", "Health"};
 
     public static Context context;
     TextView title;
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity
             isAfterSearch = true;
             searchString = intent.getStringExtra(EXTRA_SEARCH_WORDS);
             homePageMode = HOME_SEARCH;
-            title.setText ("Search: " + searchString + ' ');
+            title.setText("Search: " + searchString + ' ');
 
             // TODO: 19.8.12 dynamically change the size of the title bar w.r.t the length of the title string
 
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity
             isAfterSearch = false;
             searchString = "";
             homePageMode = HOME_LATEST;
-            title.setText (homepageModeTitles[homePageMode] + ' ');
+            title.setText(homepageModeTitles[homePageMode] + ' ');
         }
 
 
@@ -151,11 +151,11 @@ public class MainActivity extends AppCompatActivity
         AlertDialog.Builder searchDialogBuilder = new AlertDialog.Builder(this);
         searchDialogBuilder.setTitle("News Search");
 
-        searchDialogText = new TextInputEditText (this);
+        searchDialogText = new TextInputEditText(this);
         searchDialogText.setHint("Find news with...");
 
         FrameLayout searchContainer = new FrameLayout(this);
-        FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(30, 30, 30, 20);
         searchDialogText.setSingleLine();
         searchDialogText.setLayoutParams(params);
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 isAfterSearch = true;
                 homePageMode = HOME_SEARCH;
-                title.setText ("Search: " + searchString + ' ');
+                title.setText("Search: " + searchString + ' ');
                 getNewsFromServer();
                 loadNews();
             }
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity
         searchDialogBuilder.setNegativeButton("Advanced", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                advancedSearch ();
+                advancedSearch();
             }
         });
 
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity
 
             /* change home page according to mode */
             TextView title = findViewById(R.id.home_title);
-            title.setText (homepageModeTitles[homePageMode] + ' ');
+            title.setText(homepageModeTitles[homePageMode] + ' ');
 
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
@@ -304,23 +304,23 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void showSearchPage (View view) {
+    public void showSearchPage(View view) {
         /* search button pressed */
         searchDialog.show();
         return;
     }
 
-    public void advancedSearch () {
-        Intent intent = new Intent (this, SearchActivity.class);
+    public void advancedSearch() {
+        Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
 
-    public void showLogin (View view) {
-        Intent intent = new Intent (this, LoginActivity.class);
+    public void showLogin(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
-    public void getNewsFromServer () {
+    public void getNewsFromServer() {
         // TODO: 19.8.15  fill newsList with news according to homePageMode, searchString, etc.
         newsList.clear();
         AsyncNewsRetriever retriever = new AsyncNewsRetriever();
@@ -343,7 +343,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void loadNews () {
+    public void loadNews() {
         /* load news into home screen */
         LinearLayout newsContainer = findViewById(R.id.home_news_container);
         newsContainer.removeAllViews();
@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity
         mainScroll.scrollTo(0, 0);
 
         int newsCounter = 0;
-        for (News newsItem: newsList) {
+        for (News newsItem : newsList) {
             newsContainer.addView(generateHomeNewsCard(newsCounter, newsItem));
             newsCounter += 1;
             // TODO: 19.8.15 specify params for news cards
@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private MaterialCardView generateHomeNewsCard (final int newsCounter, News newsItem) {
+    private MaterialCardView generateHomeNewsCard(final int newsCounter, News newsItem) {
         MaterialCardView newCard = new MaterialCardView(this);
         // modelCard: pre-drawn news card (created with XML but removed in run time)
         MaterialCardView modelCard = (newsCounter == 0) ? newsCardModelFirst : newsCardModel;
@@ -388,9 +388,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     /* open news page according to the number of the news (in newsList) */
-    private void openNewsByNumber (int newsNumber, View view) {
-        Intent intent = new Intent (this, NewsPage.class);
-        intent.putExtra (EXTRA_NEWS_SERIAL, newsList.elementAt(newsNumber));
+    private void openNewsByNumber(int newsNumber, View view) {
+        Intent intent = new Intent(this, NewsPage.class);
+        intent.putExtra(EXTRA_NEWS_SERIAL, newsList.elementAt(newsNumber));
         startActivity(intent);
     }
 
@@ -402,14 +402,15 @@ public class MainActivity extends AppCompatActivity
         ProgressDialog progressDialog;
 
         @Override
-        protected Vector<News> doInBackground (String... params) {
+        protected Vector<News> doInBackground(String... params) {
             publishProgress("Loading..."); // Calls onProgressUpdate()
             try {
                 NewsAPI api = new NewsAPI();
                 if (isAfterSearch) {
                     return api.getNews(searchString, null, OTHERS);
                 } else {
-                    String [] categories = { "", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康" };
+                    String[] categories = {"", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康"};
+                    //return api.testGetNews("https://api2.newsminer.net/svc/news/queryNewsList?words=野熊&size=1&startDate=2018-08-15&endDate=2018-08-21");
                     return api.getNews("", categories[homePageMode], OTHERS);     // refer to the top for modes
                 }
             } catch (Exception e) {
@@ -433,7 +434,6 @@ public class MainActivity extends AppCompatActivity
             progressDialog = ProgressDialog.show(MainActivity.this, "Loading", "Refreshing News...");
         }
     }
-
 
 
     public static Context getContext() {

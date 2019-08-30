@@ -46,11 +46,11 @@
         android:src="@drawable/ic_star_border_black_24dp"
         app:layout_anchor="@id/news_page_app_bar"
         app:layout_anchorGravity="bottom|right|end"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="14dp"
         android:id="@+id/news_favourite"
         android:onClick="toggleFavourite"
         app:backgroundTint="@color/colorPrimaryDark"
-        android:elevation="18dp"
+        app:elevation="11dp"
         app:fabSize="auto"
         />
 
@@ -59,15 +59,99 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="[Text of the news not loaded.]"
-            android:lineSpacingExtra="6sp"
-            android:layout_marginTop="9dp"
-            android:textSize="20dp"
-            android:padding="16dp"
-            android:id="@+id/news_text"/>
+            android:orientation="vertical">
+            
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:backgroundTint="#74A4C4"
+                app:cardElevation="6dp">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/news_page_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="52dp"
+                        android:layout_marginBottom="0dp"
+                        android:lineSpacingExtra="6sp"
+                        android:padding="16dp"
+                        android:text="[Title of the news not loaded.]"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dp" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="-20dp"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="3dp"
+                        android:gravity="center_vertical">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="0dp"
+                            android:src="@drawable/ic_rss_feed_black_24dp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/news_page_publisher"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="-14dp"
+                            android:layout_marginTop="0dp"
+
+                            android:lineSpacingExtra="6sp"
+                            android:padding="16dp"
+                            android:text="Unknown Publisher"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11dp" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </com.google.android.material.card.MaterialCardView>
+    
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="[Text of the news not loaded.]"
+                android:lineSpacingExtra="6sp"
+                android:layout_marginTop="0dp"
+                android:textSize="17dp"
+                android:padding="16dp"
+                android:id="@+id/news_text"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:backgroundTint="#74A4C4">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:orientation="horizontal">
+
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.core.widget.NestedScrollView>
     

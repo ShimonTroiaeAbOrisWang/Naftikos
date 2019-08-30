@@ -220,8 +220,9 @@ public class MainActivity extends AppCompatActivity
         getNewsFromServer();
         // loadNews();  // no longer needed
 
-        Snackbar.make(title, "Welcome!", Snackbar.LENGTH_LONG).setAction("Action", null).setDuration(2700).show();
-
+        if (!isAfterSearch) {
+            Snackbar.make(title, "Welcome!", Snackbar.LENGTH_LONG).setAction("Action", null).setDuration(1500).show();
+        }
     }
 
     @Override

@@ -39,8 +39,14 @@ public class NewsPage extends AppCompatActivity {
 
         /* get news */
         news = MainActivity.newsToDisplay;
-        TextView textView = findViewById(R.id.news_text);
-        textView.setText(news.content);
+        TextView textContent = findViewById(R.id.news_text);
+        textContent.setText(news.content);
+        TextView textTitle = findViewById(R.id.news_page_title);
+        textTitle.setText(news.title);
+        if (news.publisher != null) {
+            TextView textPublisher = findViewById(R.id.news_page_publisher);
+            textPublisher.setText(news.publisher);
+        }
 
         /* load image */
         if (!news.image.isEmpty()) {

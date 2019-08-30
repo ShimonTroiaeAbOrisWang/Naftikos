@@ -44,7 +44,7 @@ public class News implements java.io.Serializable {
         publishTime = _publishTime;
         category = _category;
         keywords = _keywords;
-        collection = "false";
+        collection = "0";
     }
 
     public News(SQLiteDao.RawNews n){
@@ -68,9 +68,9 @@ public class News implements java.io.Serializable {
         }catch (JSONException e) {}
     }
 
-    public void setCollection(){ collection = "True"; }
+    public void setCollection(){ collection = "1"; }
 
-    public void deleteCollection(){ collection = "False"; }
+    public void deleteCollection(){ collection = "0"; }
 
     public void setImage(String _url) {
         String[] urls = _url.split(", ");

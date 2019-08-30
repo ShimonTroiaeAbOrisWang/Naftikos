@@ -45,6 +45,22 @@ public class SQLiteDao {
         return b;
     }
 
+    public News findOne(String newsId) {
+        db = SQLiteDatabase.openOrCreateDatabase(name, null);
+        Cursor cursor = db.rawQuery("select * from news where newsId=?", new String[]{newsId});
+        boolean b = cursor.moveToNext();
+        if (!b)
+            return null;
+        else{
+            String category = cursor.getString(cursor.getColumnIndex("category"));
+            String collection = cursor.getString(cursor.getColumnIndex("collection"));
+            String jsonData = cursor.getString(cursor.getColumnIndex("jsonData"));
+            cursor.close();
+            db.close();
+            return new News(new RawNews(newsId, category, collection, jsonData));
+        }
+    }
+
     public void update(String newsId, String collection){
         db = SQLiteDatabase.openOrCreateDatabase(name, null);
         db.execSQL("update news set collection=? where newsId=?", new String[]{collection, newsId});
@@ -57,9 +73,9 @@ public class SQLiteDao {
         db.close();
     }
 
-    public List<RawNews> findAllInCollection() {
+    public List<News> findAllInCollection() {
         db = SQLiteDatabase.openOrCreateDatabase(name, null);
-        List<RawNews> newsList = new ArrayList<>();
+        List<News> newsList = new ArrayList<>();
         Cursor cursor = db.rawQuery("select * from news where collection=?", new String[]{"1"});
         while(cursor.moveToNext()){
             String newsId = cursor.getString(cursor.getColumnIndex("newsId"));
@@ -67,23 +83,23 @@ public class SQLiteDao {
             String collection = cursor.getString(cursor.getColumnIndex("collection"));
             String jsonData = cursor.getString(cursor.getColumnIndex("jsonData"));
             RawNews news = new RawNews(newsId, category, collection, jsonData);
-            newsList.add(news);
+            newsList.add(new News(news));
         }
         cursor.close();
         db.close();
         return newsList;
     }
 
-    public List<RawNews> findAllInCategory(String category){
+    public List<News> findAllInCategory(String category){
         db = SQLiteDatabase.openOrCreateDatabase(name, null);
-        List<RawNews> newsList = new ArrayList<>();
+        List<News> newsList = new ArrayList<>();
         Cursor cursor = db.rawQuery("select * from news where category=?", new String[]{category});
         while(cursor.moveToNext()){
             String newsId = cursor.getString(cursor.getColumnIndex("newsId"));
             String collection = cursor.getString(cursor.getColumnIndex("collection"));
             String jsonData = cursor.getString(cursor.getColumnIndex("jsonData"));
             RawNews news = new RawNews(newsId, category, collection, jsonData);
-            newsList.add(news);
+            newsList.add(new News(news));
         }
         cursor.close();
         db.close();

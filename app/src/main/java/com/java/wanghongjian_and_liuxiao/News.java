@@ -37,11 +37,12 @@ public class News implements java.io.Serializable {
         content = "Arma virumque cano.";
     }
 
-    public News(String _newsID, String _title, String _content, String _publishTime, String _category, Vector<String> _keywords) {
+    public News(String _newsID, String _title, String _content, String _publishTime, String _category, Vector<String> _keywords, String _publisher) {
         newsID = _newsID;
         title = _title;
         content = _content;
         publishTime = _publishTime;
+        publisher = _publisher;
         category = _category;
         keywords = _keywords;
         collection = "0";

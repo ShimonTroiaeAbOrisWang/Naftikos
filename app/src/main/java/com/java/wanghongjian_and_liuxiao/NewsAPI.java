@@ -89,7 +89,7 @@ public class NewsAPI{
                 Vector<String> keywords = new Vector<>();
                 for (int j = 0; j < keywords_json.length(); j++)
                     keywords.add(keywords_json.getJSONObject(j).getString("word"));
-                News _news = new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("category"), keywords);
+                News _news = new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("category"), keywords, n.getString("publisher"));
                 if (n.getString("image") != null && !n.getString("image").equals("[]") && !n.getString("image").equals("")){
                     String image = n.getString("image");
                     _news.setImage(image.substring(1, image.length() - 1));
@@ -111,7 +111,7 @@ public class NewsAPI{
             Vector<String> keywords = new Vector<>();
             for (int j = 0; j < keywords_json.length(); j++)
                 keywords.add(keywords_json.getJSONObject(j).getString("word"));
-            _news = new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("category"), keywords);
+            _news = new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("category"), keywords, n.getString("publisher"));
             if (n.getString("image") != null && !n.getString("image").equals("[]") && !n.getString("image").equals("")) {
                 String image = n.getString("image");
                 _news.setImage(image.substring(1, image.length() - 1));

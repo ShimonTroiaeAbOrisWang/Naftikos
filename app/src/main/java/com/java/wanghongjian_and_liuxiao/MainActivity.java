@@ -11,6 +11,7 @@ import android.nfc.tech.TagTechnology;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
 import com.google.android.material.card.MaterialCardView;
 
@@ -202,6 +203,8 @@ public class MainActivity extends AppCompatActivity
         /* set the style of a news card for future creation */
         newsCardModelFirst = findViewById(R.id.news_card_01);
         newsCardModel = findViewById(R.id.news_card_02);
+        newsCardModelFirst.setVisibility(View.INVISIBLE);
+        newsCardModel.setVisibility(View.INVISIBLE);
 
         // swipe to refresh
         SwipeRefreshLayout refreshLayout = findViewById(R.id.news_refresh);
@@ -216,6 +219,9 @@ public class MainActivity extends AppCompatActivity
 
         getNewsFromServer();
         // loadNews();  // no longer needed
+
+        Snackbar.make(title, "Welcome!", Snackbar.LENGTH_LONG).setAction("Action", null).setDuration(2700).show();
+
     }
 
     @Override

@@ -71,7 +71,7 @@ public class NewsAPI{
                     String image = n.getString("image");
                     _news.setImage(image.substring(1, image.length() - 1));
                 }
-                if (n.getString("video") != null)
+                if (n.getString("video") != null && !n.getString("image").equals(""))
                     _news.setVideo(n.getString("video"));
                 news_list.add(_news);
                 db.add(_news);

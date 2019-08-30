@@ -349,7 +349,7 @@ public class MainActivity extends AppCompatActivity
             retriever.hasDialog = false;
         }
         // FIXME: 19.8.30 getMode = UPDATE_NEWES does not work!
-        // retriever.mode = getMode;
+        retriever.mode = getMode;
         retriever.execute("");
     }
 

@@ -98,7 +98,7 @@ public class News implements java.io.Serializable {
 class Image implements Runnable, java.io.Serializable {
     String imageURL, newsID, dir, file_dir = null;
     int index;
-    Bitmap image;
+    private Bitmap image;
 
     Image(String url, int _index, String _newsID, String _dir) {
         imageURL = url;

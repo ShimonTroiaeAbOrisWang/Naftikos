@@ -41,6 +41,7 @@ public class NewsAPI{
         Date now = new Date();
         cal = Calendar.getInstance();
         cal.setTime(now);
+        cal.add(Calendar.DATE, -30);
         endDate = cal.getTime();
         cal.add(Calendar.DATE, -10);
         startDate = cal.getTime();
@@ -48,42 +49,33 @@ public class NewsAPI{
         db = new SQLiteDao();
     }
 
+    public Vector<String> getSearchHistory(){ return search_history; }
+
     public Vector<News> getNews(String keyword, String category, int mode) {
         //Thread connect = new Thread(this);
         Vector<News> news_list = new Vector<>();
-        last_request = formRequest(keyword, category, mode);
-        parseNews(last_request);
-
-        JSONObject news = last_json;
-
-        if (news == null)
-            return news_list;
-        try {
-            JSONArray data = news.getJSONArray("data");
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject n = new JSONObject(data.get(i).toString());
-                JSONArray keywords_json = n.getJSONArray("keywords");
-                Vector<String> keywords = new Vector<>();
-                for (int j = 0; j < keywords_json.length(); j++)
-                    keywords.add(keywords_json.getJSONObject(j).getString("word"));
-                News _news = new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("category"), keywords);
-                if (n.getString("image") != null && !n.getString("image").equals("[]") && !n.getString("image").equals("")){
-                    String image = n.getString("image");
-                    _news.setImage(image.substring(1, image.length() - 1));
+        while (news_list.size() < 15){
+            last_request = formRequest(keyword, category, mode);
+            parseJSON(last_request);
+            JSONObject news = last_json;
+            if (news == null)
+                return news_list;
+            try {
+                JSONArray data = news.getJSONArray("data");
+                for (int i = 0; i < data.length(); i++) {
+                    News _news = parseNews(data.getJSONObject(i));
+                    news_list.add(_news);
+                    db.add(_news);
                 }
-                if (n.getString("video") != null && !n.getString("video").equals(""))
-                    _news.setVideo(n.getString("video"));
-                news_list.add(_news);
-                db.add(_news);
-            }
-        } catch (JSONException e) { }
+            } catch (JSONException e) { }
+        }
         return news_list;
     }
 
     public Vector<News> testGetNews(String request) {
         Vector<News> news_list = new Vector<>();
         last_request = request;
-        parseNews(last_request);
+        parseJSON(last_request);
 
         JSONObject news = last_json;
 
@@ -111,7 +103,24 @@ public class NewsAPI{
         return news_list;
     }
 
-    public Vector<String> getSearchHistory(){ return search_history; }
+    private News parseNews(JSONObject n){
+        News _news = null;
+        try {
+            //JSONObject n = new JSONObject(string_form_news);
+            JSONArray keywords_json = n.getJSONArray("keywords");
+            Vector<String> keywords = new Vector<>();
+            for (int j = 0; j < keywords_json.length(); j++)
+                keywords.add(keywords_json.getJSONObject(j).getString("word"));
+            _news = new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("category"), keywords);
+            if (n.getString("image") != null && !n.getString("image").equals("[]") && !n.getString("image").equals("")) {
+                String image = n.getString("image");
+                _news.setImage(image.substring(1, image.length() - 1));
+            }
+            if (n.getString("video") != null && !n.getString("video").equals("") && !n.getString("video").equals("[]"))
+                _news.setVideo(n.getString("video"));
+        }catch (JSONException e) {}
+        return _news;
+    }
 
     private String formRequest(String keyword, String category, int mode) {
         StringBuilder request = new StringBuilder(rawAPI);
@@ -125,7 +134,7 @@ public class NewsAPI{
         }else if (mode == 2){                           // 2 means to load news before
             request.append("&endDate=" + df.format(startDate));
             cal.setTime(startDate);
-            cal.add(Calendar.DATE, -2);
+            cal.add(Calendar.DATE, -3);
             startDate = cal.getTime();
             request.append("&startDate=" + df.format(startDate));
         }
@@ -145,7 +154,7 @@ public class NewsAPI{
         return request.toString();
     }
 
-    private void parseNews(String new_request) {
+    private void parseJSON(String new_request) {
         URL url;
         BufferedReader in;
         JSONObject parsedNews;

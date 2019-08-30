@@ -403,13 +403,13 @@ public class MainActivity extends AppCompatActivity
 
         inCardLayout.addView(textInCard);
 
-        TextView timeText = new TextView(this);
+        TextView postscriptText = new TextView(this);
         params.setMargins(40, 20, 40, 40);
-        timeText.setLayoutParams(params);
-        timeText.setText("4 hr ago"); // TODO: 19.8.30 specify time
-        timeText.setTextSize(12);
-        timeText.setTextColor(Color.rgb(0x90, 0x90, 0x90));
-        inCardLayout.addView(timeText);
+        postscriptText.setLayoutParams(params);
+        postscriptText.setText("1 hr ago        " + newsItem.category); // TODO: 19.8.30 specify time
+        postscriptText.setTextSize(12);
+        postscriptText.setTextColor(Color.rgb(0x90, 0x90, 0x90));
+        inCardLayout.addView(postscriptText);
 
         newCard.addView(inCardLayout);
 

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -25,8 +26,9 @@ import java.util.Vector;
 public class News implements java.io.Serializable {
     String newsID;
     String title, content, publishTime, language, url, crawlTime, publisher, category;
-    Video video;
-    Vector<Image> image;
+    String collection;
+    Video video = new Video();
+    Vector<Image> image = new Vector<>();;
     Vector<String> keywords; // keywords are listed according to their relevance from 0 to the end
     String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/wanghongjian_and_liuxiao/";
 
@@ -42,10 +44,35 @@ public class News implements java.io.Serializable {
         publishTime = _publishTime;
         category = _category;
         keywords = _keywords;
+        collection = "false";
     }
 
+    public News(SQLiteDao.RawNews n){
+        newsID = n.newsId;
+        category = n.category;
+        collection = n.collection;
+        try{
+            JSONObject raw_json = new JSONObject(n.jsonData);
+            video = new Video(raw_json.getString("video"), newsID, dir);
+            content = raw_json.getString("content");
+            publishTime = raw_json.getString("publishTime");
+            language = raw_json.getString("language");
+            url = raw_json.getString("url");
+            crawlTime = raw_json.getString("crawlTime");
+            publisher = raw_json.getString("publisher");
+            if (raw_json.getString("image") != null && !raw_json.getString("image").equals("")){
+                String[] images = raw_json.getString("iamge").split(", ");
+                for (int i=0;i<images.length;i++)
+                    image.add(new Image(images[i], i, newsID, dir));
+            }
+        }catch (JSONException e) {}
+    }
+
+    public void setCollection(){ collection = "True"; }
+
+    public void deleteCollection(){ collection = "False"; }
+
     public void setImage(String _url) {
-        image = new Vector<>();
         String[] urls = _url.split(", ");
         for (int i = 0; i < urls.length; i++) {
             Image img = new Image(urls[i], i, newsID, dir);
@@ -121,15 +148,17 @@ class Image implements Runnable, java.io.Serializable {
     @NonNull
     @Override
     public String toString() {
-        return file_dir;
+        return imageURL;
     }
 }
 
 class Video extends AsyncTask<String, Integer, Void> implements java.io.Serializable {
-    String vidioURL, newsID, dir, file_dir = null;
+    String videoURL, newsID, dir, file_dir = null;
+
+    Video(){ }
 
     Video(String url, String _newsID, String _dir) {
-        vidioURL = url;
+        videoURL = url;
         newsID = _newsID;
         dir = _dir;
         file_dir = dir + newsID + ".mp4";
@@ -142,9 +171,9 @@ class Video extends AsyncTask<String, Integer, Void> implements java.io.Serializ
         if (!file.exists()) {
             try {
                 int count;
-                if (vidioURL.substring(0, 5).equals("http:"))
-                    vidioURL = "https" + vidioURL.substring(4);
-                URL url = new URL(vidioURL);
+                if (videoURL.substring(0, 5).equals("http:"))
+                    videoURL = "https" + videoURL.substring(4);
+                URL url = new URL(videoURL);
                 HttpURLConnection tc = (HttpURLConnection) url.openConnection();
                 tc.connect();
                 int lenghtOfFile = tc.getContentLength();
@@ -161,5 +190,11 @@ class Video extends AsyncTask<String, Integer, Void> implements java.io.Serializ
         }else{ // if video has already been downloaded into external memory
         }
         return null;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return videoURL;
     }
 }

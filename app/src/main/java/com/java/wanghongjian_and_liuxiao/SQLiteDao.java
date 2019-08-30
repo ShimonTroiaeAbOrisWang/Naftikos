@@ -3,6 +3,9 @@ package com.java.wanghongjian_and_liuxiao;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +18,14 @@ public class SQLiteDao {
         db = SQLiteDatabase.openOrCreateDatabase(name, null);
         db.execSQL("create table if not exists news (newsId varchar(44), category varchar(20), collection varchar(5), jsonData varchar(2000))");
         db.close();
+    }
+
+    public void add(News news){
+        this.add(new RawNews(news));
+    }
+
+    public void add(RawNews rawNews){
+        this.add(rawNews.newsId, rawNews.category, rawNews.collection, rawNews.jsonData);
     }
 
     public void add(String newsId, String category, String collection, String jsonData) {
@@ -85,7 +96,30 @@ public class SQLiteDao {
         public String collection;
         public String jsonData;
 
-        public RawNews() {
+        public RawNews() { }
+
+        public RawNews(News n){
+            newsId = n.newsID;
+            category = n.category;
+            collection = n.collection;
+            JSONObject raw_json = new JSONObject();
+            try{
+                raw_json.put("video", n.video.toString());
+                raw_json.put("content", n.content);
+                raw_json.put("publishTime", n.publishTime);
+                raw_json.put("language", n.language);
+                raw_json.put("url", n.url);
+                raw_json.put("crawlTime", n.crawlTime);
+                raw_json.put("publisher", n.publisher);
+                StringBuilder image = new StringBuilder();
+                for (int i=0;i<n.image.size();i++) {
+                    if (i > 0)
+                        image.append(", ");
+                    image.append(n.image.get(i).toString());
+                }
+                raw_json.put("image", image.toString());
+                jsonData = raw_json.toString();
+            }catch (JSONException e) {}
         }
 
         public RawNews(String newsId, String category, String collection, String jsonData) {

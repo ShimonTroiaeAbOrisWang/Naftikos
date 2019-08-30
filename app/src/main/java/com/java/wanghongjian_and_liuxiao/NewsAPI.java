@@ -21,7 +21,7 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 
-public class NewsAPI{
+public class NewsAPI {
     private final String rawAPI = "https://api2.newsminer.net/svc/news/queryNewsList?";
     private Vector<String> search_history = new Vector<>();
     private Integer size;
@@ -41,7 +41,7 @@ public class NewsAPI{
         Date now = new Date();
         cal = Calendar.getInstance();
         cal.setTime(now);
-        cal.add(Calendar.DATE, -30);
+        cal.add(Calendar.DATE, -100);
         endDate = cal.getTime();
         cal.add(Calendar.DATE, -10);
         startDate = cal.getTime();
@@ -49,12 +49,15 @@ public class NewsAPI{
         db = new SQLiteDao();
     }
 
-    public Vector<String> getSearchHistory(){ return search_history; }
+    public Vector<String> getSearchHistory() {
+        return search_history;
+    }
 
     public Vector<News> getNews(String keyword, String category, int mode) {
         //Thread connect = new Thread(this);
         Vector<News> news_list = new Vector<>();
-        while (news_list.size() < 15){
+        int iteration = 0;
+        while (news_list.size() < 15 && iteration++ < 20) {
             last_request = formRequest(keyword, category, mode);
             parseJSON(last_request);
             JSONObject news = last_json;
@@ -67,7 +70,8 @@ public class NewsAPI{
                     news_list.add(_news);
                     db.add(_news);
                 }
-            } catch (JSONException e) { }
+            } catch (JSONException e) {
+            }
         }
         return news_list;
     }
@@ -90,7 +94,7 @@ public class NewsAPI{
                 for (int j = 0; j < keywords_json.length(); j++)
                     keywords.add(keywords_json.getJSONObject(j).getString("word"));
                 News _news = new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("category"), keywords, n.getString("publisher"));
-                if (n.getString("image") != null && !n.getString("image").equals("[]") && !n.getString("image").equals("")){
+                if (n.getString("image") != null && !n.getString("image").equals("[]") && !n.getString("image").equals("")) {
                     String image = n.getString("image");
                     _news.setImage(image.substring(1, image.length() - 1));
                 }
@@ -99,11 +103,12 @@ public class NewsAPI{
                 news_list.add(_news);
                 db.add(_news);
             }
-        } catch (JSONException e) { }
+        } catch (JSONException e) {
+        }
         return news_list;
     }
 
-    private News parseNews(JSONObject n){
+    private News parseNews(JSONObject n) {
         News _news = null;
         try {
             //JSONObject n = new JSONObject(string_form_news);
@@ -118,7 +123,8 @@ public class NewsAPI{
             }
             if (n.getString("video") != null && !n.getString("video").equals("") && !n.getString("video").equals("[]"))
                 _news.setVideo(n.getString("video"));
-        }catch (JSONException e) {}
+        } catch (JSONException e) {
+        }
         return _news;
     }
 
@@ -128,10 +134,11 @@ public class NewsAPI{
             request.append("&size=" + size);
         if (mode == 1) {                                // 1 means to update news
             request.append("&startDate=" + df.format(endDate));
-            cal.setTime(new Date());
+            cal.setTime(endDate);
+            cal.add(Calendar.DATE, +1);
             endDate = cal.getTime();
             request.append("&endDate=" + df.format(endDate));
-        }else if (mode == 2){                           // 2 means to load news before
+        } else if (mode == 2) {                           // 2 means to load news before
             request.append("&endDate=" + df.format(startDate));
             cal.setTime(startDate);
             cal.add(Calendar.DATE, -3);

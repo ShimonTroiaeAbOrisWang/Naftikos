@@ -70,7 +70,8 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginBottom="0dp"
                 android:backgroundTint="#74A4C4"
-                app:cardElevation="6dp">
+                app:cardElevation="6dp"
+                android:id="@+id/news_page_title_card">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"

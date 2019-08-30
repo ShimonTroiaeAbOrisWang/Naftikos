@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -52,6 +53,7 @@ public class NewsPage extends AppCompatActivity {
         if (!news.image.isEmpty()) {
             AppCompatImageView coverImage = findViewById(R.id.news_cover_img);
             coverImage.setImageBitmap(news.image.elementAt(0).getImage());
+            // FIXME: 19.8.31 image does not display
         }
 
         /* hide title in expanded view */
@@ -87,7 +89,7 @@ public class NewsPage extends AppCompatActivity {
         button.setImageDrawable(addedToFavourite ? added_icon: not_added_icon);
         button.show();
 
-        Snackbar.make(view, addedToFavourite ? "Added to favourite." : "Removed from favourite.", Snackbar.LENGTH_LONG)
+        Snackbar.make(view, addedToFavourite ? "News added to your Bookmarks." : "News removed from your Bookmarks.", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 
     }

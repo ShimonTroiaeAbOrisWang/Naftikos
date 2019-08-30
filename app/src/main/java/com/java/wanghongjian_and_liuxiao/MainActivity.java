@@ -16,6 +16,8 @@ import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
 import com.google.android.material.card.MaterialCardView;
 
 import android.os.Environment;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
@@ -39,6 +41,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.Random;
@@ -70,9 +74,11 @@ public class MainActivity extends AppCompatActivity
     private static final String[] homepageModeTitles = {"Latest", "Random", "Personal Feeds", "Finance", "Education", "Entertainment", "Sports", "Technology", "Autos", "Military", "Culture", "Society", "Health"};
     private static final int cardBackgroundColors [] = {Color.rgb(0xF0-2, 0xF0, 0xF0), Color.rgb(0xF3-2, 0xF0, 0xF0), Color.rgb(0xF0-2, 0xF3, 0xF0), Color.rgb(0xF0-2, 0xF0, 0xF3),
             Color.rgb(0xEE-2, 0xF0, 0xF0), Color.rgb(0xF0-2, 0xEE, 0xF0), Color.rgb(0xF0-2, 0xF0, 0xEE),
-            Color.rgb(0xF2-2, 0xF2, 0xF0), Color.rgb(0xF2-2, 0xF0, 0xF2), Color.rgb(0xF0-2, 0xF2, 0xF2)};
+            Color.rgb(0xF2-2, 0xF2, 0xF0), Color.rgb(0xF2-2, 0xF0, 0xF2), Color.rgb(0xF0-2, 0xF2, 0xF2),
+            Color.rgb(0xEB-2, 0xF6, 0xF0), Color.rgb(0xF0-2, 0xEB, 0xF6), Color.rgb(0xF6-2, 0xF0, 0xEB),
+            Color.rgb(0xE5-2, 0xE5, 0xE5)};
 
-    private static final int numberOfCardBackground = 10;
+    private static final int numberOfCardBackground = 14;
 
     public static Context context;
     TextView title;
@@ -83,6 +89,7 @@ public class MainActivity extends AppCompatActivity
     AlertDialog searchDialog;
     TextInputEditText searchDialogText;
     MaterialCardView newsCardModelFirst, newsCardModel;
+    int maxScroll = 0;
 
     Vector<News> newsList;
     static News newsToDisplay;
@@ -156,6 +163,21 @@ public class MainActivity extends AppCompatActivity
                 /* when title is clicked, open the navigation drawer */
                 DrawerLayout _drawer = findViewById(R.id.drawer_layout);
                 _drawer.openDrawer(GravityCompat.START);
+            }
+        });
+
+        /* swipe down to load more news! */
+        final ScrollView mainScroll = findViewById(R.id.main_scroll_view);
+        mainScroll.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
+                    maxScroll = mainScroll.getChildAt(0).getHeight() - mainScroll.getHeight() + mainScroll.getPaddingBottom() + mainScroll.getPaddingTop();
+                    if (mainScroll.getScrollY() >= maxScroll) {
+                        getNewsFromServer(LOAD_NEWS_BEFORE);
+                    }
+                }
+                return false;
             }
         });
 
@@ -353,12 +375,7 @@ public class MainActivity extends AppCompatActivity
     public void getNewsFromServer () {getNewsFromServer(OTHERS);}
 
     public void getNewsFromServer(int getMode) {
-        newsList.clear();
         AsyncNewsRetriever retriever = new AsyncNewsRetriever();
-        if (getMode == UPDATE_NEWS) {
-            retriever.hasDialog = false;
-        }
-        // FIXME: 19.8.30 getMode = UPDATE_NEWES does not work!
         retriever.mode = getMode;
         retriever.execute("");
     }
@@ -377,6 +394,17 @@ public class MainActivity extends AppCompatActivity
             newsCounter += 1;
             // TODO: 19.8.15 specify params for news cards
         }
+
+        TextView textSwipeMore = new TextView(this);
+        textSwipeMore.setText("Swipe down to load more news.");
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, 45, 0, 45);
+        textSwipeMore.setLayoutParams(params);
+        textSwipeMore.setGravity(Gravity.CENTER);
+        textSwipeMore.setTextColor(Color.rgb(0x87, 0x87, 0x87));
+        textSwipeMore.setTextSize(15);
+
+        newsContainer.addView(textSwipeMore);
 
         /* end the refresh process on finish */
         SwipeRefreshLayout refreshLayout = findViewById(R.id.news_refresh);
@@ -444,17 +472,15 @@ public class MainActivity extends AppCompatActivity
     /* load news in background to improve UI smoothness */
     private class AsyncNewsRetriever extends AsyncTask<String, String, Vector<News>> {
 
-        private String resp;
         ProgressDialog progressDialog;
         public int mode = OTHERS;
-        public boolean hasDialog = true;
 
         @Override
         protected Vector<News> doInBackground(String... params) {
             publishProgress("Loading..."); // Calls onProgressUpdate()
             try {
                 if (isAfterSearch) {
-                    return api.getNews(searchString, null, OTHERS);
+                    return api.getNews(searchString, null, mode);
                 } else {
                     String[] categories = {"", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康"};
                     //return api.testGetNews("https://api2.newsminer.net/svc/news/queryNewsList?words=野熊&size=1&startDate=2018-08-15&endDate=2018-08-21");
@@ -462,7 +488,6 @@ public class MainActivity extends AppCompatActivity
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                resp = e.getMessage();
             }
             return null;
         }
@@ -470,7 +495,7 @@ public class MainActivity extends AppCompatActivity
 
         protected void onPostExecute(Vector<News> v) {
             // execution of result of Long time consuming operation
-            if (hasDialog) {
+            if (mode != UPDATE_NEWS) {
                 progressDialog.dismiss();
             }
 
@@ -482,17 +507,26 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
                 newsList = v;
+            } else if (mode == LOAD_NEWS_BEFORE) {
+                newsList.addAll(v);
+                // FIXME: 19.8.31 sometimes, LOAD_NEWS_BEFORE mode return a vector of news that are already in newsList!!
             } else {
                 newsList = v;
             }
             loadNews();
+            if (mode == LOAD_NEWS_BEFORE) {
+                if (v.isEmpty()) {
+                    Snackbar.make(title, "No more news.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                }
+                    ScrollView mainScroll = findViewById(R.id.main_scroll_view);
+                    mainScroll.scrollTo(0, maxScroll);
+            }
         }
-
 
         @Override
         protected void onPreExecute() {
-            if (hasDialog) {
-                progressDialog = ProgressDialog.show(MainActivity.this, "Loading", "Ναυτικός is updating news...");
+            if (mode != UPDATE_NEWS) {
+                progressDialog = ProgressDialog.show(MainActivity.this, "Loading", (mode ==  LOAD_NEWS_BEFORE ? "Ναυτικός is loading more news...": "Ναυτικός is updating news..."));
             }
         }
     }

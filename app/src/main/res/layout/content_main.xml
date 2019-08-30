@@ -8,7 +8,10 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/news_refresh">
 
     <ScrollView
 
@@ -120,6 +123,8 @@
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
     <LinearLayout

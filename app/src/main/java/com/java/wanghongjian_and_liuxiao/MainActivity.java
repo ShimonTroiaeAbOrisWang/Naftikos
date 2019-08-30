@@ -28,6 +28,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.Menu;
 import android.view.ViewGroup;
@@ -174,7 +175,7 @@ public class MainActivity extends AppCompatActivity
                 homePageMode = HOME_SEARCH;
                 title.setText ("Search: " + searchString + ' ');
                 getNewsFromServer();
-                loadNews();
+                // loadNews();
             }
         });
 
@@ -190,6 +191,25 @@ public class MainActivity extends AppCompatActivity
         /* set the style of a news card for future creation */
         newsCardModelFirst = findViewById(R.id.news_card_01);
         newsCardModel = findViewById(R.id.news_card_02);
+
+        // swipe to refresh
+        SwipeRefreshLayout refreshLayout = findViewById(R.id.news_refresh);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //getNewsFromServer();  // so as not to invoke a loading dialog
+                NewsAPI api = new NewsAPI();
+                if (isAfterSearch) {
+                    newsList = api.getNews(searchString, null, OTHERS);
+                } else {
+                    String [] categories = { "", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康" };
+                    newsList = api.getNews("", categories[homePageMode], OTHERS);     // refer to the top for modes
+                }
+                loadNews();
+            }
+        });
+
+
 
         getNewsFromServer();
         // loadNews();  // no longer needed
@@ -357,6 +377,10 @@ public class MainActivity extends AppCompatActivity
             newsCounter += 1;
             // TODO: 19.8.15 specify params for news cards
         }
+
+        /* end the refresh process on finish */
+        SwipeRefreshLayout refreshLayout = findViewById(R.id.news_refresh);
+        refreshLayout.setRefreshing(false);
 
     }
 

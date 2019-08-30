@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity
     TextInputEditText searchDialogText;
     MaterialCardView newsCardModelFirst, newsCardModel;
 
+    NewsAPI api;
     Vector<News> newsList;
 
 

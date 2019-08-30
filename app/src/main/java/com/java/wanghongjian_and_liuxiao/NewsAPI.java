@@ -42,7 +42,7 @@ public class NewsAPI{
         cal = Calendar.getInstance();
         cal.setTime(now);
         endDate = cal.getTime();
-        cal.add(Calendar.DATE, -5);
+        cal.add(Calendar.DATE, -10);
         startDate = cal.getTime();
         size = 15;
         db = new SQLiteDao();

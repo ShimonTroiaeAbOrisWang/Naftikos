@@ -4,7 +4,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.nfc.tech.TagTechnology;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.Random;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity
@@ -64,6 +67,11 @@ public class MainActivity extends AppCompatActivity
     private static final int HOME_HEALTH = 12;
 
     private static final String[] homepageModeTitles = {"Latest", "Random", "Personal Feeds", "Finance", "Education", "Entertainment", "Sports", "Technology", "Autos", "Military", "Culture", "Society", "Health"};
+    private static final int cardBackgroundColors [] = {Color.rgb(0xF0-2, 0xF0, 0xF0), Color.rgb(0xF3-2, 0xF0, 0xF0), Color.rgb(0xF0-2, 0xF3, 0xF0), Color.rgb(0xF0-2, 0xF0, 0xF3),
+            Color.rgb(0xEE-2, 0xF0, 0xF0), Color.rgb(0xF0-2, 0xEE, 0xF0), Color.rgb(0xF0-2, 0xF0, 0xEE),
+            Color.rgb(0xF2-2, 0xF2, 0xF0), Color.rgb(0xF2-2, 0xF0, 0xF2), Color.rgb(0xF0-2, 0xF2, 0xF2)};
+
+    private static final int numberOfCardBackground = 10;
 
     public static Context context;
     TextView title;
@@ -374,14 +382,36 @@ public class MainActivity extends AppCompatActivity
         /* it is fucking stupid that Android view does not support cloning! */
         newCard.setLayoutParams(modelCard.getLayoutParams());
         newCard.setCardElevation(modelCard.getCardElevation());
-        newCard.setCardBackgroundColor(modelCard.getCardBackgroundColor());
-        newCard.setBackground(modelCard.getBackground());
+        //newCard.setCardBackgroundColor(modelCard.getCardBackgroundColor());
+        //newCard.setBackground(modelCard.getBackground());
+        Random random = new Random();
+        newCard.setBackgroundColor(cardBackgroundColors[random.nextInt(numberOfCardBackground)]);
         newCard.setForegroundGravity(modelCard.getForegroundGravity());
+
+        LinearLayout inCardLayout = new LinearLayout(this);
+        inCardLayout.setOrientation(LinearLayout.VERTICAL);
+        inCardLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         TextView textInCard = new TextView(this);
         // TODO: 19.8.15 put content, image, etc. to the card
         textInCard.setText(newsItem.getTitle());
-        newCard.addView(textInCard);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(40, 40, 40, 20);
+        textInCard.setLayoutParams(params);
+        textInCard.setTextColor(Color.rgb(0x27, 0x27, 0x27));
+        textInCard.setTextSize(17);
+
+        inCardLayout.addView(textInCard);
+
+        TextView timeText = new TextView(this);
+        params.setMargins(40, 20, 40, 40);
+        timeText.setLayoutParams(params);
+        timeText.setText("4 hr ago"); // TODO: 19.8.30 specify time
+        timeText.setTextSize(12);
+        timeText.setTextColor(Color.rgb(0x90, 0x90, 0x90));
+        inCardLayout.addView(timeText);
+
+        newCard.addView(inCardLayout);
 
         newCard.setClickable(true);
         newCard.setOnClickListener(new View.OnClickListener() {
@@ -451,4 +481,5 @@ public class MainActivity extends AppCompatActivity
     public static Context getContext() {
         return context;
     }
+
 }

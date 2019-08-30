@@ -2,6 +2,7 @@ package com.java.wanghongjian_and_liuxiao;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 public class NewsPage extends AppCompatActivity {
 
@@ -39,6 +41,12 @@ public class NewsPage extends AppCompatActivity {
         news = MainActivity.newsToDisplay;
         TextView textView = findViewById(R.id.news_text);
         textView.setText(news.content);
+
+        /* load image */
+        if (!news.image.isEmpty()) {
+            AppCompatImageView coverImage = findViewById(R.id.news_cover_img);
+            coverImage.setImageBitmap(news.image.elementAt(0).getImage());
+        }
 
         /* hide title in expanded view */
         final CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.news_layout);
@@ -72,6 +80,9 @@ public class NewsPage extends AppCompatActivity {
         button.hide();
         button.setImageDrawable(addedToFavourite ? added_icon: not_added_icon);
         button.show();
+
+        Snackbar.make(view, addedToFavourite ? "Added to favourite." : "Removed from favourite.", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
 
     }
 }

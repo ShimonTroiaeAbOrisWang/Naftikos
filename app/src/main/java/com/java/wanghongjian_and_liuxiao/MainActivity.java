@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity
 
     Vector<News> newsList;
     static News newsToDisplay;
+    NewsAPI api;
 
 
     @Override
@@ -111,6 +112,8 @@ public class MainActivity extends AppCompatActivity
 
         newsList = new Vector<News>();
         context = this;
+
+        api = new NewsAPI();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -443,7 +446,6 @@ public class MainActivity extends AppCompatActivity
         protected Vector<News> doInBackground(String... params) {
             publishProgress("Loading..."); // Calls onProgressUpdate()
             try {
-                NewsAPI api = new NewsAPI();
                 if (isAfterSearch) {
                     return api.getNews(searchString, null, OTHERS);
                 } else {
@@ -464,6 +466,14 @@ public class MainActivity extends AppCompatActivity
             if (hasDialog) {
                 progressDialog.dismiss();
             }
+            /*
+            if (mode == UPDATE_NEWS) {
+                for (News news: v) {
+                    newsList.add(0, news);
+                }
+            } else 
+
+             */
             newsList = v;
             loadNews();
         }

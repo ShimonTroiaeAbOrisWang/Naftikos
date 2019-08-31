@@ -31,6 +31,7 @@ public class NewsAPI {
     private String last_request;
     private Calendar cal;
     private SQLiteDao db;
+    public Vector<News> newsList;
 
     DateFormat df;
 
@@ -73,7 +74,16 @@ public class NewsAPI {
             } catch (JSONException e) {
             }
         }
+        newsList = news_list;
         return news_list;
+    }
+
+    public boolean getCoverImage(){
+        for (News n: newsList){
+            if (n.image.size() > 0)
+                n.image.firstElement().getImage();
+        }
+        return true;
     }
 
     public Vector<News> testGetNews(String request) {

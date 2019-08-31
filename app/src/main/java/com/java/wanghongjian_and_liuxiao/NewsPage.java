@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +24,12 @@ public class NewsPage extends AppCompatActivity {
     Drawable not_added_icon;
     Drawable added_icon;
     News news;
+    int imageTotal;
+    int currentLoadedImages;
+    int displayImage = 0;
+    boolean [] imageLoaded;
+
+    CountDownTimer countDownTimer;
 
 
     @Override
@@ -51,15 +58,44 @@ public class NewsPage extends AppCompatActivity {
         }
 
         /* load image */
-        if (!news.image.isEmpty()) {
-            AppCompatImageView coverImage = findViewById(R.id.news_cover_img);
-            Bitmap coverBitmap = news.image.elementAt(0).getImage();
-            if (coverBitmap != null) {
-                coverImage.setImageBitmap(coverBitmap);
-            } else {
-                Snackbar.make(findViewById(R.id.news_layout), "Image is null.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        imageTotal = news.image.size();
+        currentLoadedImages = 0;
+        final AppCompatImageView coverImage = findViewById(R.id.news_cover_img);
+        if (imageTotal != 0) {
+            for (Image img: news.image) {
+                boolean firstFlag = true;
+                if (img.getImage() != null) { // this is needed: every image must be iterated first, otherwise it does not display
+                    if (firstFlag) {
+                        coverImage.setImageBitmap(img.getImage());
+                        currentLoadedImages = 1;
+                    }
+                    firstFlag = false;
+                }
             }
-            // FIXME: 19.8.31 the bitmap returned by getImage() is a null
+
+            /* images cycler */
+            countDownTimer = new CountDownTimer(2000*100, 2000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    /* load image */
+                    if (currentLoadedImages < imageTotal) {
+                        Image img = news.image.elementAt(currentLoadedImages);
+                        if (img.downloaded) {
+                            coverImage.setImageBitmap(img.getImage());
+                            currentLoadedImages += 1;
+                        }
+                    } else {
+                        Image img = news.image.elementAt(displayImage);
+                        if (img.downloaded) {
+                            coverImage.setImageBitmap(img.getImage());
+                        }
+                        displayImage = (displayImage + 1) % imageTotal;
+                    }
+                }
+                @Override
+                public void onFinish() { }
+            }.start();
+
         }
 
         /* hide title in expanded view */

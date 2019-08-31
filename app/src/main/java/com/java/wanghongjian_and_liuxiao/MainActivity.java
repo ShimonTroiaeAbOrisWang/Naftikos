@@ -391,6 +391,17 @@ public class MainActivity extends AppCompatActivity
         ScrollView mainScroll = findViewById(R.id.main_scroll_view);
         mainScroll.scrollTo(0, 0);
 
+
+        /* debug: load news with >= 2 images  */
+        Vector<News> v = new Vector<>();
+        for (News news: newsList) {
+            if (news.image.size() > 1) {
+                v.add(news);
+            }
+        }
+        newsList = v;
+        /* debug: load news with >= 2 images  */
+
         int newsCounter = 0;
         for (News newsItem : newsList) {
             newsContainer.addView(generateHomeNewsCard(newsCounter, newsItem));

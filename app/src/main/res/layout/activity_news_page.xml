@@ -27,7 +27,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="225dp"
-                android:src="@drawable/testnewsbg2"
+                android:src="@drawable/loadimg"
                 android:scaleType="centerCrop"
                 android:id="@+id/news_cover_img"/>
 

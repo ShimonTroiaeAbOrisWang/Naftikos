@@ -97,10 +97,11 @@ public class News implements java.io.Serializable {
 }
 
 class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializable {
-    ProgressDialog progressDialog;
+
     String imageURL, newsID, dir, file_dir = null;
     int index;
     private Bitmap image;
+    public boolean downloaded = false;
 
     Image(String url, int _index, String _newsID, String _dir) {
         imageURL = url;
@@ -133,6 +134,7 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        downloaded = true;
         super.onPostExecute(aVoid);
         //TODO: here you can call a function, with the 'image' as a parameter
     }

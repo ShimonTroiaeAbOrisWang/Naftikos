@@ -57,7 +57,7 @@ public class NewsAPI {
         //Thread connect = new Thread(this);
         Vector<News> news_list = new Vector<>();
         int iteration = 0;
-        while (news_list.size() < 15 && iteration++ < 20) {
+        while (news_list.size() < 15 && iteration++ < 30) {
             last_request = formRequest(keyword, category, mode);
             parseJSON(last_request);
             JSONObject news = last_json;

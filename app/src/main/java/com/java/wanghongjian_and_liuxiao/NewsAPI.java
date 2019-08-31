@@ -135,13 +135,13 @@ public class NewsAPI {
         if (mode == 1) {                                // 1 means to update news
             request.append("&startDate=" + df.format(endDate));
             cal.setTime(endDate);
-            cal.add(Calendar.DATE, +1);
+            cal.add(Calendar.HOUR, +3);
             endDate = cal.getTime();
             request.append("&endDate=" + df.format(endDate));
         } else if (mode == 2) {                           // 2 means to load news before
             request.append("&endDate=" + df.format(startDate));
             cal.setTime(startDate);
-            cal.add(Calendar.DATE, -1);
+            cal.add(Calendar.HOUR, -3);
             startDate = cal.getTime();
             request.append("&startDate=" + df.format(startDate));
         }

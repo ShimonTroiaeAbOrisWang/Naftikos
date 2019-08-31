@@ -21,7 +21,7 @@
             app:title="Generic News"
             android:id="@+id/news_layout"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline.Shadow"
-            app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Medium.Light"
             app:expandedTitleMarginBottom="35dp"
             >
 

@@ -577,6 +577,16 @@ public class MainActivity extends AppCompatActivity
 
         protected void onPostExecute(Vector<News> v) {
             // execution of result of Long time consuming operation
+
+            // FIXME: 19.8.31 only in the following way can the image of news be loaded in the home page!
+            for (News news: v) {
+                if (!news.image.isEmpty()) {
+                    if (!news.image.elementAt(0).hasImage()) {
+                        news.image.elementAt(0).getImage();
+                    }
+                }
+            }
+
             if (mode != UPDATE_NEWS) {
                 progressDialog.dismiss();
             }
@@ -604,12 +614,7 @@ public class MainActivity extends AppCompatActivity
                     mainScroll.scrollTo(0, maxScroll);
             }
 
-            // FIXME: 19.8.31 only in the following way can the image of news be loaded in the home page!
-            for (News news: newsList) {
-                if (!news.image.isEmpty()) {
-                    news.image.elementAt(0).getImage();
-                }
-            }
+
         }
 
         @Override

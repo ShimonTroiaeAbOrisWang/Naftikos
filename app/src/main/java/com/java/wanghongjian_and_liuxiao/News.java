@@ -1,5 +1,6 @@
 package com.java.wanghongjian_and_liuxiao;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -77,8 +78,6 @@ public class News implements java.io.Serializable {
         String[] urls = _url.split(", ");
         for (int i = 0; i < urls.length; i++) {
             Image img = new Image(urls[i], i, newsID, dir);
-            if (i == 0)
-                img.getImage();
             image.add(img);
         }
     }
@@ -96,7 +95,8 @@ public class News implements java.io.Serializable {
     }
 }
 
-class Image implements Runnable, java.io.Serializable {
+class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializable {
+    ProgressDialog progressDialog;
     String imageURL, newsID, dir, file_dir = null;
     int index;
     private Bitmap image;
@@ -110,10 +110,8 @@ class Image implements Runnable, java.io.Serializable {
     }
 
     @Override
-    public void run() {
+    protected Void doInBackground(String... strings) {
         try {
-            if (file_dir != null)
-                return;
             if (imageURL.substring(0, 5).equals("http:"))
                 imageURL = "https" + imageURL.substring(4);
             URL url = new URL(imageURL);
@@ -129,13 +127,19 @@ class Image implements Runnable, java.io.Serializable {
         } catch (MalformedURLException e) {
         } catch (IOException e) {
         }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        //TODO: here you can call a function, with the 'image' as a parameter
     }
 
     public Bitmap getImage() {
         File file = new File(file_dir);
         if (!file.exists()) {
-            Thread connect = new Thread(this);
-            connect.start();
+            this.execute();
         } else {
             try {
                 FileInputStream in = new FileInputStream(file);
@@ -154,6 +158,7 @@ class Image implements Runnable, java.io.Serializable {
 }
 
 class Video extends AsyncTask<String, Integer, Void> implements java.io.Serializable {
+    ProgressDialog progressDialog;
     String videoURL, newsID, dir, file_dir = null;
 
     Video(){ }

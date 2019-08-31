@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -52,8 +53,10 @@ public class NewsPage extends AppCompatActivity {
         /* load image */
         if (!news.image.isEmpty()) {
             AppCompatImageView coverImage = findViewById(R.id.news_cover_img);
-            coverImage.setImageBitmap(news.image.elementAt(0).getImage());
-            // FIXME: 19.8.31 image does not display
+            Bitmap coverBitmap = news.image.elementAt(0).getImage();
+
+            coverImage.setImageBitmap(coverBitmap);
+            // FIXME: 19.8.31 the bitmap returned by getImage() is a null
         }
 
         /* hide title in expanded view */

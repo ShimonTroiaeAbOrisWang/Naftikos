@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:theme="@style/ThemeOverlay.AppCompat.Light">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/ThemeOverlay.AppCompat.Light">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -28,9 +29,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="23dp"
-        android:layout_marginBottom="51dp"
+        android:layout_marginBottom="25dp"
         android:onClick="showSearchPage"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorSecondary"
         app:elevation="12dp"
         app:fabSize="auto"
         app:srcCompat="@drawable/ic_search_black_24dp" />

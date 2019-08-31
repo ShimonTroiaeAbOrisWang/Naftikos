@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
 import com.google.android.material.card.MaterialCardView;
 
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -38,6 +39,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -99,6 +101,8 @@ public class MainActivity extends AppCompatActivity
     static News newsToDisplay;
     NewsAPI api;
     HashSet<String> viewedNewsSet;
+    HashSet<String> imageDisplayedSet;
+    CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,6 +246,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         viewedNewsSet = new HashSet<>();
+        imageDisplayedSet = new HashSet<>();
 
         getNewsFromServer();
         // loadNews();  // no longer needed
@@ -425,6 +430,29 @@ public class MainActivity extends AppCompatActivity
         SwipeRefreshLayout refreshLayout = findViewById(R.id.news_refresh);
         refreshLayout.setRefreshing(false);
 
+        imageDisplayedSet.clear();
+        countDownTimer = new CountDownTimer(1500*200, 1500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                for (News news: newsList) {
+                    if (!news.image.isEmpty() && !imageDisplayedSet.contains(news.newsID)) {
+                        if (news.image.elementAt(0).hasImage() && !news.image.elementAt(0).unsafeURL) {
+                            LinearLayout theLayout = news.layout;
+                            ImageView img = new ImageView (getContext());
+                            img.setImageBitmap(news.image.elementAt(0).getImage());
+                            theLayout.addView(img);
+                            imageDisplayedSet.add(news.newsID);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
+
     }
 
     private MaterialCardView generateHomeNewsCard(final int newsCounter, News newsItem) {
@@ -434,22 +462,34 @@ public class MainActivity extends AppCompatActivity
 
         /* it is fucking stupid that Android view does not support cloning! */
         newCard.setLayoutParams(modelCard.getLayoutParams());
-        newCard.setCardElevation(modelCard.getCardElevation());
-        //newCard.setCardBackgroundColor(modelCard.getCardBackgroundColor());
-        //newCard.setBackground(modelCard.getBackground());
-        Random random = new Random();
-        newCard.setBackgroundColor(cardBackgroundColors[random.nextInt(numberOfCardBackground)]);
-        newCard.setForegroundGravity(modelCard.getForegroundGravity());
+
 
         LinearLayout inCardLayout = new LinearLayout(this);
         inCardLayout.setOrientation(LinearLayout.VERTICAL);
         inCardLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
+        final TextView publisherText = new TextView(this);
+        publisherText.setText(newsItem.publisher);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);;
+        params.setMargins(40, 17, 40, 10);
+        publisherText.setLayoutParams(params);
+        publisherText.setTextSize(15);
+        publisherText.setTextColor(Color.rgb(0x50, 0x68, 0x86));
+
+        inCardLayout.addView(publisherText);
+
+        View lineView = new View (this);
+        ViewGroup.LayoutParams lineParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+        lineView.setLayoutParams(lineParams);
+        lineView.setBackgroundColor(Color.rgb(0xC0, 0xC0, 0xC0));
+
+        inCardLayout.addView(lineView);
+
         final TextView textInCard = new TextView(this);
         // TODO: 19.8.15 put content, image, etc. to the card
         textInCard.setText(newsItem.getTitle());
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(40, 40, 40, 20);
+
+        params.setMargins(40, 15, 40, 10);
         textInCard.setLayoutParams(params);
         if (viewedNewsSet.contains(newsItem.newsID)) {
             textInCard.setTextColor(DIM_TITLE_COLOR);
@@ -461,12 +501,17 @@ public class MainActivity extends AppCompatActivity
         inCardLayout.addView(textInCard);
 
         TextView postscriptText = new TextView(this);
-        params.setMargins(40, 20, 40, 40);
+        params.setMargins(40, 8, 40, 40);
         postscriptText.setLayoutParams(params);
-        postscriptText.setText("1 hr ago       " + newsItem.category + "       " + newsItem.publisher); // TODO: 19.8.30 specify time
+        postscriptText.setText("1 hr ago           " + newsItem.category); // TODO: 19.8.30 specify time
         postscriptText.setTextSize(12);
         postscriptText.setTextColor(Color.rgb(0x90, 0x90, 0x90));
         inCardLayout.addView(postscriptText);
+
+
+
+
+        newsItem.layout = inCardLayout;
 
         newCard.addView(inCardLayout);
 

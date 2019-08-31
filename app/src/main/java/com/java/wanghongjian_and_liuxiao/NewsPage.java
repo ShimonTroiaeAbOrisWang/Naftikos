@@ -3,6 +3,8 @@ package com.java.wanghongjian_and_liuxiao;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -146,4 +148,5 @@ public class NewsPage extends AppCompatActivity {
                 .setAction("Action", null).show();
 
     }
+
 }

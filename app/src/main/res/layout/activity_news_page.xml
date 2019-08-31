@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewsPage">
+    tools:context=".NewsPage"
+    android:theme="@style/ThemeOverlay.AppCompat.Light">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -24,12 +25,17 @@
             app:expandedTitleMarginBottom="35dp"
             >
 
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="225dp"
                 android:src="@drawable/loadimg"
                 android:scaleType="centerCrop"
+                android:background="#FFFFFF"
                 android:id="@+id/news_cover_img"/>
+
+
+
 
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
@@ -49,7 +55,7 @@
         android:layout_marginEnd="14dp"
         android:id="@+id/news_favourite"
         android:onClick="toggleFavourite"
-        app:backgroundTint="@color/colorPrimaryDark"
+        app:backgroundTint="@color/colorAccent"
         app:elevation="11dp"
         app:fabSize="auto"
         />
@@ -67,11 +73,11 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-9dp"
+                android:layout_marginTop="-12dp"
                 android:layout_marginBottom="0dp"
-                android:backgroundTint="#74A4C4"
+                app:cardBackgroundColor="#74A4C4"
                 app:cardElevation="6dp"
-                app:cardCornerRadius="9dp"
+                app:cardCornerRadius="14dp"
                 android:id="@+id/news_page_title_card">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -84,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="19dp"
                         android:layout_marginEnd="52dp"
                         android:layout_marginBottom="0dp"
                         android:lineSpacingExtra="6sp"

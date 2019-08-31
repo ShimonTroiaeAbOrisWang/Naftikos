@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.widget.LinearLayout;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,8 @@ public class News implements java.io.Serializable {
     Vector<Image> image = new Vector<>();;
     Vector<String> keywords; // keywords are listed according to their relevance from 0 to the end
     String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/wanghongjian_and_liuxiao/";
+
+    public LinearLayout layout = null;
 
     public News() {
         title = "Default News Title";
@@ -155,6 +158,10 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
             }
         }
         return image;
+    }
+
+    public boolean hasImage () {
+        return (image != null);
     }
 
     @NonNull

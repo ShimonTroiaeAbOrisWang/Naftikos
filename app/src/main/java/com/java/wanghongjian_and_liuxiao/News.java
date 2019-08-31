@@ -102,6 +102,7 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
     int index;
     private Bitmap image;
     public boolean downloaded = false;
+    public boolean unsafeURL = false;
 
     Image(String url, int _index, String _newsID, String _dir) {
         imageURL = url;
@@ -128,6 +129,7 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
             out.close();
         } catch (MalformedURLException e) {
         } catch (IOException e) {
+            unsafeURL = true;
         }
         return null;
     }
@@ -140,6 +142,8 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
     }
 
     public Bitmap getImage() {
+        if (image != null)
+            return image;
         File file = new File(file_dir);
         if (!file.exists()) {
             this.execute();

@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.Vector;
 
 public class News implements java.io.Serializable {
+    static SQLiteDao db = new SQLiteDao();
     String newsID;
     String title, content, publishTime, language, url, crawlTime, publisher, category;
     String collection;
@@ -74,9 +75,15 @@ public class News implements java.io.Serializable {
         }catch (JSONException e) {}
     }
 
-    public void setCollection(){ collection = "1"; }
+    public void setCollection(){
+        collection = "1";
+        db.update(newsID, "1");
+    }
 
-    public void deleteCollection(){ collection = "0"; }
+    public void deleteCollection(){
+        collection = "0";
+        db.update(newsID, "0");
+    }
 
     public void setImage(String _url) {
         String[] urls = _url.split(", ");

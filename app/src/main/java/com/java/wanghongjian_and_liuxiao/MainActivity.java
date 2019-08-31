@@ -541,6 +541,24 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public void showBookmarks (View view) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        Snackbar.make(view, "Work in progress.", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
+
+    public void showHistory (View view) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        Snackbar.make(view, "Work in progress.", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
+
     public static Context getContext() {
         return context;
     }

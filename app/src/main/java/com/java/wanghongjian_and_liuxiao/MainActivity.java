@@ -430,6 +430,7 @@ public class MainActivity extends AppCompatActivity
         SwipeRefreshLayout refreshLayout = findViewById(R.id.news_refresh);
         refreshLayout.setRefreshing(false);
 
+        /* add images to home page */
         imageDisplayedSet.clear();
         countDownTimer = new CountDownTimer(1500*200, 1500) {
             @Override
@@ -437,9 +438,24 @@ public class MainActivity extends AppCompatActivity
                 for (News news: newsList) {
                     if (!news.image.isEmpty() && !imageDisplayedSet.contains(news.newsID)) {
                         if (news.image.elementAt(0).hasImage() && !news.image.elementAt(0).unsafeURL) {
+
                             LinearLayout theLayout = news.layout;
+
+                            View lineView = new View (getContext());
+                            ViewGroup.LayoutParams lineParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                            lineView.setLayoutParams(lineParams);
+                            lineView.setBackgroundColor(Color.rgb(0xC0, 0xC0, 0xC0));
+
+                            theLayout.addView(lineView);
+
                             ImageView img = new ImageView (getContext());
                             img.setImageBitmap(news.image.elementAt(0).getImage());
+
+                            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);;
+                            params.setMargins(40, 9, 40, 10);
+
+                            img.setLayoutParams(params);
+                            img.setMaxHeight(100);
                             theLayout.addView(img);
                             imageDisplayedSet.add(news.newsID);
                         }
@@ -501,7 +517,7 @@ public class MainActivity extends AppCompatActivity
         inCardLayout.addView(textInCard);
 
         TextView postscriptText = new TextView(this);
-        params.setMargins(40, 8, 40, 40);
+        params.setMargins(40, 8, 40, 18);
         postscriptText.setLayoutParams(params);
         postscriptText.setText("1 hr ago           " + newsItem.category); // TODO: 19.8.30 specify time
         postscriptText.setTextSize(12);
@@ -586,6 +602,13 @@ public class MainActivity extends AppCompatActivity
                 }
                     ScrollView mainScroll = findViewById(R.id.main_scroll_view);
                     mainScroll.scrollTo(0, maxScroll);
+            }
+
+            // FIXME: 19.8.31 only in the following way can the image of news be loaded in the home page!
+            for (News news: newsList) {
+                if (!news.image.isEmpty()) {
+                    news.image.elementAt(0).getImage();
+                }
             }
         }
 

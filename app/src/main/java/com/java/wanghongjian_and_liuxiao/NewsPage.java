@@ -82,7 +82,7 @@ public class NewsPage extends AppCompatActivity {
                     /* load image */
                     if (currentLoadedImages < imageTotal) {
                         Image img = news.image.elementAt(currentLoadedImages);
-                        if (img.downloaded) {
+                        if (img.hasImage()) {
                             if (img.unsafeURL) {
                                 news.image.remove(img);
                                 imageTotal -= 1;
@@ -97,7 +97,7 @@ public class NewsPage extends AppCompatActivity {
                         }
                     } else if (imageTotal > 0) {
                         Image img = news.image.elementAt(displayImage);
-                        if (img.downloaded) {
+                        if (img.hasImage()) {
                             coverImage.setImageBitmap(img.getImage());
                         }
                         displayImage = (displayImage + 1) % imageTotal;

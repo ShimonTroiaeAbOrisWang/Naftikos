@@ -104,7 +104,6 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
     String imageURL, newsID, dir, file_dir = null;
     int index;
     private Bitmap image;
-    public boolean downloaded = false;
     public boolean unsafeURL = false;
 
     Image(String url, int _index, String _newsID, String _dir) {
@@ -139,7 +138,6 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        downloaded = true;
         super.onPostExecute(aVoid);
         //TODO: here you can call a function, with the 'image' as a parameter
     }

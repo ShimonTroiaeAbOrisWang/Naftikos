@@ -34,4 +34,5 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0'
     // SwipyRefreshLayout
     // implementation 'com.github.omadahealth:swipy:1.2.3@aar' (crash!)
+    compile 'org.mongodb:mongo-java-driver:3.2.2'
 }

@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.Vector;
 
 public class News implements java.io.Serializable {
-    static SQLiteDao db = new SQLiteDao();
     String newsID;
     String title, content, publishTime, language, url, crawlTime, publisher, category;
     String collection;
@@ -77,12 +76,14 @@ public class News implements java.io.Serializable {
 
     public void setCollection(){
         collection = "1";
-        db.update(newsID, "1");
+        SQLiteDao.update(newsID, "1");
+        MongoDB.addCollection(this);
     }
 
     public void deleteCollection(){
         collection = "0";
-        db.update(newsID, "0");
+        SQLiteDao.update(newsID, "0");
+        MongoDB.deleteCollection(this);
     }
 
     public void setImage(String _url) {
@@ -128,7 +129,7 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
                 imageURL = "https" + imageURL.substring(4);
             URL url = new URL(imageURL);
             HttpURLConnection tc = (HttpURLConnection) url.openConnection();
-            tc.setConnectTimeout(500);
+            tc.setConnectTimeout(200);
             tc.setReadTimeout(500);
             InputStream in = tc.getInputStream();
             int a = in.available();

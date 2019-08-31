@@ -3,6 +3,8 @@ package com.java.wanghongjian_and_liuxiao;
 import org.json.JSONException;
 import org.junit.Test;
 
+import java.util.Vector;
+
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -10,8 +12,15 @@ import org.junit.Test;
  */
 public class ExampleUnitTest {
     @Test
-    public void testNewsAPI() throws JSONException {
-        NewsAPI api = new NewsAPI();
-        api.getNews("教育", null, 3);
+    public void testMongo() throws JSONException {
+        User u = new User("abc", "123");
+        u.history.add("a");
+        u.history.add("b");
+        u.history.add("c");
+        MongoDB mongo = new MongoDB();
+        mongo.addUser(u);
+        mongo.updateUser(u);
+
+        User user = mongo.findUser("abc");
     }
 }

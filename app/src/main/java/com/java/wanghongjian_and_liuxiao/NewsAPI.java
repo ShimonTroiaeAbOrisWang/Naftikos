@@ -155,7 +155,7 @@ public class NewsAPI {
             startDate = cal.getTime();
             request.append("&startDate=" + df.format(startDate));
         }
-        if (keyword != null) {
+        if (keyword != null && !keyword.equals("")) {
             request.append("&words=" + keyword);
             search_history.add(keyword);
             if (search_history.size() > 20)

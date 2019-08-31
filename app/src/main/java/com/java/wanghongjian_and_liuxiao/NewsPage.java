@@ -36,8 +36,8 @@ public class NewsPage extends AppCompatActivity {
             actionBar.hide();
         }
 
-        not_added_icon = getResources().getDrawable(R.drawable.ic_star_border_black_24dp);
-        added_icon = getResources().getDrawable(R.drawable.ic_star_black_24dp);
+        not_added_icon = getResources().getDrawable(R.drawable.ic_bookmark_border_black_24dp);
+        added_icon = getResources().getDrawable(R.drawable.ic_bookmark_black_24dp);
 
         /* get news */
         news = MainActivity.newsToDisplay;

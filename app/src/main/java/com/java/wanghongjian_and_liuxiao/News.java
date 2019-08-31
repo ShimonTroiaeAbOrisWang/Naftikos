@@ -27,11 +27,12 @@ import java.net.URL;
 import java.util.Vector;
 
 public class News implements java.io.Serializable {
+    static SQLiteDao db = new SQLiteDao();
     String newsID;
     String title, content, publishTime, language, url, crawlTime, publisher, category;
     String collection;
     Video video = new Video();
-    Vector<Image> image = new Vector<>();;
+    Vector<Image> image = new Vector<>();
     Vector<String> keywords; // keywords are listed according to their relevance from 0 to the end
     String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/wanghongjian_and_liuxiao/";
 
@@ -74,16 +75,20 @@ public class News implements java.io.Serializable {
         }catch (JSONException e) {}
     }
 
-    public void setCollection(){ collection = "1"; }
+    public void setCollection(){
+        collection = "1";
+        db.update(newsID, "1");
+    }
 
-    public void deleteCollection(){ collection = "0"; }
+    public void deleteCollection(){
+        collection = "0";
+        db.update(newsID, "0");
+    }
 
     public void setImage(String _url) {
         String[] urls = _url.split(", ");
         for (int i = 0; i < urls.length; i++) {
             Image img = new Image(urls[i], i, newsID, dir);
-            if (i == 0)
-                img.execute();
             image.add(img);
         }
     }
@@ -123,7 +128,10 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
                 imageURL = "https" + imageURL.substring(4);
             URL url = new URL(imageURL);
             HttpURLConnection tc = (HttpURLConnection) url.openConnection();
+            tc.setConnectTimeout(500);
+            tc.setReadTimeout(500);
             InputStream in = tc.getInputStream();
+            int a = in.available();
             image = BitmapFactory.decodeStream(in);
             in.close();
             File file = new File(file_dir);
@@ -134,6 +142,8 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
         } catch (MalformedURLException e) {
         } catch (IOException e) {
             unsafeURL = true;
+        } catch (NullPointerException e){
+            System.out.println("null pointer exception");
         }
         return null;
     }

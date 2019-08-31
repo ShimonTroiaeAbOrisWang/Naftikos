@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 
@@ -158,7 +159,7 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
 }
 
 class Video extends AsyncTask<String, Integer, Void> implements java.io.Serializable {
-    ProgressDialog progressDialog;
+    //ProgressDialog progressDialog;
     String videoURL, newsID, dir, file_dir = null;
 
     Video(){ }
@@ -169,6 +170,12 @@ class Video extends AsyncTask<String, Integer, Void> implements java.io.Serializ
         dir = _dir;
         file_dir = dir + newsID + ".mp4";
         this.execute(url);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        //progressDialog.show();
     }
 
     @Override
@@ -196,6 +203,12 @@ class Video extends AsyncTask<String, Integer, Void> implements java.io.Serializ
         }else{ // if video has already been downloaded into external memory
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        //
     }
 
     @NonNull

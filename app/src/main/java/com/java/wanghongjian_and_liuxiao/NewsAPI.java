@@ -141,7 +141,7 @@ public class NewsAPI {
         } else if (mode == 2) {                           // 2 means to load news before
             request.append("&endDate=" + df.format(startDate));
             cal.setTime(startDate);
-            cal.add(Calendar.DATE, -3);
+            cal.add(Calendar.DATE, -1);
             startDate = cal.getTime();
             request.append("&startDate=" + df.format(startDate));
         }
@@ -156,8 +156,6 @@ public class NewsAPI {
             request.append("&categories=" + category);
             categories = category;
         }
-
-        startDate = endDate;
         return request.toString();
     }
 

@@ -191,6 +191,9 @@ public class MainActivity extends AppCompatActivity
 
         /* build search dialog */
 
+        LinearLayout searchDialogLinear = new LinearLayout(this);
+        searchDialogLinear.setOrientation(LinearLayout.VERTICAL);
+
         AlertDialog.Builder searchDialogBuilder = new AlertDialog.Builder(this);
         searchDialogBuilder.setTitle("News Search");
 
@@ -204,7 +207,16 @@ public class MainActivity extends AppCompatActivity
         searchDialogText.setLayoutParams(params);
         searchContainer.addView(searchDialogText);
 
-        searchDialogBuilder.setView(searchContainer);
+        searchDialogLinear.addView(searchContainer);
+
+        final TextView searchHistory = new TextView(this);
+        searchHistory.setText("Arma virumque cano");
+        searchHistory.setLayoutParams(params);
+        searchHistory.setVisibility(View.GONE);
+
+        searchDialogLinear.addView(searchHistory);
+
+        searchDialogBuilder.setView(searchDialogLinear);
         searchDialogBuilder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -224,7 +236,8 @@ public class MainActivity extends AppCompatActivity
         searchDialogBuilder.setNegativeButton("Advanced", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                advancedSearch();
+                searchHistory.setVisibility(View.VISIBLE);
+                // advancedSearch();
             }
         });
 
@@ -578,15 +591,6 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Vector<News> v) {
             // execution of result of Long time consuming operation
 
-            // FIXME: 19.8.31 only in the following way can the image of news be loaded in the home page!
-            /*for (News news: v) {
-                if (!news.image.isEmpty()) {
-                    if (!news.image.elementAt(0).hasImage()) {
-                        news.image.elementAt(0).getImage();
-                    }
-                }
-            }*/
-
             if (mode != UPDATE_NEWS) {
                 progressDialog.dismiss();
             }
@@ -610,11 +614,9 @@ public class MainActivity extends AppCompatActivity
                 if (v.isEmpty()) {
                     Snackbar.make(title, "No more news.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
-                    ScrollView mainScroll = findViewById(R.id.main_scroll_view);
-                    mainScroll.scrollTo(0, maxScroll);
+                ScrollView mainScroll = findViewById(R.id.main_scroll_view);
+                mainScroll.scrollTo(0, maxScroll);
             }
-
-
         }
 
         @Override

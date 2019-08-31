@@ -54,8 +54,11 @@ public class NewsPage extends AppCompatActivity {
         if (!news.image.isEmpty()) {
             AppCompatImageView coverImage = findViewById(R.id.news_cover_img);
             Bitmap coverBitmap = news.image.elementAt(0).getImage();
-
-            coverImage.setImageBitmap(coverBitmap);
+            if (coverBitmap != null) {
+                coverImage.setImageBitmap(coverBitmap);
+            } else {
+                Snackbar.make(findViewById(R.id.news_layout), "Image is null.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
             // FIXME: 19.8.31 the bitmap returned by getImage() is a null
         }
 

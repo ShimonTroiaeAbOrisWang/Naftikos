@@ -82,6 +82,8 @@ public class News implements java.io.Serializable {
         String[] urls = _url.split(", ");
         for (int i = 0; i < urls.length; i++) {
             Image img = new Image(urls[i], i, newsID, dir);
+            if (i == 0)
+                img.execute();
             image.add(img);
         }
     }

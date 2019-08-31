@@ -47,6 +47,7 @@ import org.w3c.dom.Text;
 import java.io.File;
 import java.util.Random;
 import java.util.Vector;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -79,6 +80,8 @@ public class MainActivity extends AppCompatActivity
             Color.rgb(0xE5-2, 0xE5, 0xE5)};
 
     private static final int numberOfCardBackground = 14;
+    private static final int DIM_TITLE_COLOR = Color.rgb(0x6A, 0x6A, 0x6A);
+    private static final int TITLE_COLOR = Color.rgb(0x23, 0x23, 0x23);
 
     public static Context context;
     TextView title;
@@ -94,7 +97,7 @@ public class MainActivity extends AppCompatActivity
     Vector<News> newsList;
     static News newsToDisplay;
     NewsAPI api;
-
+    HashSet<String> viewedNewsSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,7 +240,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
+        viewedNewsSet = new HashSet<>();
 
         getNewsFromServer();
         // loadNews();  // no longer needed
@@ -430,13 +433,17 @@ public class MainActivity extends AppCompatActivity
         inCardLayout.setOrientation(LinearLayout.VERTICAL);
         inCardLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        TextView textInCard = new TextView(this);
+        final TextView textInCard = new TextView(this);
         // TODO: 19.8.15 put content, image, etc. to the card
         textInCard.setText(newsItem.getTitle());
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(40, 40, 40, 20);
         textInCard.setLayoutParams(params);
-        textInCard.setTextColor(Color.rgb(0x27, 0x27, 0x27));
+        if (viewedNewsSet.contains(newsItem.newsID)) {
+            textInCard.setTextColor(DIM_TITLE_COLOR);
+        } else {
+            textInCard.setTextColor(TITLE_COLOR);
+        }
         textInCard.setTextSize(17);
 
         inCardLayout.addView(textInCard);
@@ -455,17 +462,19 @@ public class MainActivity extends AppCompatActivity
         newCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openNewsByNumber(newsCounter, view);
+                openNewsByNumber(newsCounter, view, textInCard);
             }
         });
         return newCard;
     }
 
     /* open news page according to the number of the news (in newsList) */
-    private void openNewsByNumber(int newsNumber, View view) {
+    private void openNewsByNumber(int newsNumber, View view, TextView textToDim) {
         Intent intent = new Intent(this, NewsPage.class);
         newsToDisplay = newsList.elementAt(newsNumber);
         startActivity(intent);
+        viewedNewsSet.add(newsToDisplay.newsID);
+        textToDim.setTextColor(DIM_TITLE_COLOR); //dim text after open
     }
 
 

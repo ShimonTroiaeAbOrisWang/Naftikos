@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity
     private static final int HOME_HEALTH = 12;
 
     private static final String[] homepageModeTitles = {"Latest", "Random", "Personal Feeds", "Finance", "Education", "Entertainment", "Sports", "Technology", "Autos", "Military", "Culture", "Society", "Health"};
+
     private static final int cardBackgroundColors [] = {Color.rgb(0xF0-2, 0xF0, 0xF0), Color.rgb(0xF3-2, 0xF0, 0xF0), Color.rgb(0xF0-2, 0xF3, 0xF0), Color.rgb(0xF0-2, 0xF0, 0xF3),
             Color.rgb(0xEE-2, 0xF0, 0xF0), Color.rgb(0xF0-2, 0xEE, 0xF0), Color.rgb(0xF0-2, 0xF0, 0xEE),
             Color.rgb(0xF2-2, 0xF2, 0xF0), Color.rgb(0xF2-2, 0xF0, 0xF2), Color.rgb(0xF0-2, 0xF2, 0xF2),
@@ -392,7 +393,7 @@ public class MainActivity extends AppCompatActivity
         mainScroll.scrollTo(0, 0);
 
 
-        /* debug: load news with >= 2 images  */
+        /* debug: load news with >= 2 images
         Vector<News> v = new Vector<>();
         for (News news: newsList) {
             if (news.image.size() > 1) {
@@ -400,7 +401,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
         newsList = v;
-        /* debug: load news with >= 2 images  */
+         debug: load news with >= 2 images  */
 
         int newsCounter = 0;
         for (News newsItem : newsList) {

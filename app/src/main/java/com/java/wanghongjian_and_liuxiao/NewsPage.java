@@ -81,10 +81,19 @@ public class NewsPage extends AppCompatActivity {
                     if (currentLoadedImages < imageTotal) {
                         Image img = news.image.elementAt(currentLoadedImages);
                         if (img.downloaded) {
-                            coverImage.setImageBitmap(img.getImage());
-                            currentLoadedImages += 1;
+                            if (img.unsafeURL) {
+                                news.image.remove(img);
+                                imageTotal -= 1;
+                                if (imageTotal == 0) {
+                                    // non of the images is safe
+                                    coverImage.setImageDrawable(getDrawable(R.drawable.testnewsbg));
+                                }
+                            } else {
+                                coverImage.setImageBitmap(img.getImage());
+                                currentLoadedImages += 1;
+                            }
                         }
-                    } else {
+                    } else if (imageTotal > 0) {
                         Image img = news.image.elementAt(displayImage);
                         if (img.downloaded) {
                             coverImage.setImageBitmap(img.getImage());
@@ -96,6 +105,8 @@ public class NewsPage extends AppCompatActivity {
                 public void onFinish() { }
             }.start();
 
+        } else {
+            coverImage.setImageDrawable(getDrawable(R.drawable.testnewsbg));
         }
 
         /* hide title in expanded view */
@@ -114,7 +125,7 @@ public class NewsPage extends AppCompatActivity {
                     collapsingToolbarLayout.setTitle(news.title);
                     isShow = true;
                 } else if(isShow) {
-                    collapsingToolbarLayout.setTitle(news.publishTime); // maybe time and location?
+                    collapsingToolbarLayout.setTitle(" "); // maybe time and location?
                     isShow = false;
                 }
             }

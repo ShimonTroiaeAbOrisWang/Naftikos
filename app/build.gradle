@@ -35,4 +35,5 @@ dependencies {
     // SwipyRefreshLayout
     // implementation 'com.github.omadahealth:swipy:1.2.3@aar' (crash!)
     implementation 'org.mongodb:mongo-java-driver:3.2.2'
+    implementation 'com.r0adkll:slidableactivity:2.1.0'
 }

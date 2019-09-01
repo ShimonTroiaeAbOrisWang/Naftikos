@@ -13,7 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.java.wanghongjian_and_liuxiao.NewsPage"></activity>
+        <activity android:name="com.java.wanghongjian_and_liuxiao.NewsPage"
+            android:theme="@style/AppTheme.Slide"
+            android:parentActivityName="com.java.wanghongjian_and_liuxiao.MainActivity">
+        </activity>
         <activity
             android:name="com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity"
             android:label="Ναυτικός Sign in"

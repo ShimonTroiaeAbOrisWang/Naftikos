@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,8 +21,12 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.r0adkll.slidr.Slidr;
+import com.r0adkll.slidr.model.SlidrConfig;
+import com.r0adkll.slidr.model.SlidrInterface;
+import com.r0adkll.slidr.model.SlidrPosition;
 
-public class NewsPage extends AppCompatActivity {
+public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
 
     boolean addedToFavourite = false;
     Drawable not_added_icon;
@@ -30,21 +35,21 @@ public class NewsPage extends AppCompatActivity {
     int imageTotal;
     int currentLoadedImages;
     int displayImage = 0;
-    boolean [] imageLoaded;
 
     CountDownTimer countDownTimer;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_page);
 
+        Slidr.attach(this);
+
         /* hide default bar */
-        ActionBar actionBar = getSupportActionBar();
+        /*ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
-        }
+        }*/
 
         not_added_icon = getResources().getDrawable(R.drawable.ic_bookmark_border_black_24dp);
         added_icon = getResources().getDrawable(R.drawable.ic_bookmark_black_24dp);
@@ -165,4 +170,5 @@ public class NewsPage extends AppCompatActivity {
         super.finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
+
 }

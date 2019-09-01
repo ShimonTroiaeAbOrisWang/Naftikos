@@ -2,10 +2,14 @@ package com.java.wanghongjian_and_liuxiao;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.TextView;
 
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
@@ -38,6 +42,17 @@ public class CategorySettingActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
+
+
+        TextView categoriesText = findViewById(R.id.categories_text);
+        categoriesText.setTypeface(MainActivity.ubuntuMidItalic);
+
+        /* get screen resolution to adjust text size */
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screen_width = displayMetrics.widthPixels;
+
+        categoriesText.setTextSize (screen_width / 54f);
     }
 
 

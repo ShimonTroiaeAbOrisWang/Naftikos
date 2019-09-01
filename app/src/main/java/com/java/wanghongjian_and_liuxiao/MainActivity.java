@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
     public static Context context;
     TextView title;
     int homePageMode;
-    Typeface ubuntuMidItalic;
+    static Typeface ubuntuMidItalic;
     boolean isAfterSearch = false;
     String searchString;
     //static FrameLayout dimmer;

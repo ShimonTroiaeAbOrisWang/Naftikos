@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SQLiteDao {
-    private String name;
-    private SQLiteDatabase db;
+    static String name;
+    static SQLiteDatabase db;
 
     public SQLiteDao() {
         name = MainActivity.getContext().getExternalFilesDir("") + "/news.db";
@@ -61,7 +61,7 @@ public class SQLiteDao {
         }
     }
 
-    public void update(String newsId, String collection){
+    static void update(String newsId, String collection){
         db = SQLiteDatabase.openOrCreateDatabase(name, null);
         db.execSQL("update news set collection=? where newsId=?", new String[]{collection, newsId});
         db.close();
@@ -104,6 +104,20 @@ public class SQLiteDao {
         cursor.close();
         db.close();
         return newsList;
+    }
+
+    static void clearCollection(){
+        db = SQLiteDatabase.openOrCreateDatabase(name, null);
+        db.execSQL("update news set collection=?", new String[]{"0"});
+        db.close();
+    }
+
+    static void updateCollection(List<News> collection){
+        clearCollection();
+        db = SQLiteDatabase.openOrCreateDatabase(name, null);
+        for (News n: collection)
+            db.execSQL("update news set collection=? where newsId=?", new String[]{"1", n.newsID});
+        db.close();
     }
 
     public class RawNews {

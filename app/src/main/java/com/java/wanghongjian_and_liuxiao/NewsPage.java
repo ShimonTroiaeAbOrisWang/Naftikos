@@ -133,11 +133,21 @@ public class NewsPage extends AppCompatActivity {
             }
         });
 
-
+        /* bookmarked? */
+        addedToFavourite = (news.collection == "1");
+        FloatingActionButton button = findViewById(R.id.news_favourite);
+        button.hide();
+        button.setImageDrawable(addedToFavourite ? added_icon: not_added_icon);
+        button.show();
     }
 
     public void toggleFavourite (View view) {
         addedToFavourite = !addedToFavourite;
+        if (addedToFavourite) {
+            //news.setCollection();
+        } else {
+            //news.deleteCollection();
+        }
         FloatingActionButton button = findViewById(R.id.news_favourite);
 
         button.hide();

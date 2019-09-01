@@ -505,8 +505,8 @@ public class MainActivity extends AppCompatActivity
                             img.setImageBitmap(news.image.elementAt(0).getImage());
 
                             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);;
-                            params.setMargins(40, 9, 40, 10);
-
+                            params.setMargins(40, 18, 40, 18);
+                            img.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             img.setLayoutParams(params);
                             img.setMaxHeight(100);
                             theLayout.addView(img);

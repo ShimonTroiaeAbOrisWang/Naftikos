@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/searchbg"
-    tools:context=".SearchActivity">
+    tools:context=".SearchActivity"
+    android:theme="@style/Theme.Design.Light">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -19,7 +20,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginEnd="0dp"
         app:cardCornerRadius="0dp"
-        app:cardBackgroundColor="@color/colorBanner"
+        app:cardBackgroundColor="@color/colorSecondary"
         app:cardElevation="9dp"
         >
         <TextView
@@ -67,6 +68,18 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:id="@+id/search_history_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginHorizontal="0dp">
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -105,6 +118,18 @@
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show History"
+            android:textAllCaps="true"
+            android:alpha=".63"
+            android:layout_marginBottom="8dp"
+            android:onClick="historyButtonClick"
+            android:id="@+id/search_history"
+            />
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -121,7 +146,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="23dp"
-        app:backgroundTint="@color/colorPrimaryDark"
+        app:backgroundTint="@color/colorSecondary"
         app:elevation="12dp"
         app:fabSize="auto"
         app:srcCompat="@drawable/ic_keyboard_arrow_left_black_24dp"

@@ -38,9 +38,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.Menu;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -94,6 +97,9 @@ public class MainActivity extends AppCompatActivity
     String searchString;
     AlertDialog searchDialog;
     TextInputEditText searchDialogText;
+
+    AlertDialog searchHistoryDialog;
+
     MaterialCardView newsCardModelFirst, newsCardModel;
     int maxScroll = 0;
 
@@ -103,6 +109,7 @@ public class MainActivity extends AppCompatActivity
     HashSet<String> viewedNewsSet;
     HashSet<String> imageDisplayedSet;
     CountDownTimer countDownTimer;
+    static Vector<String> searchHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,12 +196,17 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        /* build search dialog */
+        /* build search dialog & search history dialog */
+        final AlertDialog.Builder historyDialogBuilder = new AlertDialog.Builder(this);
+        historyDialogBuilder.setTitle("Search History");
+        historyDialogBuilder.setNegativeButton("Return", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                searchDialog.show();
+            }
+        });
 
-        LinearLayout searchDialogLinear = new LinearLayout(this);
-        searchDialogLinear.setOrientation(LinearLayout.VERTICAL);
-
-        AlertDialog.Builder searchDialogBuilder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder searchDialogBuilder = new AlertDialog.Builder(this);
         searchDialogBuilder.setTitle("News Search");
 
         searchDialogText = new TextInputEditText(this);
@@ -207,16 +219,8 @@ public class MainActivity extends AppCompatActivity
         searchDialogText.setLayoutParams(params);
         searchContainer.addView(searchDialogText);
 
-        searchDialogLinear.addView(searchContainer);
 
-        final TextView searchHistory = new TextView(this);
-        searchHistory.setText("Arma virumque cano");
-        searchHistory.setLayoutParams(params);
-        searchHistory.setVisibility(View.GONE);
-
-        searchDialogLinear.addView(searchHistory);
-
-        searchDialogBuilder.setView(searchDialogLinear);
+        searchDialogBuilder.setView(searchContainer);
         searchDialogBuilder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -233,15 +237,50 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        searchDialogBuilder.setNegativeButton("Advanced", new DialogInterface.OnClickListener() {
+        searchDialogBuilder.setNegativeButton("Show History", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                searchHistory.setVisibility(View.VISIBLE);
-                // advancedSearch();
+                searchHistory = api.getSearchHistory();
+                Vector<String> searchHistorySet = new Vector<>();
+                for (int j = 0; j < searchHistory.size(); j += 1) {
+                    String s = searchHistory.elementAt(searchHistory.size() - 1 - j);
+                    if (s.length() > 0 && !searchHistorySet.contains(s)) {
+                        searchHistorySet.add(s);
+                    }
+                    if (searchHistorySet.size() == 9) {
+                        break;
+                    }
+                }
+
+                ListView historyListView= new ListView(getContext());
+                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1, searchHistorySet);
+                historyListView.setAdapter(adapter);
+
+                historyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        /* search */
+                        searchString = adapter.getItem(position);
+                        searchHistoryDialog.dismiss();
+                        isAfterSearch = true;
+                        homePageMode = HOME_SEARCH;
+                        title.setText("Search: " + searchString + ' ');
+                        getNewsFromServer();
+                    }
+                });
+
+                historyDialogBuilder.setView(historyListView);
+
+                searchHistoryDialog = historyDialogBuilder.create();
+                searchHistoryDialog.show();
+                //advancedSearch();
             }
         });
 
+
         searchDialog = searchDialogBuilder.create();
+
+
 
         /* set the style of a news card for future creation */
         newsCardModelFirst = findViewById(R.id.news_card_01);
@@ -385,6 +424,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void advancedSearch() {
+
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
@@ -497,15 +537,22 @@ public class MainActivity extends AppCompatActivity
         inCardLayout.setOrientation(LinearLayout.VERTICAL);
         inCardLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
+        MaterialCardView publisherCard = new MaterialCardView(this);
+        publisherCard.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        publisherCard.setBackgroundColor(Color.rgb(0xEE, 0xEE, 0xF2));
+        publisherCard.setCardElevation(6);
+
+
         final TextView publisherText = new TextView(this);
         publisherText.setText(newsItem.publisher);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);;
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(40, 17, 40, 10);
         publisherText.setLayoutParams(params);
         publisherText.setTextSize(15);
         publisherText.setTextColor(Color.rgb(0x50, 0x68, 0x86));
 
-        inCardLayout.addView(publisherText);
+        publisherCard.addView(publisherText);
+        inCardLayout.addView(publisherCard);
 
         View lineView = new View (this);
         ViewGroup.LayoutParams lineParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
@@ -517,9 +564,10 @@ public class MainActivity extends AppCompatActivity
         final TextView textInCard = new TextView(this);
         // TODO: 19.8.15 put content, image, etc. to the card
         textInCard.setText(newsItem.getTitle());
+        FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        params.setMargins(40, 15, 40, 10);
-        textInCard.setLayoutParams(params);
+        params2.setMargins(40, 24, 40, 12);
+        textInCard.setLayoutParams(params2);
         if (viewedNewsSet.contains(newsItem.newsID)) {
             textInCard.setTextColor(DIM_TITLE_COLOR);
         } else {
@@ -575,11 +623,15 @@ public class MainActivity extends AppCompatActivity
             publishProgress("Loading..."); // Calls onProgressUpdate()
             try {
                 if (isAfterSearch) {
-                    return api.getNews(searchString, null, mode);
+                    Vector<News> vGet = api.getNews(searchString, null, mode);
+                    api.getCoverImage();
+                    return vGet;
                 } else {
                     String[] categories = {"", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康"};
                     //return api.testGetNews("https://api2.newsminer.net/svc/news/queryNewsList?words=野熊&size=1&startDate=2018-08-15&endDate=2018-08-21");
-                    return api.getNews("", categories[homePageMode], mode);     // refer to the top for modes
+                    Vector<News> vGet = api.getNews("", categories[homePageMode], mode);     // refer to the top for modes
+                    api.getCoverImage();
+                    return vGet;
                 }
             } catch (Exception e) {
                 e.printStackTrace();

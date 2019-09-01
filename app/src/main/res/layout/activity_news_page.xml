@@ -77,7 +77,7 @@
                 android:layout_marginBottom="0dp"
                 app:cardBackgroundColor="#74A4C4"
                 app:cardElevation="6dp"
-                app:cardCornerRadius="14dp"
+                app:cardCornerRadius="10dp"
                 android:id="@+id/news_page_title_card">
 
                 <androidx.appcompat.widget.LinearLayoutCompat

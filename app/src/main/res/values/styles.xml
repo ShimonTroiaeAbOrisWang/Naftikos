@@ -36,6 +36,8 @@
         <item name="android:shadowColor">@android:color/black</item>
     </style>
 
+    <integer name="slide_animation_duration">500</integer>
+
     <style name="TextAppearance.AppCompat.Medium.Light">
         <item name="android:textColor">@android:color/black</item>
     </style>

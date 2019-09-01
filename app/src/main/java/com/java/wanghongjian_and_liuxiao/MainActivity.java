@@ -606,7 +606,9 @@ public class MainActivity extends AppCompatActivity
     private void openNewsByNumber(int newsNumber, View view, TextView textToDim) {
         Intent intent = new Intent(this, NewsPage.class);
         newsToDisplay = newsList.elementAt(newsNumber);
+
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         viewedNewsSet.add(newsToDisplay.newsID);
         textToDim.setTextColor(DIM_TITLE_COLOR); //dim text after open
     }

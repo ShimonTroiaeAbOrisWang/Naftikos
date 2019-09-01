@@ -52,6 +52,12 @@ public class SearchActivity extends AppCompatActivity {
 
         LinearLayoutCompat.LayoutParams params = new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
+
+        /* *******    *
+            obsolete!
+          *    ******* */
+
+
         searchHistory = MainActivity.searchHistory;
         searchHistory.add("Also");
         searchHistory.add("Further");

@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.java.wanghongjian_and_liuxiao">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,25 +9,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.java.wanghongjian_and_liuxiao.NewsPage"
-            android:theme="@style/AppTheme.Slide"
-            android:parentActivityName="com.java.wanghongjian_and_liuxiao.MainActivity">
-        </activity>
+        <activity android:name=".CategorySettingActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.Slide"></activity>
         <activity
-            android:name="com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity"
+            android:name=".NewsPage"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.Slide"></activity>
+        <activity
+            android:name=".ui.login.LoginActivity"
             android:label="Ναυτικός Sign in"
-            android:parentActivityName="com.java.wanghongjian_and_liuxiao.MainActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.java.wanghongjian_and_liuxiao.MainActivity" />
         </activity>
         <activity
-            android:name="com.java.wanghongjian_and_liuxiao.SearchActivity"
+            android:name=".SearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Ναυτικός Search"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name="com.java.wanghongjian_and_liuxiao.MainActivity"
+            android:name=".MainActivity"
             android:label="Ναυτικός"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -45,5 +44,9 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

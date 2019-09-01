@@ -14,8 +14,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NewsPage"
-    android:id="@+id/news_page_content_container"
-    android:theme="@style/ThemeOverlay.AppCompat.Light.Slide">
+    android:id="@+id/news_page_content_container">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

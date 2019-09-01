@@ -95,9 +95,9 @@ public class MainActivity extends AppCompatActivity
     Typeface ubuntuMidItalic;
     boolean isAfterSearch = false;
     String searchString;
+    //static FrameLayout dimmer;
     AlertDialog searchDialog;
     TextInputEditText searchDialogText;
-
     AlertDialog searchHistoryDialog;
 
     MaterialCardView newsCardModelFirst, newsCardModel;
@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity
             title.setText(homepageModeTitles[homePageMode] + ' ');
         }
 
+        //dimmer = findViewById(R.id.dimmer);
 
         MaterialCardView titleCard = findViewById(R.id.title_material_card);
 
@@ -367,6 +368,7 @@ public class MainActivity extends AppCompatActivity
             vItem.setVisible(!vItem.isVisible());
 
             // TODO: 19.8.12 redesign the function of navigation menu customization
+            categorySetting();
 
         } else if (id == R.id.nav_preferences) {
             /* preferences page */
@@ -423,10 +425,21 @@ public class MainActivity extends AppCompatActivity
         return;
     }
 
-    public void advancedSearch() {
+    private void advancedSearch() {
 
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
+    }
+
+    private void categorySetting () {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        Intent intent = new Intent (this, CategorySettingActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out); // transition
+        //dimmer.setVisibility(View.VISIBLE);
     }
 
     public void showLogin(View view) {
@@ -608,7 +621,7 @@ public class MainActivity extends AppCompatActivity
         newsToDisplay = newsList.elementAt(newsNumber);
 
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left); // transition
         viewedNewsSet.add(newsToDisplay.newsID);
         textToDim.setTextColor(DIM_TITLE_COLOR); //dim text after open
     }

@@ -6,13 +6,17 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        
+
     </style>
 
     <style name="AppTheme.Slide" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
+
+
+    <color name="halfTransparent">#33000000</color>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -43,6 +47,7 @@
     </style>
 
     <integer name="slide_animation_duration">500</integer>
+    <integer name="vslide_animation_duration">700</integer>
 
     <style name="TextAppearance.AppCompat.Medium.Light">
         <item name="android:textColor">@android:color/black</item>

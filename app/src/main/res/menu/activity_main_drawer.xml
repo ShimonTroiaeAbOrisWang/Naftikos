@@ -15,9 +15,19 @@
         <item
             android:id="@+id/nav_random"
             android:icon="@drawable/ic_casino_black_24dp"
-            android:title="Random Topic" />
+            android:title="Random Topic"
+            android:visible="false"/>
     </group>
 
+    <group
+        android:id="@+id/nav_preferences_group">
+
+        <item
+            android:id="@+id/nav_preferences"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="Preferences" />
+
+    </group>
 
         <item android:title="Topics">
             <menu>
@@ -36,12 +46,10 @@
                 <item
                     android:id="@+id/nav_sports"
                     android:icon="@drawable/ic_pool_black_24dp"
-                    android:visible="false"
                     android:title="Sports" />
                 <item
                     android:id="@+id/nav_technology"
                     android:icon="@drawable/ic_developer_board_black_24dp"
-                    android:visible="false"
                     android:title="Technology" />
                 <item
                     android:id="@+id/nav_military"
@@ -61,26 +69,21 @@
                 <item
                     android:id="@+id/nav_society"
                     android:icon="@drawable/ic_poll_black_24dp"
-                    android:visible="false"
+
                     android:title="Society" />
                 <item
                     android:id="@+id/nav_health"
                     android:icon="@drawable/ic_fitness_center_black_24dp"
-                    android:visible="false"
+
                     android:title="Health" />
-                <item
-                    android:id="@+id/nav_customization"
-                    android:title=""
-                    android:icon="@drawable/ic_add_black_24dp" />
+
+
             </menu>
         </item>
 
         <group
-            android:id="@+id/nav_preferences_et_about">
-            <item
-                android:id="@+id/nav_preferences"
-                android:icon="@drawable/ic_settings_black_24dp"
-                android:title="Preferences" />
+            android:id="@+id/nav_about_group">
+
             <item
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_more_horiz_black_24dp"

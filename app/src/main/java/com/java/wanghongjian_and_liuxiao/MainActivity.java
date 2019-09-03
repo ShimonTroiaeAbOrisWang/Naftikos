@@ -29,6 +29,8 @@ import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
+import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
+import com.nex3z.togglebuttongroup.button.ToggleButton;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -289,6 +291,8 @@ public class MainActivity extends AppCompatActivity
         newsCardModelFirst.setVisibility(View.INVISIBLE);
         newsCardModel.setVisibility(View.INVISIBLE);
 
+
+
         // swipe to refresh
         SwipeRefreshLayout refreshLayout = findViewById(R.id.news_refresh);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -335,6 +339,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            categorySetting();
             return true;
         }
 
@@ -346,12 +351,13 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.nav_customization) {
+        if (id == R.id.nav_preferences) {
             /* customise navigation (clicking "+" icon) */
             NavigationView v = findViewById(R.id.nav_view);
             Menu nav_menu = v.getMenu();
 
             /* the following lines are only a demo */
+            /*
             MenuItem vItem = nav_menu.findItem(R.id.nav_sports);
             vItem.setVisible(!vItem.isVisible());
             vItem = nav_menu.findItem(R.id.nav_technology);
@@ -365,7 +371,7 @@ public class MainActivity extends AppCompatActivity
             vItem = nav_menu.findItem(R.id.nav_culture);
             vItem.setVisible(!vItem.isVisible());
             vItem = nav_menu.findItem(R.id.nav_health);
-            vItem.setVisible(!vItem.isVisible());
+            vItem.setVisible(!vItem.isVisible());*/
 
             // TODO: 19.8.12 redesign the function of navigation menu customization
             categorySetting();

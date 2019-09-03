@@ -9,8 +9,13 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
+import com.nex3z.togglebuttongroup.button.LabelToggle;
+import com.nex3z.togglebuttongroup.button.ToggleButton;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrPosition;
@@ -52,7 +57,15 @@ public class CategorySettingActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screen_width = displayMetrics.widthPixels;
 
-        categoriesText.setTextSize (screen_width / 54f);
+        categoriesText.setTextSize (screen_width / 63f);
+
+        final MultiSelectToggleGroup multi = findViewById(R.id.group_topics);
+
+        for (int i = 0; i < multi.getChildCount(); i++) {
+            LabelToggle child = (LabelToggle) multi.getChildAt(i);
+
+            child.getTextView().setPadding(0, 0, 0, 0);
+        }
     }
 
 

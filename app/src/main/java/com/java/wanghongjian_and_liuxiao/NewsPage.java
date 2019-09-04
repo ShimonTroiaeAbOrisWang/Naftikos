@@ -174,7 +174,9 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
     @Override
     public void finish() {
         Glide.with(coverImage).clear(coverImage);
-        countDownTimer.cancel();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
         super.finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }

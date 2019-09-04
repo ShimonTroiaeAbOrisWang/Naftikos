@@ -142,10 +142,10 @@ public class SQLiteDao {
                 raw_json.put("crawlTime", n.crawlTime);
                 raw_json.put("publisher", n.publisher);
                 StringBuilder image = new StringBuilder();
-                for (int i=0;i<n.image.size();i++) {
+                for (int i=0;i<n.imageURLs.size();i++) {
                     if (i > 0)
                         image.append(", ");
-                    image.append(n.image.get(i).toString());
+                    image.append(n.imageURLs.get(i));
                 }
                 raw_json.put("image", image.toString());
                 jsonData = raw_json.toString();

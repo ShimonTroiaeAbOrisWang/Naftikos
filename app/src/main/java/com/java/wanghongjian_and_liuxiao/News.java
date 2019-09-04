@@ -31,7 +31,7 @@ public class News implements java.io.Serializable {
     String title, content, publishTime, language, url, crawlTime, publisher, category;
     String collection;
     Video video = new Video();
-    Vector<Image> image = new Vector<>();
+    // Vector<Image> image = new Vector<>();
     Vector<String> keywords; // keywords are listed according to their relevance from 0 to the end
     String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/wanghongjian_and_liuxiao/";
 
@@ -111,10 +111,9 @@ public class News implements java.io.Serializable {
         return content;
     }
 }
-
+/*
 class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializable {
 
-    // TODO: 19.9.4 only imageURL is needed now!
     String imageURL, newsID, dir, file_dir = null;
     int index;
     private Bitmap image;
@@ -158,7 +157,6 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        //TODO: here you can call a function, with the 'image' as a parameter
     }
 
     public Bitmap getImage() {
@@ -187,6 +185,7 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
         return imageURL;
     }
 }
+*/
 
 class Video extends AsyncTask<String, Integer, Void> implements java.io.Serializable {
     //ProgressDialog progressDialog;

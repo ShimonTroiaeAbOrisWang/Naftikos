@@ -79,10 +79,11 @@ public class NewsAPI {
     }
 
     public boolean getCoverImage(){
+        /*
         for (News n: newsList){
             if (n.image.size() > 0)
                 n.image.firstElement().getImage();
-        }
+        }*/
         return true;
     }
 

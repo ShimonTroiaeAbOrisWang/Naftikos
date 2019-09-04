@@ -16,7 +16,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
 import com.google.android.material.card.MaterialCardView;
 
-import android.os.CountDownTimer;
 import android.os.Environment;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -110,13 +109,15 @@ public class MainActivity extends AppCompatActivity
 
     MaterialCardView newsCardModelFirst, newsCardModel;
     int maxScroll = 0;
+    TextView textSwipeMore;
+    int newsCountBeforeSwipeMore = 0;
 
     Vector<News> newsList;
+    Vector<News> newsToAdd;
     static News newsToDisplay;
     NewsAPI api;
     HashSet<String> viewedNewsSet;
     HashSet<String> imageDisplayedSet;
-    CountDownTimer countDownTimer;
     static Vector<String> searchHistory;
 
     @Override
@@ -141,7 +142,8 @@ public class MainActivity extends AppCompatActivity
         if (!external_dir.exists())
             external_dir.mkdirs();
 
-        newsList = new Vector<News>();
+        newsList = new Vector<>();
+        newsToAdd = new Vector<>();
         context = this;
 
         api = new NewsAPI();
@@ -468,15 +470,12 @@ public class MainActivity extends AppCompatActivity
         retriever.execute("");
     }
 
-    public void loadNews() {
+    public void loadNews(boolean toAdd) {
         /* load news into home screen */
         LinearLayout newsContainer = findViewById(R.id.home_news_container);
-        newsContainer.removeAllViews();
-
-        ScrollView mainScroll = findViewById(R.id.main_scroll_view);
-        mainScroll.scrollTo(0, 0);
-
-
+        if (!toAdd) {
+            newsContainer.removeAllViews();
+        }
         /* debug: load news with >= 2 images
         Vector<News> v = new Vector<>();
         for (News news: newsList) {
@@ -488,13 +487,15 @@ public class MainActivity extends AppCompatActivity
          debug: load news with >= 2 images  */
 
         int newsCounter = 0;
-        for (News newsItem : newsList) {
-            newsContainer.addView(generateHomeNewsCard(newsCounter, newsItem));
+        for (News newsItem : toAdd ? newsToAdd: newsList) {
+            newsContainer.addView(generateHomeNewsCard(newsCounter, newsItem, toAdd));
             newsCounter += 1;
             // TODO: 19.8.15 specify params for news cards
         }
-
-        TextView textSwipeMore = new TextView(this);
+        if (toAdd) {
+            newsContainer.removeView(textSwipeMore);
+        }
+        textSwipeMore = new TextView(this);
         textSwipeMore.setText("Swipe down to load more news.");
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 45, 0, 45);
@@ -510,11 +511,11 @@ public class MainActivity extends AppCompatActivity
         refreshLayout.setRefreshing(false);
 
         /* add images to home page */
-        setCoverImagesViaGlide();
+        // setCoverImagesViaGlide();
 
     }
 
-    private MaterialCardView generateHomeNewsCard(final int newsCounter, News newsItem) {
+    private MaterialCardView generateHomeNewsCard(final int newsCounter, News newsItem, final boolean toAdd) {
         MaterialCardView newCard = new MaterialCardView(this);
         // modelCard: pre-drawn news card (created with XML but removed in run time)
         MaterialCardView modelCard = (newsCounter == 0) ? newsCardModelFirst : newsCardModel;
@@ -576,8 +577,6 @@ public class MainActivity extends AppCompatActivity
         inCardLayout.addView(postscriptText);
 
 
-
-
         newsItem.layout = inCardLayout;
 
         newCard.addView(inCardLayout);
@@ -586,7 +585,7 @@ public class MainActivity extends AppCompatActivity
         newCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openNewsByNumber(newsCounter, view, textInCard);
+                openNewsByNumber(newsCounter + (toAdd ? newsCountBeforeSwipeMore: 0), view, textInCard);
             }
         });
         return newCard;
@@ -648,18 +647,24 @@ public class MainActivity extends AppCompatActivity
                 }
                 newsList = v;
             } else if (mode == LOAD_NEWS_BEFORE) {
+                newsCountBeforeSwipeMore = newsList.size();
                 newsList.addAll(v);
-                // FIXME: 19.8.31 sometimes, LOAD_NEWS_BEFORE mode return a vector of news that are already in newsList!!
+                newsToAdd = v;
             } else {
                 newsList = v;
             }
-            loadNews();
+            loadNews(mode == LOAD_NEWS_BEFORE);
+            ScrollView mainScroll = findViewById(R.id.main_scroll_view);
             if (mode == LOAD_NEWS_BEFORE) {
+                mainScroll.scrollTo(0, maxScroll);
                 if (v.isEmpty()) {
                     Snackbar.make(title, "No more news.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                } else {
+                    setCoverImagesViaGlide(v);
                 }
-                ScrollView mainScroll = findViewById(R.id.main_scroll_view);
-                mainScroll.scrollTo(0, maxScroll);
+            } else {
+                mainScroll.scrollTo(0, 0);
+                setCoverImagesViaGlide(newsList);
             }
         }
 
@@ -671,8 +676,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void setCoverImagesViaGlide () {
-        for (News news: newsList) {
+    private void setCoverImagesViaGlide (Vector<News> vector) {
+        for (News news: vector) {
             if (!news.imageURLs.isEmpty()) {
                 LinearLayout theLayout = news.layout;
                 View lineView = new View (getContext());
@@ -683,7 +688,7 @@ public class MainActivity extends AppCompatActivity
 
                 ImageView img = new ImageView (getContext());
                 // img.setImageBitmap(news.image.elementAt(0).getImage());
-                Glide.with(theLayout).load (news.imageURLs.elementAt(0)).into(img);
+                Glide.with(getContext()).load (news.imageURLs.elementAt(0)).into(img);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);;
                 params.setMargins(40, 18, 40, 18);
                 img.setScaleType(ImageView.ScaleType.CENTER_CROP);

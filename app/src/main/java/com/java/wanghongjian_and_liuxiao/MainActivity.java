@@ -11,6 +11,7 @@ import android.nfc.tech.TagTechnology;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
 import com.google.android.material.card.MaterialCardView;
@@ -22,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
@@ -30,12 +32,14 @@ import android.view.MenuItem;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
+import com.nex3z.togglebuttongroup.button.LabelToggle;
 import com.nex3z.togglebuttongroup.button.ToggleButton;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.Menu;
@@ -55,6 +59,8 @@ import java.io.File;
 import java.util.Random;
 import java.util.Vector;
 import java.util.HashSet;
+
+import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -302,6 +308,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+
         viewedNewsSet = new HashSet<>();
         imageDisplayedSet = new HashSet<>();
 
@@ -503,43 +510,7 @@ public class MainActivity extends AppCompatActivity
         refreshLayout.setRefreshing(false);
 
         /* add images to home page */
-        imageDisplayedSet.clear();
-        countDownTimer = new CountDownTimer(1500*200, 1500) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                for (News news: newsList) {
-                    if (!news.image.isEmpty() && !imageDisplayedSet.contains(news.newsID)) {
-                        if (news.image.elementAt(0).hasImage() && !news.image.elementAt(0).unsafeURL) {
-
-                            LinearLayout theLayout = news.layout;
-
-                            View lineView = new View (getContext());
-                            ViewGroup.LayoutParams lineParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
-                            lineView.setLayoutParams(lineParams);
-                            lineView.setBackgroundColor(Color.rgb(0xC0, 0xC0, 0xC0));
-
-                            theLayout.addView(lineView);
-
-                            ImageView img = new ImageView (getContext());
-                            img.setImageBitmap(news.image.elementAt(0).getImage());
-
-                            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);;
-                            params.setMargins(40, 18, 40, 18);
-                            img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            img.setLayoutParams(params);
-                            img.setMaxHeight(100);
-                            theLayout.addView(img);
-                            imageDisplayedSet.add(news.newsID);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        }.start();
+        setCoverImagesViaGlide();
 
     }
 
@@ -645,13 +616,13 @@ public class MainActivity extends AppCompatActivity
             try {
                 if (isAfterSearch) {
                     Vector<News> vGet = api.getNews(searchString, null, mode);
-                    api.getCoverImage();
+                    //api.getCoverImage();
                     return vGet;
                 } else {
                     String[] categories = {"", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康"};
                     //return api.testGetNews("https://api2.newsminer.net/svc/news/queryNewsList?words=野熊&size=1&startDate=2018-08-15&endDate=2018-08-21");
                     Vector<News> vGet = api.getNews("", categories[homePageMode], mode);     // refer to the top for modes
-                    api.getCoverImage();
+                    //api.getCoverImage();
                     return vGet;
                 }
             } catch (Exception e) {
@@ -696,6 +667,29 @@ public class MainActivity extends AppCompatActivity
         protected void onPreExecute() {
             if (mode != UPDATE_NEWS) {
                 progressDialog = ProgressDialog.show(MainActivity.this, "Loading", (mode ==  LOAD_NEWS_BEFORE ? "Ναυτικός is loading more news...": "Ναυτικός is updating news..."));
+            }
+        }
+    }
+
+    private void setCoverImagesViaGlide () {
+        for (News news: newsList) {
+            if (!news.imageURLs.isEmpty()) {
+                LinearLayout theLayout = news.layout;
+                View lineView = new View (getContext());
+                ViewGroup.LayoutParams lineParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                lineView.setLayoutParams(lineParams);
+                lineView.setBackgroundColor(Color.rgb(0xC0, 0xC0, 0xC0));
+                theLayout.addView(lineView);
+
+                ImageView img = new ImageView (getContext());
+                // img.setImageBitmap(news.image.elementAt(0).getImage());
+                Glide.with(theLayout).load (news.imageURLs.elementAt(0)).into(img);
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);;
+                params.setMargins(40, 18, 40, 18);
+                img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                img.setLayoutParams(params);
+                img.setMaxHeight(100);
+                theLayout.addView(img);
             }
         }
     }

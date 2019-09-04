@@ -35,6 +35,8 @@ public class News implements java.io.Serializable {
     Vector<String> keywords; // keywords are listed according to their relevance from 0 to the end
     String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/wanghongjian_and_liuxiao/";
 
+    Vector<String> imageURLs = new Vector<>();
+
     public LinearLayout layout = null;
 
     public News() {
@@ -66,11 +68,13 @@ public class News implements java.io.Serializable {
             url = raw_json.getString("url");
             crawlTime = raw_json.getString("crawlTime");
             publisher = raw_json.getString("publisher");
+            /*
             if (raw_json.getString("image") != null && !raw_json.getString("image").equals("")){
                 String[] images = raw_json.getString("iamge").split(", ");
                 for (int i=0;i<images.length;i++)
                     image.add(new Image(images[i], i, newsID, dir));
             }
+             */
         }catch (JSONException e) {}
     }
 
@@ -89,8 +93,9 @@ public class News implements java.io.Serializable {
     public void setImage(String _url) {
         String[] urls = _url.split(", ");
         for (int i = 0; i < urls.length; i++) {
-            Image img = new Image(urls[i], i, newsID, dir);
-            image.add(img);
+            //Image img = new Image(urls[i], i, newsID, dir);
+            //image.add(img);
+            imageURLs.add(urls[i]);
         }
     }
 
@@ -109,6 +114,7 @@ public class News implements java.io.Serializable {
 
 class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializable {
 
+    // TODO: 19.9.4 only imageURL is needed now!
     String imageURL, newsID, dir, file_dir = null;
     int index;
     private Bitmap image;

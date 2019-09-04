@@ -3,9 +3,11 @@ package com.java.wanghongjian_and_liuxiao;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -19,6 +21,8 @@ import com.nex3z.togglebuttongroup.button.ToggleButton;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrPosition;
+
+import java.util.Vector;
 
 public class CategorySettingActivity extends AppCompatActivity {
 
@@ -37,6 +41,7 @@ public class CategorySettingActivity extends AppCompatActivity {
 
         // Attach the Slidr Mechanism to this activity
         Slidr.attach(this, mConfig);
+
 
         View decorView = getWindow().getDecorView();
         // Hide the status bar.
@@ -61,11 +66,35 @@ public class CategorySettingActivity extends AppCompatActivity {
 
         final MultiSelectToggleGroup multi = findViewById(R.id.group_topics);
 
-        for (int i = 0; i < multi.getChildCount(); i++) {
-            LabelToggle child = (LabelToggle) multi.getChildAt(i);
 
-            child.getTextView().setPadding(0, 0, 0, 0);
+
+        multi.removeAllViews();
+        String[] dummyText = getResources().getStringArray(R.array.topics_array);
+        for (String text : dummyText) {
+            LabelToggle toggle = new LabelToggle(this);
+            toggle.setText(text);
+            toggle.setTextColor(getResources().getColor(android.R.color.white));
+
+            int color = ContextCompat.getColor(this, R.color.colorCategoryButton);
+            // Background for unchecked state
+            GradientDrawable unchecked = new GradientDrawable();
+            unchecked.setCornerRadius(42);
+            unchecked.setStroke(2, color);
+            toggle.getTextView().setBackgroundDrawable(unchecked);
+
+            // Background for checked state
+            GradientDrawable checked = new GradientDrawable();
+            checked.setColor(color);
+            checked.setCornerRadius(42);
+            checked.setStroke(2, color);
+            toggle.setCheckedImageDrawable(checked);
+            toggle.setPadding(6, 0, 6, 0);
+
+            toggle.getTextView().setPadding(22, 0, 22, 0);
+            toggle.getTextView().setTextSize(12);
+            multi.addView(toggle);
         }
+
     }
 
 

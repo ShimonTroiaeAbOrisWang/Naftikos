@@ -47,11 +47,11 @@
 
             <com.nex3z.togglebuttongroup.MultiSelectToggleGroup
                 android:id="@+id/group_topics"
-                android:layout_width="160dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 app:tbgFlow="true"
-                app:tbgRowSpacing="3dp">
+                app:tbgRowSpacing="4dp">
 
                 <com.nex3z.togglebuttongroup.button.LabelToggle
                     android:id="@+id/lb_sun"

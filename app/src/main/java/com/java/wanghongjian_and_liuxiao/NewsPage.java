@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,7 +36,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
     int imageTotal;
     int currentLoadedImages;
     int displayImage = 0;
-
+    AppCompatImageView coverImage;
     CountDownTimer countDownTimer;
 
     @Override
@@ -58,7 +59,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
         news = MainActivity.newsToDisplay;
         TextView textContent = findViewById(R.id.news_text);
         textContent.setText(news.content);
-        TextView textTitle = findViewById(R.id.news_page_title);
+        final TextView textTitle = findViewById(R.id.news_page_title);
         textTitle.setText(news.title);
         if (news.publisher != null) {
             TextView textPublisher = findViewById(R.id.news_page_publisher);
@@ -66,26 +67,29 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
         }
 
         /* load image */
-        imageTotal = news.image.size();
+        imageTotal = news.imageURLs.size();
         currentLoadedImages = 0;
-        final AppCompatImageView coverImage = findViewById(R.id.news_cover_img);
+
+        coverImage = findViewById(R.id.news_cover_img);
         if (imageTotal != 0) {
+            /*
             for (Image img: news.image) {
                 boolean firstFlag = true;
-                if (img.getImage() != null) { // this is needed: every image must be iterated first, otherwise it does not display
+                if (img.getImage() != null) {
                     if (firstFlag) {
                         coverImage.setImageBitmap(img.getImage());
                         currentLoadedImages = 1;
                     }
                     firstFlag = false;
                 }
-            }
-
+            } */
+            //Glide.with(coverImage).load (news.imageURLs.elementAt(displayImage)).into(coverImage);
             /* images cycler */
-            countDownTimer = new CountDownTimer(2000*100, 2000) {
+            countDownTimer = new CountDownTimer(2500*100, 2500) {
                 @Override
                 public void onTick(long millisUntilFinished) {
                     /* load image */
+                    /*
                     if (currentLoadedImages < imageTotal) {
                         Image img = news.image.elementAt(currentLoadedImages);
                         if (img.hasImage()) {
@@ -93,7 +97,6 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
                                 news.image.remove(img);
                                 imageTotal -= 1;
                                 if (imageTotal == 0) {
-                                    // non of the images is safe
                                     coverImage.setImageDrawable(getDrawable(R.drawable.testnewsbg));
                                 }
                             } else {
@@ -108,6 +111,9 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
                         }
                         displayImage = (displayImage + 1) % imageTotal;
                     }
+                    */
+                    Glide.with(coverImage).load (news.imageURLs.elementAt(displayImage)).into(coverImage);
+                    displayImage = (displayImage + 1) % imageTotal;
                 }
                 @Override
                 public void onFinish() { }
@@ -167,6 +173,8 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
 
     @Override
     public void finish() {
+        Glide.with(coverImage).clear(coverImage);
+        countDownTimer.cancel();
         super.finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }

@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
 import com.google.android.material.card.MaterialCardView;
@@ -475,6 +476,8 @@ public class MainActivity extends AppCompatActivity
         LinearLayout newsContainer = findViewById(R.id.home_news_container);
         if (!toAdd) {
             newsContainer.removeAllViews();
+        } else {
+            newsContainer.removeView(textSwipeMore);
         }
         /* debug: load news with >= 2 images
         Vector<News> v = new Vector<>();
@@ -492,9 +495,7 @@ public class MainActivity extends AppCompatActivity
             newsCounter += 1;
             // TODO: 19.8.15 specify params for news cards
         }
-        if (toAdd) {
-            newsContainer.removeView(textSwipeMore);
-        }
+
         textSwipeMore = new TextView(this);
         textSwipeMore.setText("Swipe down to load more news.");
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -688,12 +689,12 @@ public class MainActivity extends AppCompatActivity
 
                 ImageView img = new ImageView (getContext());
                 // img.setImageBitmap(news.image.elementAt(0).getImage());
-                Glide.with(getContext()).load (news.imageURLs.elementAt(0)).into(img);
+                RequestOptions myOptions = new RequestOptions().centerCrop().override(400, 300);
+                Glide.with(getContext()).asBitmap().apply(myOptions).load (news.imageURLs.elementAt(0)).into(img);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);;
                 params.setMargins(40, 18, 40, 18);
                 img.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 img.setLayoutParams(params);
-                img.setMaxHeight(100);
                 theLayout.addView(img);
             }
         }

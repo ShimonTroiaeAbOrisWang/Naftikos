@@ -135,6 +135,9 @@ public class NewsAPI {
             }
             if (n.getString("video") != null && !n.getString("video").equals("") && !n.getString("video").equals("[]"))
                 _news.setVideo(n.getString("video"));
+            News doc = db.findOne(_news.newsID);
+            if (doc != null)
+                _news.collection = doc.collection;
         } catch (JSONException e) {
         }
         return _news;

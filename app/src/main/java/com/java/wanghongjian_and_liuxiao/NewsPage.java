@@ -148,7 +148,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
         });
 
         /* bookmarked? */
-        addedToFavourite = (news.collection == "1");
+        addedToFavourite = (news.getCollectionStatus().equals("1"));
         FloatingActionButton button = findViewById(R.id.news_favourite);
         button.hide();
         button.setImageDrawable(addedToFavourite ? added_icon: not_added_icon);

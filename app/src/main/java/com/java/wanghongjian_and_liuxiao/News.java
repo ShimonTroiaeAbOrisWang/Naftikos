@@ -79,6 +79,11 @@ public class News implements java.io.Serializable {
         }catch (JSONException e) {}
     }
 
+    public String getCollectionStatus(){
+        collection = sql.findOne(newsID).collection;
+        return collection;
+    }
+
     public void setCollection(){
         collection = "1";
         sql.update(newsID, "1");

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -27,6 +28,8 @@ import java.util.Vector;
 public class CategorySettingActivity extends AppCompatActivity {
 
     private SlidrConfig mConfig;
+    Intent resultIntent;
+    boolean[] isPreferredTopic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,9 @@ public class CategorySettingActivity extends AppCompatActivity {
         // Attach the Slidr Mechanism to this activity
         Slidr.attach(this, mConfig);
 
+        resultIntent = new Intent();
+        Intent intent = getIntent();
+        isPreferredTopic = intent.getBooleanArrayExtra(MainActivity.EXTRA_PREFERRED);
 
         View decorView = getWindow().getDecorView();
         // Hide the status bar.
@@ -66,10 +72,9 @@ public class CategorySettingActivity extends AppCompatActivity {
 
         final MultiSelectToggleGroup multi = findViewById(R.id.group_topics);
 
-
-
         multi.removeAllViews();
         String[] dummyText = getResources().getStringArray(R.array.topics_array);
+        int topicIndex = MainActivity.HOME_FINANCE;
         for (String text : dummyText) {
             LabelToggle toggle = new LabelToggle(this);
             toggle.setText(text);
@@ -92,14 +97,28 @@ public class CategorySettingActivity extends AppCompatActivity {
 
             toggle.getTextView().setPadding(22, 0, 22, 0);
             toggle.getTextView().setTextSize(12);
+            toggle.setChecked(isPreferredTopic[topicIndex]);
+            toggle.setId(0xE000 + topicIndex);
             multi.addView(toggle);
+
+            topicIndex += 1;
         }
+
+        multi.setOnCheckedChangeListener(new MultiSelectToggleGroup.OnCheckedStateChangeListener() {
+            @Override
+            public void onCheckedStateChanged(MultiSelectToggleGroup group, int checkedId, boolean isChecked) {
+
+                isPreferredTopic[checkedId - 0xE000] = isChecked; // this is strange...
+            }
+        });
 
     }
 
 
     @Override
     public void finish() {
+        resultIntent.putExtra(MainActivity.EXTRA_PREFERRED_II, isPreferredTopic);
+        setResult(RESULT_OK, resultIntent);
         super.finish();
         overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out);
         //MainActivity.dimmer.setVisibility(View.INVISIBLE);

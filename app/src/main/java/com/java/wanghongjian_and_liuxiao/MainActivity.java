@@ -67,33 +67,31 @@ public class MainActivity extends AppCompatActivity
 
     /* constants strings as keys in key-value pairs */
     public static final String EXTRA_SEARCH_WORDS = "com.naftikos.SEARCH_WORDS";
+    public static final String EXTRA_PREFERRED = "com.naftikos.PREFERRED";
+    public static final String EXTRA_PREFERRED_II = "com.naftikos.PREFERRED_II";
+    static final int CATEGORIES_REQUEST = 0xD000;
     public static final int UPDATE_NEWS = 1, LOAD_NEWS_BEFORE = 2, OTHERS = 3;
 
     /* constants for home page mode */
-    private static final int HOME_SEARCH = -1;
-    private static final int HOME_LATEST = 0;
-    private static final int HOME_RAND = 1;
-    private static final int HOME_PERSONAL = 2;
-    private static final int HOME_FINANCE = 3;
-    private static final int HOME_EDUCATION = 4;
-    private static final int HOME_ENT = 5;
-    private static final int HOME_SPORTS = 6;
-    private static final int HOME_TECH = 7;
-    private static final int HOME_AUTOS = 8;
-    private static final int HOME_MILITARY = 9;
-    private static final int HOME_CULTURE = 10;
-    private static final int HOME_SOCIETY = 11;
-    private static final int HOME_HEALTH = 12;
+    static final int HOME_SEARCH = -1;
+    static final int HOME_LATEST = 0;
+    static final int HOME_RAND = 1;
+    static final int HOME_PERSONAL = 2;
+    static final int HOME_FINANCE = 3;
+    static final int HOME_EDUCATION = 4;
+    static final int HOME_ENT = 5;
+    static final int HOME_SPORTS = 6;
+    static final int HOME_TECH = 7;
+    static final int HOME_AUTOS = 8;
+    static final int HOME_MILITARY = 9;
+    static final int HOME_CULTURE = 10;
+    static final int HOME_SOCIETY = 11;
+    static final int HOME_HEALTH = 12;
 
     private static final String[] homepageModeTitles = {"Latest", "Random", "Personal Feeds", "Finance", "Education", "Entertainment", "Sports", "Technology", "Autos", "Military", "Culture", "Society", "Health"};
-
-    private static final int cardBackgroundColors [] = {Color.rgb(0xF0-2, 0xF0, 0xF0), Color.rgb(0xF3-2, 0xF0, 0xF0), Color.rgb(0xF0-2, 0xF3, 0xF0), Color.rgb(0xF0-2, 0xF0, 0xF3),
-            Color.rgb(0xEE-2, 0xF0, 0xF0), Color.rgb(0xF0-2, 0xEE, 0xF0), Color.rgb(0xF0-2, 0xF0, 0xEE),
-            Color.rgb(0xF2-2, 0xF2, 0xF0), Color.rgb(0xF2-2, 0xF0, 0xF2), Color.rgb(0xF0-2, 0xF2, 0xF2),
-            Color.rgb(0xEB-2, 0xF6, 0xF0), Color.rgb(0xF0-2, 0xEB, 0xF6), Color.rgb(0xF6-2, 0xF0, 0xEB),
-            Color.rgb(0xE5-2, 0xE5, 0xE5)};
-
-    private static final int numberOfCardBackground = 14;
+    static final String[] categories = {"", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康"};
+    private boolean[] isPreferredTopic = { true, true, true, true, false, true, true, true, false, false, false, true, false };
+    private MenuItem[] navItems = { null, null, null, null, null, null, null, null, null, null, null, null, null };
     private static final int DIM_TITLE_COLOR = Color.rgb(0x6A, 0x6A, 0x6A);
     private static final int TITLE_COLOR = Color.rgb(0x23, 0x23, 0x23);
 
@@ -112,6 +110,10 @@ public class MainActivity extends AppCompatActivity
     int maxScroll = 0;
     TextView textSwipeMore;
     int newsCountBeforeSwipeMore = 0;
+
+
+    static NavigationView navigationView;
+    static Menu nav_menu;
 
     Vector<News> newsList;
     Vector<News> newsToAdd;
@@ -150,12 +152,29 @@ public class MainActivity extends AppCompatActivity
         api = new NewsAPI();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        nav_menu = navigationView.getMenu();
+
+        navItems[HOME_FINANCE] = nav_menu.findItem(R.id.nav_finance);
+        navItems[HOME_EDUCATION] = nav_menu.findItem(R.id.nav_education);
+        navItems[HOME_ENT]= nav_menu.findItem(R.id.nav_entertainment);
+        navItems[HOME_SPORTS] = nav_menu.findItem(R.id.nav_sports);
+        navItems[HOME_TECH] = nav_menu.findItem(R.id.nav_technology);
+        navItems[HOME_AUTOS] = nav_menu.findItem(R.id.nav_autos);
+        navItems[HOME_MILITARY] = nav_menu.findItem(R.id.nav_military);
+        navItems[HOME_CULTURE] = nav_menu.findItem(R.id.nav_culture);
+        navItems[HOME_SOCIETY] = nav_menu.findItem(R.id.nav_society);
+        navItems[HOME_HEALTH] = nav_menu.findItem(R.id.nav_health);
+
+        for (int j = HOME_FINANCE; j <= HOME_HEALTH; j += 1) {
+            navItems[j].setVisible(isPreferredTopic[j]);
+        }
+
 
         title = findViewById(R.id.home_title);
 
@@ -453,7 +472,8 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         }
         Intent intent = new Intent (this, CategorySettingActivity.class);
-        startActivity(intent);
+        intent.putExtra(EXTRA_PREFERRED, isPreferredTopic);
+        startActivityForResult(intent, CATEGORIES_REQUEST);
         overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out); // transition
         //dimmer.setVisibility(View.VISIBLE);
     }
@@ -619,7 +639,7 @@ public class MainActivity extends AppCompatActivity
                     //api.getCoverImage();
                     return vGet;
                 } else {
-                    String[] categories = {"", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康"};
+
                     //return api.testGetNews("https://api2.newsminer.net/svc/news/queryNewsList?words=野熊&size=1&startDate=2018-08-15&endDate=2018-08-21");
                     Vector<News> vGet = api.getNews("", categories[homePageMode], mode);     // refer to the top for modes
                     return vGet;
@@ -688,7 +708,7 @@ public class MainActivity extends AppCompatActivity
                 theLayout.addView(lineView);
 
                 ImageView img = new ImageView (getContext());
-                RequestOptions myOptions = new RequestOptions().centerCrop().override(400, 300);
+                RequestOptions myOptions = new RequestOptions().centerCrop().override(600, 450);
                 Glide.with(getContext()).asBitmap().apply(myOptions).load (news.imageURLs.elementAt(0)).into(img);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);;
                 params.setMargins(40, 18, 40, 18);
@@ -720,6 +740,21 @@ public class MainActivity extends AppCompatActivity
 
     public static Context getContext() {
         return context;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == CATEGORIES_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                boolean[] resultArray = data.getBooleanArrayExtra(EXTRA_PREFERRED_II);
+                for (int j = HOME_FINANCE; j <= HOME_HEALTH; j += 1) {
+                    isPreferredTopic[j] = resultArray[j];
+                    navItems[j].setVisible(isPreferredTopic[j]);
+                }
+            }
+        }
     }
 
 }

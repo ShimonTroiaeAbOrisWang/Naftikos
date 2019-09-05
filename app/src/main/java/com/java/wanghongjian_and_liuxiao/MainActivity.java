@@ -34,6 +34,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
 import com.nex3z.togglebuttongroup.button.LabelToggle;
 import com.nex3z.togglebuttongroup.button.ToggleButton;
+import com.snatik.storage.Storage;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -53,9 +54,15 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.Random;
 import java.util.Vector;
 import java.util.HashSet;
@@ -123,6 +130,9 @@ public class MainActivity extends AppCompatActivity
     HashSet<String> imageDisplayedSet;
     static Vector<String> searchHistory;
 
+    Storage storage;
+    String externPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,20 +140,26 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Work in progress.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
-
         File external_dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/wanghongjian_and_liuxiao/");
-        if (!external_dir.exists())
+        if (!external_dir.exists()) {
             external_dir.mkdirs();
+        } // TODO: 19.9.5 I suggest that we use the following way for file I/O:
+        // init
+        storage = new Storage(getApplicationContext());
+        // get external storage
+        externPath = storage.getExternalStorageDirectory() + File.separator + "Naftikos";
+        // new dir
+        if (!storage.isDirectoryExists(externPath)) {
+            storage.createDirectory(externPath);
+        }
+
+        if (storage.isFileExist(externPath + File.separator + "config.ini")) {
+            byte[] content = storage.readFile(externPath + File.separator + "config.ini");
+            try {
+                isPreferredTopic = SerializationUtils.deserialize(content);
+            } catch (Exception e) { }
+        }
+
 
         newsList = new Vector<>();
         newsToAdd = new Vector<>();
@@ -753,6 +769,8 @@ public class MainActivity extends AppCompatActivity
                     isPreferredTopic[j] = resultArray[j];
                     navItems[j].setVisible(isPreferredTopic[j]);
                 }
+                /* store the config locally */
+                storage.createFile(externPath + File.separator + "config.ini", SerializationUtils.serialize(isPreferredTopic));
             }
         }
     }

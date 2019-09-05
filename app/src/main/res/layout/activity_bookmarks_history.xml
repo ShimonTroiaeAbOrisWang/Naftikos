@@ -27,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
+            app:tabRippleColor="@color/colorSecondaryDark"
             app:tabIndicatorColor="@color/colorSecondaryDark"
             app:tabSelectedTextColor="@color/colorSecondaryDark"/>
 
@@ -50,7 +51,11 @@
         android:layout_marginHorizontal="2dp"
         android:layout_marginVertical="4dp"
         app:rippleColor="@null"
-        app:backgroundTint="@null"
+        app:backgroundTint="@color/colorPrimary"
+        android:backgroundTintMode="src_in"
+        android:elevation="0dp"
+        android:outlineAmbientShadowColor="@null"
+        android:outlineSpotShadowColor="@null"
         app:fabSize="mini"
         android:onClick="goBack"
         android:src="@drawable/ic_arrow_back_black_24dp"/>

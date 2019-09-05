@@ -490,10 +490,10 @@ public class MainActivity extends AppCompatActivity
          debug: load news with >= 2 images  */
 
         int newsCounter = 0;
+
         for (News newsItem : toAdd ? newsToAdd: newsList) {
             newsContainer.addView(generateHomeNewsCard(newsCounter, newsItem, toAdd));
             newsCounter += 1;
-            // TODO: 19.8.15 specify params for news cards
         }
 
         textSwipeMore = new TextView(this);
@@ -622,7 +622,6 @@ public class MainActivity extends AppCompatActivity
                     String[] categories = {"", "", "", "财经", "教育", "娱乐", "体育", "科技", "汽车", "军事", "文化", "社会", "健康"};
                     //return api.testGetNews("https://api2.newsminer.net/svc/news/queryNewsList?words=野熊&size=1&startDate=2018-08-15&endDate=2018-08-21");
                     Vector<News> vGet = api.getNews("", categories[homePageMode], mode);     // refer to the top for modes
-                    //api.getCoverImage();
                     return vGet;
                 }
             } catch (Exception e) {
@@ -678,6 +677,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setCoverImagesViaGlide (Vector<News> vector) {
+
         for (News news: vector) {
             if (!news.imageURLs.isEmpty()) {
                 LinearLayout theLayout = news.layout;
@@ -688,7 +688,6 @@ public class MainActivity extends AppCompatActivity
                 theLayout.addView(lineView);
 
                 ImageView img = new ImageView (getContext());
-                // img.setImageBitmap(news.image.elementAt(0).getImage());
                 RequestOptions myOptions = new RequestOptions().centerCrop().override(400, 300);
                 Glide.with(getContext()).asBitmap().apply(myOptions).load (news.imageURLs.elementAt(0)).into(img);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);;

@@ -54,27 +54,22 @@
                 <item
                     android:id="@+id/nav_military"
                     android:icon="@drawable/ic_my_location_black_24dp"
-                    android:visible="false"
                     android:title="Military" />
                 <item
                     android:id="@+id/nav_autos"
                     android:icon="@drawable/ic_directions_car_black_24dp"
-                    android:visible="false"
                     android:title="Autos" />
                 <item
                     android:id="@+id/nav_culture"
                     android:icon="@drawable/ic_public_black_24dp"
-                    android:visible="false"
                     android:title="Culture" />
                 <item
                     android:id="@+id/nav_society"
                     android:icon="@drawable/ic_poll_black_24dp"
-
                     android:title="Society" />
                 <item
                     android:id="@+id/nav_health"
                     android:icon="@drawable/ic_fitness_center_black_24dp"
-
                     android:title="Health" />
 
 

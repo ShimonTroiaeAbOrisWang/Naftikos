@@ -94,11 +94,18 @@ public class MongoDB {
         if (current_user._his.contains(n.newsID))
             return;
         current_user.collection.add(n);
+        current_user._his.add(n.newsID);
         updateUser(current_user);
     }
 
     static void deleteCollection(News n) {
-        current_user.collection.remove(n);
+        for (int i=0;i<current_user.collection.size();i++){
+            if (current_user.collection.get(i).newsID.equals(n.newsID)){
+                current_user.collection.remove(i);
+                break;
+            }
+        }
+        current_user._his.remove(n.newsID);
         updateUser(current_user);
     }
 

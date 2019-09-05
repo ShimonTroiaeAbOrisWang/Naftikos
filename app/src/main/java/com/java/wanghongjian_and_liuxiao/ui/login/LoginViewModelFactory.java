@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
-import com.java.wanghongjian_and_liuxiao.data.LoginDataSource;
+import com.java.wanghongjian_and_liuxiao.LoginDataSource;
 import com.java.wanghongjian_and_liuxiao.data.LoginRepository;
 
 /**

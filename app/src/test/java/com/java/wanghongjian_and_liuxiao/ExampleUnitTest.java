@@ -21,6 +21,6 @@ public class ExampleUnitTest {
         mongo.addUser(u);
         mongo.updateUser(u);
 
-        User user = mongo.findUser("abc");
+        mongo.findUser("abc");
     }
 }

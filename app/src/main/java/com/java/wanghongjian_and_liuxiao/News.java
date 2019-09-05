@@ -95,7 +95,11 @@ public class News implements java.io.Serializable {
         for (int i = 0; i < urls.length; i++) {
             //Image img = new Image(urls[i], i, newsID, dir);
             //image.add(img);
-            imageURLs.add(urls[i]);
+            String processedUrl = urls[i];
+            if (processedUrl.substring(0, 5).equals("http:")) {
+                processedUrl = "https" + processedUrl.substring(4);
+            }
+            imageURLs.add(processedUrl);
         }
     }
 

@@ -62,13 +62,15 @@ public class News implements java.io.Serializable {
         collection = n.collection;
         try{
             JSONObject raw_json = new JSONObject(n.jsonData);
-            video = new Video(raw_json.getString("video"), newsID, dir);
+            title = raw_json.getString("title");
             content = raw_json.getString("content");
             publishTime = raw_json.getString("publishTime");
             language = raw_json.getString("language");
             url = raw_json.getString("url");
             crawlTime = raw_json.getString("crawlTime");
             publisher = raw_json.getString("publisher");
+            video = new Video(raw_json.getString("video"), newsID, dir);
+
             /*
             if (raw_json.getString("image") != null && !raw_json.getString("image").equals("")){
                 String[] images = raw_json.getString("iamge").split(", ");
@@ -76,7 +78,7 @@ public class News implements java.io.Serializable {
                     image.add(new Image(images[i], i, newsID, dir));
             }
              */
-        }catch (JSONException e) {}
+        } catch (JSONException e) {}
     }
 
     public String getCollectionStatus(){

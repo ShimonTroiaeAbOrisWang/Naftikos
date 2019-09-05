@@ -14,7 +14,7 @@ public class SQLiteDao {
     public SQLiteDatabase db;
 
     public SQLiteDao() {
-        name = MainActivity.getContext().getExternalFilesDir("") + "/news.db";
+        name = MainActivity.getContext().getExternalFilesDir("") + "/-news.db";
         db = SQLiteDatabase.openOrCreateDatabase(name, null);
         db.execSQL("create table if not exists news (newsId varchar(44), category varchar(20), collection varchar(5), jsonData varchar(2000))");
         db.close();
@@ -73,9 +73,9 @@ public class SQLiteDao {
         db.close();
     }
 
-    public List<News> findAllInCollection() {
+    public ArrayList<News> findAllInCollection() {
         db = SQLiteDatabase.openOrCreateDatabase(name, null);
-        List<News> newsList = new ArrayList<>();
+        ArrayList<News> newsList = new ArrayList<>();
         Cursor cursor = db.rawQuery("select * from news where collection=?", new String[]{"1"});
         while(cursor.moveToNext()){
             String newsId = cursor.getString(cursor.getColumnIndex("newsId"));
@@ -134,13 +134,14 @@ public class SQLiteDao {
             collection = n.collection;
             JSONObject raw_json = new JSONObject();
             try{
-                raw_json.put("video", n.video.toString());
+                raw_json.put("title", n.title);
                 raw_json.put("content", n.content);
                 raw_json.put("publishTime", n.publishTime);
                 raw_json.put("language", n.language);
                 raw_json.put("url", n.url);
                 raw_json.put("crawlTime", n.crawlTime);
                 raw_json.put("publisher", n.publisher);
+                raw_json.put("video", n.video.toString());
                 StringBuilder image = new StringBuilder();
                 for (int i=0;i<n.imageURLs.size();i++) {
                     if (i > 0)

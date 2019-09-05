@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -192,5 +193,9 @@ public class NewsAPI {
             parsedNews = null;
         }
         last_json = parsedNews;
+    }
+
+    public ArrayList<News> getBookmarks () {
+        return db.findAllInCollection();
     }
 }

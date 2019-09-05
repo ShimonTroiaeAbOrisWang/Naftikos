@@ -1,5 +1,6 @@
 package com.java.wanghongjian_and_liuxiao;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -13,8 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.java.wanghongjian_and_liuxiao.ui.main.SectionsPagerAdapter;
+
+import java.util.ArrayList;
+import java.util.Vector;
 
 public class BookmarksHistoryActivity extends AppCompatActivity {
 
@@ -40,6 +47,8 @@ public class BookmarksHistoryActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        // overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left); // transition
+
     }
 
     public void goBack (View view) {

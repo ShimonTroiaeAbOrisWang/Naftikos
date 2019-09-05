@@ -63,6 +63,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
 import java.util.HashSet;
@@ -76,6 +77,8 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_SEARCH_WORDS = "com.naftikos.SEARCH_WORDS";
     public static final String EXTRA_PREFERRED = "com.naftikos.PREFERRED";
     public static final String EXTRA_PREFERRED_II = "com.naftikos.PREFERRED_II";
+    public static final String EXTRA_BOOKMARKS = "com.naftikos.BOOKMARKS";
+    public static final String EXTRA_HISTORY = "com.naftikos.HISTORY";
     static final int CATEGORIES_REQUEST = 0xD000;
     public static final int UPDATE_NEWS = 1, LOAD_NEWS_BEFORE = 2, OTHERS = 3;
 
@@ -124,8 +127,8 @@ public class MainActivity extends AppCompatActivity
 
     Vector<News> newsList;
     Vector<News> newsToAdd;
-    static News newsToDisplay;
-    NewsAPI api;
+    static public News newsToDisplay;
+    static public NewsAPI api;
     HashSet<String> viewedNewsSet;
     HashSet<String> imageDisplayedSet;
     static Vector<String> searchHistory;

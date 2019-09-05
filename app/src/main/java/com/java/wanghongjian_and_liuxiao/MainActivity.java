@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity
     HashSet<String> viewedNewsSet;
     HashSet<String> imageDisplayedSet;
     static Vector<String> searchHistory;
+    SQLiteDao sql;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

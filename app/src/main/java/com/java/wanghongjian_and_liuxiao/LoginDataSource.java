@@ -1,5 +1,7 @@
-package com.java.wanghongjian_and_liuxiao.data;
+package com.java.wanghongjian_and_liuxiao;
 
+import com.java.wanghongjian_and_liuxiao.MongoDB;
+import com.java.wanghongjian_and_liuxiao.data.Result;
 import com.java.wanghongjian_and_liuxiao.data.model.LoggedInUser;
 
 import java.io.IOException;
@@ -13,11 +15,13 @@ public class LoginDataSource {
 
         try {
             // TODO: handle loggedInUser authentication
-            LoggedInUser fakeUser =
-                    new LoggedInUser(
-                            java.util.UUID.randomUUID().toString(),
-                            "Jane Doe");
-            return new Result.Success<>(fakeUser);
+            int state = MongoDB.login(username, password);
+            if (state == 1 || state == 2){
+                LoggedInUser User = new LoggedInUser(username, username);
+                return new Result.Success<>(User);
+            }else{
+                return new Result.Error(new IOException("Error logging in"));
+            }
         } catch (Exception e) {
             return new Result.Error(new IOException("Error logging in", e));
         }

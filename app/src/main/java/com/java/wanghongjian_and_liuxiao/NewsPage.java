@@ -156,9 +156,9 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
     public void toggleFavourite (View view) {
         addedToFavourite = !addedToFavourite;
         if (addedToFavourite) {
-            //news.setCollection();
+            news.setCollection();
         } else {
-            //news.deleteCollection();
+            news.deleteCollection();
         }
         FloatingActionButton button = findViewById(R.id.news_favourite);
 

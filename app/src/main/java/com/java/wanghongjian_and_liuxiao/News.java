@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.Vector;
 
 public class News implements java.io.Serializable {
+    SQLiteDao sql = new SQLiteDao();
     String newsID;
     String title, content, publishTime, language, url, crawlTime, publisher, category;
     String collection;
@@ -80,14 +81,16 @@ public class News implements java.io.Serializable {
 
     public void setCollection(){
         collection = "1";
-        SQLiteDao.update(newsID, "1");
-        MongoDB.addCollection(this);
+        sql.update(newsID, "1");
+        if (MongoDB.current_user != null)
+            MongoDB.addCollection(this);
     }
 
     public void deleteCollection(){
         collection = "0";
-        SQLiteDao.update(newsID, "0");
-        MongoDB.deleteCollection(this);
+        sql.update(newsID, "0");
+        if (MongoDB.current_user != null)
+            MongoDB.deleteCollection(this);
     }
 
     public void setImage(String _url) {

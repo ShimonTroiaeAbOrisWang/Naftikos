@@ -10,6 +10,8 @@
     <color name="colorSecondaryLight">#5e92f3</color>
     <color name="colorCategoryButton">#5bbce8</color>
 
+    <color name="newsPageButton">#56566C</color>
+
     <color name="colorAccent">#D81B60</color>
 
     <color name="colorBanner">#4bacb8</color>

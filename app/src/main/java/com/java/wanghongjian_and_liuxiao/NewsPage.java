@@ -171,6 +171,17 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
 
     }
 
+    public void share (View view) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "I'm reading a Ναυτικός news!\n" + news.title);
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
+    }
+
+
     @Override
     public void finish() {
         Glide.with(coverImage).clear(coverImage);

@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -83,12 +84,15 @@ public class MongoDB {
         List<String> history = new ArrayList<>(u.history), collection = new ArrayList<>();
         for (News n : u.collection)
             collection.add(n.newsID);
-        mc = new MongoConnection("updateOne", u.userName, new Document("$set", new Document("history", history).append("collection", collection)));
+        Document doc = new Document("history", history).append("collection", collection).append("userName", u.userName).append("passwd", u.passwd);
+        mc = new MongoConnection("updateOne", u.userName, doc);
         mc.execute();
         return;
     }
 
     static void addCollection(News n) {
+        if (current_user._his.contains(n.newsID))
+            return;
         current_user.collection.add(n);
         updateUser(current_user);
     }
@@ -118,7 +122,8 @@ public class MongoDB {
                     .append("passwd", u.passwd);
             mc = new MongoConnection("insertOne", null, doc);
             int state = mc.execute().get();
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
         return true;
     }
 }
@@ -194,8 +199,8 @@ class MongoConnection extends AsyncTask<String, Integer, Integer> {
                 out.flush();
                 out.close();
             } else if (task.equals("updateOne")) {
-                params.put("history", new JSONArray(source.get("history")));
-                params.put("collection", new JSONArray(source.get("collection")));
+                params.put("history", new JSONArray(source.get("history").toString()));
+                params.put("collection", new JSONArray(source.get("collection").toString()));
                 byte[] input = params.toString().getBytes("utf-8");
                 out.write(input, 0, input.length);
                 out.flush();
@@ -213,9 +218,12 @@ class MongoConnection extends AsyncTask<String, Integer, Integer> {
         } catch (IOException e) {
             System.out.println(e);
         } catch (JSONException e) {
+            System.out.println(e);
         } catch (NullPointerException e) {
             System.out.println("null pointer exception");
-        } catch (Exception e) { System.out.println(e);}
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         return 1;
     }
 }
@@ -225,6 +233,7 @@ class User {
     public final String userName, passwd;
     public Vector<String> history;
     ArrayList<News> collection;
+    HashSet<String> _his = new HashSet<>(), _col = new HashSet<>();
 
     User(Document userDoc) {
         userName = userDoc.getString("userName");
@@ -236,6 +245,8 @@ class User {
             n.collection = "1";
             collection.add(n);
         }
+        _his = new HashSet<>(history);
+        _col = new HashSet<>((List<String>) userDoc.get("collection"));
         sql.updateCollection(collection);
     }
 

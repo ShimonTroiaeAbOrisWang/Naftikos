@@ -225,6 +225,8 @@ class Video extends AsyncTask<String, Integer, Void> implements java.io.Serializ
         if (!file.exists()) {
             try {
                 int count;
+                if (videoURL.length() < 5)
+                    return null;
                 if (videoURL.substring(0, 5).equals("http:"))
                     videoURL = "https" + videoURL.substring(4);
                 URL url = new URL(videoURL);

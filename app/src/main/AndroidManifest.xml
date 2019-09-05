@@ -16,8 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:networkSecurityConfig="@xml/network_security_config">
-        <activity android:name=".CategorySettingActivity"
-        android:theme="@style/AppTheme">
         <activity
             android:name=".BookmarksHistoryActivity"
             android:label="@string/title_activity_bookmarks_history"

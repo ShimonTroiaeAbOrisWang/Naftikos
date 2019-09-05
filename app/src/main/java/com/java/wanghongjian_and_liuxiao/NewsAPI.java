@@ -72,6 +72,7 @@ public class NewsAPI {
                     db.add(_news);
                 }
             } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
         newsList = news_list;

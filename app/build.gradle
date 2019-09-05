@@ -34,6 +34,8 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0'
     // SwipyRefreshLayout
     // implementation 'com.github.omadahealth:swipy:1.2.3@aar' (crash!)
+    implementation 'com.snatik:storage:2.1.0'
+    implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'org.mongodb:mongo-java-driver:3.2.2'
     implementation 'com.r0adkll:slidableactivity:2.1.0'
     implementation 'com.nex3z:toggle-button-group:1.2.0'

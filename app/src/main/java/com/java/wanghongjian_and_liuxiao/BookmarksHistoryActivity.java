@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 
 import com.java.wanghongjian_and_liuxiao.ui.main.SectionsPagerAdapter;
 
@@ -26,6 +27,9 @@ public class BookmarksHistoryActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+
+        Window window = getWindow();
+        window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
         FloatingActionButton fab = findViewById(R.id.fab);
 

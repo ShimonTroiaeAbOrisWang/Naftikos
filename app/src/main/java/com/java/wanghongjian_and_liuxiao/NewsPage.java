@@ -7,9 +7,11 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -172,6 +174,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
     }
 
     public void share (View view) {
+        /*
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, "I'm reading a Ναυτικός news!\n" + news.title);
@@ -179,6 +182,21 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
 
         Intent shareIntent = Intent.createChooser(sendIntent, null);
         startActivity(shareIntent);
+         */
+        try {
+            Intent intent = new Intent();
+            ComponentName comp = new ComponentName("com.tencent.mm",
+                    "com.tencent.mm.ui.tools.ShareImgUI");
+            intent.setComponent(comp);
+            intent.setAction("android.intent.action.SEND");
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_TEXT, "I'm reading...");
+            //intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 

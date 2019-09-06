@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -30,6 +32,8 @@ import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
 import com.r0adkll.slidr.model.SlidrPosition;
+
+import java.io.File;
 
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
@@ -198,22 +202,41 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
         //关闭sso授权
         oks.disableSSOWhenAuthorize();
 
-        // title标题，微信、QQ和QQ空间等平台使用
-        oks.setTitle(shareText);
-        // titleUrl QQ和QQ空间跳转链接
-        oks.setTitleUrl(shareURL);
-        // text是分享文本，所有平台都需要这个字段
-        oks.setText("Title: " + news.title);
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        // oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-        // url在微信、微博，Facebook等平台中使用
-        oks.setUrl(shareURL);
-        // comment是我对这条分享的评论，仅在人人网使用
-        oks.setComment("");
+        if (news.imageURLs.size() > 0) {
+            // title标题，微信、QQ和QQ空间等平台使用
+            oks.setTitle(shareText);
+            // titleUrl QQ和QQ空间跳转链接
+            oks.setTitleUrl(shareURL);
+            // text是分享文本，所有平台都需要这个字段
+            oks.setText(shareText + "Title: " + news.title);
+
+            oks.setImageUrl(news.imageURLs.elementAt(0));
+            // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+            // oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+            // url在微信、微博，Facebook等平台中使用
+            oks.setUrl(shareURL);
+        } else {
+            oks.setTitle(shareText);
+            //oks.setTitleUrl(shareURL);
+            oks.setText(shareText + "Title: " + news.title + "\n" + "Link: " + shareURL);
+            //oks.setUrl(shareURL);
+            oks.setComment("");
+        }
+
         // 启动分享GUI
         oks.show(this);
 
     }
+
+
+    private void galleryAddPic(String imagePath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(imagePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        sendBroadcast(mediaScanIntent);
+    }
+
 
 
     @Override

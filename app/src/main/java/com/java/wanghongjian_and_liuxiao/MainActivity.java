@@ -610,7 +610,7 @@ public class MainActivity extends AppCompatActivity
         inCardLayout.addView(lineView);
 
         final TextView textInCard = new TextView(this);
-        // TODO: 19.8.15 put content, image, etc. to the card
+
         textInCard.setText(newsItem.getTitle());
         FrameLayout.LayoutParams params2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -638,13 +638,28 @@ public class MainActivity extends AppCompatActivity
 
         newCard.addView(inCardLayout);
 
+        final int logicalNum = newsCounter + (toAdd ? newsCountBeforeSwipeMore: 0);
+
         newCard.setClickable(true);
         newCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openNewsByNumber(newsCounter + (toAdd ? newsCountBeforeSwipeMore: 0), view, textInCard);
+                openNewsByNumber(logicalNum, view, textInCard);
             }
         });
+
+        /***
+         * DEBUG
+         *      ***/
+        System.out.println(newsItem.title);
+        System.out.println("Logical #: " + (newsCounter + (toAdd ? newsCountBeforeSwipeMore: 0)));
+        for (int i = 0; i < newsList.size(); i += 1) {
+            if (newsList.elementAt(i).newsID == newsItem.newsID) {
+                System.out.println("Real #: " + i);
+            }
+        }
+
+
         return newCard;
     }
 
@@ -688,18 +703,25 @@ public class MainActivity extends AppCompatActivity
                     storage.createFile(externPath + File.separator + "search.history", SerializationUtils.serialize(searchHistory));
 
                     Vector<News> vGet = api.getNews(searchString, null, mode);
-                    //api.getCoverImage();
-                    return vGet;
+                    if (vGet == null) {
+                        return new Vector<>();
+                    } else {
+                        return vGet;
+                    }
                 } else {
 
                     //return api.testGetNews("https://api2.newsminer.net/svc/news/queryNewsList?words=野熊&size=1&startDate=2018-08-15&endDate=2018-08-21");
                     Vector<News> vGet = api.getNews("", categories[homePageMode], mode);     // refer to the top for modes
-                    return vGet;
+                    if (vGet == null) {
+                        return new Vector<>();
+                    } else {
+                        return vGet;
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return null;
+            return new Vector<>();
         }
 
 

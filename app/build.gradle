@@ -63,6 +63,7 @@ MobSDK {
             Wechat {
                 appId "wx4868b35061f87885"
                 appSecret "64020361b8ec4c99936c0e3999a9f249"
+                bypassApproval true
             }
             QQ {
                 appId "100371282"

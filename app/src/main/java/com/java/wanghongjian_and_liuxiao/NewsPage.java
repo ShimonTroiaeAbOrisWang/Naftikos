@@ -31,6 +31,8 @@ import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
 import com.r0adkll.slidr.model.SlidrPosition;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
 public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
 
     boolean addedToFavourite = false;
@@ -42,6 +44,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
     int displayImage = 0;
     AppCompatImageView coverImage;
     CountDownTimer countDownTimer;
+    Animation rotateOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +106,8 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
             videoButton.startAnimation(shake);
         }
 
+        rotateOnce = AnimationUtils.loadAnimation(this, R.anim.rotate_once);
+
 
         /* hide title in expanded view */
         final CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.news_layout);
@@ -135,6 +140,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
     }
 
     public void toggleFavourite (View view) {
+
         addedToFavourite = !addedToFavourite;
         if (addedToFavourite) {
             news.setCollection();
@@ -142,6 +148,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
             news.deleteCollection();
         }
         FloatingActionButton button = findViewById(R.id.news_favourite);
+        button.startAnimation(rotateOnce);
 
         button.hide();
         button.setImageDrawable(addedToFavourite ? added_icon: not_added_icon);
@@ -160,7 +167,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
     }
 
     public void share (View view) {
-        /*
+/*
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, "I'm reading a Ναυτικός news!\n" + news.title);
@@ -168,7 +175,9 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
 
         Intent shareIntent = Intent.createChooser(sendIntent, null);
         startActivity(shareIntent);
-         */
+        */
+
+         /*
         try {
             Intent intent = new Intent();
             ComponentName comp = new ComponentName("com.tencent.mm",
@@ -177,11 +186,32 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
             intent.setAction("android.intent.action.SEND");
             intent.setType("image/*");
             intent.putExtra(Intent.EXTRA_TEXT, "I'm reading...");
-            //intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
+
+        String shareText = "I'm reading a Ναυτικός news!\n";
+        String shareURL = news.url;
+
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+        // title标题，微信、QQ和QQ空间等平台使用
+        oks.setTitle(shareText);
+        // titleUrl QQ和QQ空间跳转链接
+        oks.setTitleUrl(shareURL);
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("Title: " + news.title);
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        // oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        // url在微信、微博，Facebook等平台中使用
+        oks.setUrl(shareURL);
+        // comment是我对这条分享的评论，仅在人人网使用
+        oks.setComment("");
+        // 启动分享GUI
+        oks.show(this);
 
     }
 

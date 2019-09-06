@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -24,6 +26,7 @@ public class NewBookmarksHistoryActivity extends AppCompatActivity {
 
     private ListView listView;
     private SingleSelectToggleGroup single;
+    Animation rotateOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class NewBookmarksHistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_bookmarks_history);
         Slidr.attach(this);
 
+        rotateOnce = AnimationUtils.loadAnimation(this, R.anim.rotate_once);
 
         listView = findViewById(R.id.bookmarks_or_history_list);
         single = findViewById(R.id.group_choices);
@@ -77,10 +81,11 @@ public class NewBookmarksHistoryActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left); // transition
             }
         });
-
+        findViewById(R.id.resync_button).startAnimation(rotateOnce);
     }
 
     private void loadHistory () {
+
         final ArrayList<News> history = new ArrayList<>();
         final Vector<String> history_titles = new Vector<>();
         for (int j = 0; j < MainActivity.viewHistory.size(); j += 1) {
@@ -107,6 +112,8 @@ public class NewBookmarksHistoryActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.resync_button).startAnimation(rotateOnce);
+
     }
 
 
@@ -117,6 +124,7 @@ public class NewBookmarksHistoryActivity extends AppCompatActivity {
     }
 
     public void refresh (View view) {
+
         if (single.getCheckedId() == R.id.choice_bookmarks) {
             loadBookmarks();
         } else {

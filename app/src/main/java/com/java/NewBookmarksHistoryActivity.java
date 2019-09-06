@@ -37,11 +37,6 @@ public class NewBookmarksHistoryActivity extends AppCompatActivity {
         loadBookmarks();
 
         Intent intent = getIntent();
-        if (intent.hasExtra(MainActivity.EXTRA_HISTORY)) {
-            /* load history page */
-            single.check(R.id.choice_history);
-            loadHistory();
-        }
 
         single.setOnCheckedChangeListener(new SingleSelectToggleGroup.OnCheckedChangeListener() {
             @Override
@@ -53,6 +48,12 @@ public class NewBookmarksHistoryActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if (intent.hasExtra(MainActivity.EXTRA_HISTORY)) {
+            /* load history page */
+            single.check(R.id.choice_history);
+        }
+
 
     }
 
@@ -85,6 +86,9 @@ public class NewBookmarksHistoryActivity extends AppCompatActivity {
         for (int j = 0; j < MainActivity.viewHistory.size(); j += 1) {
 
             News news = MainActivity.api.getNewsById(MainActivity.viewHistory.elementAt(MainActivity.viewHistory.size() - j - 1));
+            if (news == null) {
+                continue;
+            }
             history.add(news);
             history_titles.add(news.getTitle());
 

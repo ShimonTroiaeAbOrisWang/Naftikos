@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity
             storage.createDirectory(externPath);
         }
 
-        viewHistory = new Vector<>();
         if (storage.isFileExist(externPath + File.separator + "config.ini")) {
             byte[] content = storage.readFile(externPath + File.separator + "config.ini");
             try {
@@ -168,10 +167,19 @@ public class MainActivity extends AppCompatActivity
             } catch (Exception e) { }
         }
 
+        viewHistory = new Vector<>();
         if (storage.isFileExist(externPath + File.separator + "view.history")) {
             byte[] content = storage.readFile(externPath + File.separator + "view.history");
             try {
                 viewHistory = SerializationUtils.deserialize(content);
+            } catch (Exception e) { }
+        }
+
+        searchHistory = new Vector<>();
+        if (storage.isFileExist(externPath + File.separator + "search.history")) {
+            byte[] content = storage.readFile(externPath + File.separator + "search.history");
+            try {
+                searchHistory = SerializationUtils.deserialize(content);
             } catch (Exception e) { }
         }
 
@@ -302,7 +310,7 @@ public class MainActivity extends AppCompatActivity
         searchDialogBuilder.setNegativeButton("Show History", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                searchHistory = api.getSearchHistory();
+                // searchHistory = api.getSearchHistory();
                 Vector<String> searchHistorySet = new Vector<>();
                 for (int j = 0; j < searchHistory.size(); j += 1) {
                     String s = searchHistory.elementAt(searchHistory.size() - 1 - j);
@@ -672,6 +680,13 @@ public class MainActivity extends AppCompatActivity
             publishProgress("Loading..."); // Calls onProgressUpdate()
             try {
                 if (isAfterSearch) {
+
+                    if (searchHistory.size() == 15) {
+                        viewHistory.remove(0);
+                    }
+                    searchHistory.add(searchString);
+                    storage.createFile(externPath + File.separator + "search.history", SerializationUtils.serialize(searchHistory));
+
                     Vector<News> vGet = api.getNews(searchString, null, mode);
                     //api.getCoverImage();
                     return vGet;

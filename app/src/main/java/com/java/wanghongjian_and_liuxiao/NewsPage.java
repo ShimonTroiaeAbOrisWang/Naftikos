@@ -15,6 +15,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toolbar;
@@ -96,6 +98,9 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
             videoButton.hide();
         } else if (news.videoURL.length() < 5) {
             videoButton.hide();
+        } else {
+            Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+            videoButton.startAnimation(shake);
         }
 
 
@@ -151,6 +156,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
         Intent intent = new Intent(this, VideoActivity.class);
         intent.putExtra(MainActivity.EXTRA_VIDEO_URL, news.videoURL);
         startActivity(intent);
+        overridePendingTransition(R.anim.push_up_in, R.anim.push_down_out); // transition
     }
 
     public void share (View view) {

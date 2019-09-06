@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light"
+    tools:context="com.java.NewBookmarksHistoryActivity">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.nex3z.togglebuttongroup.SingleSelectToggleGroup
+            android:layout_marginLeft="29dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="20dp"
+            android:id="@+id/group_choices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tbgCheckedButton="@+id/choice_bookmarks">
+
+            <com.nex3z.togglebuttongroup.button.LabelToggle
+                android:id="@+id/choice_bookmarks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="9dp"
+                app:tbgMarkerColor="@color/colorSecondaryLight"
+                android:text="Bookmarks"/>
+
+            <com.nex3z.togglebuttongroup.button.LabelToggle
+                android:id="@+id/choice_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="9dp"
+                app:tbgMarkerColor="@color/colorSecondaryLight"
+                android:text="History"/>
+
+        </com.nex3z.togglebuttongroup.SingleSelectToggleGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="@color/colorSecondaryLight"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="3dp"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:id="@+id/bookmarks_or_history_list" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:onClick="goBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_arrow_back_black_24dp"
+        android:backgroundTint="@android:color/transparent"
+        android:layout_marginTop="17dp"
+        android:layout_marginLeft="0dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:onClick="refresh"
+        android:id="@+id/resync_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/colorSecondary"
+        app:srcCompat="@drawable/ic_sync_black_24dp" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

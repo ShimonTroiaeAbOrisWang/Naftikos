@@ -14,6 +14,7 @@ import android.os.Bundle;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.snackbar.Snackbar;
+import com.java.NewBookmarksHistoryActivity;
 import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
 import com.google.android.material.card.MaterialCardView;
 
@@ -132,6 +133,7 @@ public class MainActivity extends AppCompatActivity
     HashSet<String> viewedNewsSet;
     HashSet<String> imageDisplayedSet;
     static Vector<String> searchHistory;
+    static public Vector<String> viewHistory;
     SQLiteDao sql;
 
     Storage storage;
@@ -157,10 +159,18 @@ public class MainActivity extends AppCompatActivity
             storage.createDirectory(externPath);
         }
 
+        viewHistory = new Vector<>();
         if (storage.isFileExist(externPath + File.separator + "config.ini")) {
             byte[] content = storage.readFile(externPath + File.separator + "config.ini");
             try {
                 isPreferredTopic = SerializationUtils.deserialize(content);
+            } catch (Exception e) { }
+        }
+
+        if (storage.isFileExist(externPath + File.separator + "view.history")) {
+            byte[] content = storage.readFile(externPath + File.separator + "view.history");
+            try {
+                viewHistory = SerializationUtils.deserialize(content);
             } catch (Exception e) { }
         }
 
@@ -637,6 +647,15 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, NewsPage.class);
         newsToDisplay = newsList.elementAt(newsNumber);
 
+        if (viewHistory.contains(newsToDisplay.newsID)) {
+            viewHistory.remove(newsToDisplay.newsID);
+        }
+        if (viewHistory.size() == 50) {
+            viewHistory.remove(0);
+        }
+        viewHistory.add(newsToDisplay.newsID);
+        storage.createFile(externPath + File.separator + "view.history", SerializationUtils.serialize(viewHistory));
+
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left); // transition
         viewedNewsSet.add(newsToDisplay.newsID);
@@ -741,13 +760,15 @@ public class MainActivity extends AppCompatActivity
 
 
     public void showBookmarks (View view) {
-        Intent intent = new Intent(this, BookmarksHistoryActivity.class);
+        Intent intent = new Intent(this, NewBookmarksHistoryActivity.class);
+        intent.putExtra(EXTRA_BOOKMARKS, 0);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     public void showHistory (View view) {
-        Intent intent = new Intent(this, BookmarksHistoryActivity.class);
+        Intent intent = new Intent(this, NewBookmarksHistoryActivity.class);
+        intent.putExtra(EXTRA_HISTORY, 0);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }

@@ -198,4 +198,7 @@ public class NewsAPI {
     public ArrayList<News> getBookmarks () {
         return db.findAllInCollection();
     }
+    public News getNewsById (String id) {
+        return db.findOne(id);
+    }
 }

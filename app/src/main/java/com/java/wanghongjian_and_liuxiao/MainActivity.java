@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_PREFERRED_II = "com.naftikos.PREFERRED_II";
     public static final String EXTRA_BOOKMARKS = "com.naftikos.BOOKMARKS";
     public static final String EXTRA_HISTORY = "com.naftikos.HISTORY";
+    public static final String EXTRA_VIDEO_URL = "com.naftikos.VIDEO_URL";
     static final int CATEGORIES_REQUEST = 0xD000;
     public static final int UPDATE_NEWS = 1, LOAD_NEWS_BEFORE = 2, OTHERS = 3;
 
@@ -560,9 +561,6 @@ public class MainActivity extends AppCompatActivity
         /* end the refresh process on finish */
         SwipeRefreshLayout refreshLayout = findViewById(R.id.news_refresh);
         refreshLayout.setRefreshing(false);
-
-        /* add images to home page */
-        // setCoverImagesViaGlide();
 
     }
 

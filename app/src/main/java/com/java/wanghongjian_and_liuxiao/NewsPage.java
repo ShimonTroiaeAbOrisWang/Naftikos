@@ -74,46 +74,11 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
 
         coverImage = findViewById(R.id.news_cover_img);
         if (imageTotal != 0) {
-            /*
-            for (Image img: news.image) {
-                boolean firstFlag = true;
-                if (img.getImage() != null) {
-                    if (firstFlag) {
-                        coverImage.setImageBitmap(img.getImage());
-                        currentLoadedImages = 1;
-                    }
-                    firstFlag = false;
-                }
-            } */
-            //Glide.with(coverImage).load (news.imageURLs.elementAt(displayImage)).into(coverImage);
             /* images cycler */
             countDownTimer = new CountDownTimer(2500*100, 2500) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-                    /* load image */
-                    /*
-                    if (currentLoadedImages < imageTotal) {
-                        Image img = news.image.elementAt(currentLoadedImages);
-                        if (img.hasImage()) {
-                            if (img.unsafeURL) {
-                                news.image.remove(img);
-                                imageTotal -= 1;
-                                if (imageTotal == 0) {
-                                    coverImage.setImageDrawable(getDrawable(R.drawable.testnewsbg));
-                                }
-                            } else {
-                                coverImage.setImageBitmap(img.getImage());
-                                currentLoadedImages += 1;
-                            }
-                        }
-                    } else if (imageTotal > 0) {
-                        Image img = news.image.elementAt(displayImage);
-                        if (img.hasImage()) {
-                            coverImage.setImageBitmap(img.getImage());
-                        }
-                        displayImage = (displayImage + 1) % imageTotal;
-                    }
-                    */
+
                     Glide.with(coverImage).load (news.imageURLs.elementAt(displayImage)).into(coverImage);
                     displayImage = (displayImage + 1) % imageTotal;
                 }
@@ -124,6 +89,15 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
         } else {
             coverImage.setImageDrawable(getDrawable(R.drawable.testnewsbg));
         }
+
+        /* prepare video (if any) */
+        FloatingActionButton videoButton = findViewById(R.id.news_play_video);
+        if (news.videoURL == null) {
+            videoButton.hide();
+        } else if (news.videoURL.length() < 5) {
+            videoButton.hide();
+        }
+
 
         /* hide title in expanded view */
         final CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.news_layout);
@@ -171,6 +145,12 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
         Snackbar.make(view, addedToFavourite ? "News added to your Bookmarks." : "News removed from your Bookmarks.", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
 
+    }
+
+    public void playVideo (View view) {
+        Intent intent = new Intent(this, VideoActivity.class);
+        intent.putExtra(MainActivity.EXTRA_VIDEO_URL, news.videoURL);
+        startActivity(intent);
     }
 
     public void share (View view) {

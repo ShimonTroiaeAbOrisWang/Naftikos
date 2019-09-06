@@ -31,7 +31,8 @@ public class News implements java.io.Serializable {
     String newsID;
     String title, content, publishTime, language, url, crawlTime, publisher, category;
     String collection;
-    Video video = new Video();
+    // Video video = new Video();
+    String videoURL;
     // Vector<Image> image = new Vector<>();
     Vector<String> keywords; // keywords are listed according to their relevance from 0 to the end
     String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/wanghongjian_and_liuxiao/";
@@ -69,7 +70,8 @@ public class News implements java.io.Serializable {
             url = raw_json.getString("url");
             crawlTime = raw_json.getString("crawlTime");
             publisher = raw_json.getString("publisher");
-            video = new Video(raw_json.getString("video"), newsID, dir);
+            // video = new Video(raw_json.getString("video"), newsID, dir);
+            videoURL = raw_json.getString("video");
 
             /*
             if (raw_json.getString("image") != null && !raw_json.getString("image").equals("")){
@@ -118,9 +120,21 @@ public class News implements java.io.Serializable {
         }
     }
 
+
     public void setVideo(String _url) {
-        video = new Video(_url, newsID, dir);
+        if (_url == null) {
+            videoURL = "";
+        } else if (_url.length() > 6) {
+            if (_url.substring(0, 5).equals("http:")) {
+                videoURL = "https" + _url.substring(4);
+            } else {
+                videoURL = _url;
+            }
+        } else {
+            videoURL = "";
+        }
     }
+
 
     public String getTitle() {
         return title;

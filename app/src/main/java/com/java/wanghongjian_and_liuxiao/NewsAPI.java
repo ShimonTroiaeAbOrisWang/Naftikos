@@ -57,13 +57,24 @@ public class NewsAPI {
         return search_history;
     }
 
+    private boolean isBlocked(News news){
+        boolean toBlock = false;
+        for (String w: MainActivity.keywordsBlacklist){
+            if (news.keywords.contains(w) || news.title.contains(w) || news.content.contains(w)){
+                toBlock = true;
+                break;
+            }
+        }
+        return toBlock;
+    }
+
     public Vector<News> getNews(String keyword, String category, int mode, boolean recommend) {
         //Thread connect = new Thread(this);
         Vector<News> news_list = new Vector<>();
         int iteration = 0;
         words = keyword;
         categories = category;
-        while (news_list.size() < 15 && iteration++ < 60) {
+        while (news_list.size() < 15 && iteration++ < 5) {
             last_request = formRequest(words, categories, mode, recommend);
             parseJSON(last_request);
             JSONObject news = last_json;
@@ -73,7 +84,7 @@ public class NewsAPI {
                 JSONArray data = news.getJSONArray("data");
                 for (int i = data.length() - 1; i >= 0 ; i--) {
                     News _news = parseNews(data.getJSONObject(i));
-                    if (loadingHistory.contains(_news.newsID))
+                    if (loadingHistory.contains(_news.newsID) || isBlocked(_news))
                         continue;
                     news_list.add(_news);
                     db.add(_news);

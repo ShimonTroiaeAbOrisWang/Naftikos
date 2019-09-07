@@ -30,6 +30,7 @@ public class CategorySettingActivity extends AppCompatActivity {
     private SlidrConfig mConfig;
     Intent resultIntent;
     boolean[] isPreferredTopic;
+    private final static int TOPIC_ID_OFFSET = 0x5E000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +99,7 @@ public class CategorySettingActivity extends AppCompatActivity {
             toggle.getTextView().setPadding(22, 0, 22, 0);
             toggle.getTextView().setTextSize(12);
             toggle.setChecked(isPreferredTopic[topicIndex]);
-            toggle.setId(0xE000 + topicIndex);
+            toggle.setId(TOPIC_ID_OFFSET + topicIndex);
             multi.addView(toggle);
 
             topicIndex += 1;
@@ -108,7 +109,7 @@ public class CategorySettingActivity extends AppCompatActivity {
             @Override
             public void onCheckedStateChanged(MultiSelectToggleGroup group, int checkedId, boolean isChecked) {
 
-                isPreferredTopic[checkedId - 0xE000] = isChecked; // this is strange...
+                isPreferredTopic[checkedId - TOPIC_ID_OFFSET] = isChecked; // this is strange...
             }
         });
 

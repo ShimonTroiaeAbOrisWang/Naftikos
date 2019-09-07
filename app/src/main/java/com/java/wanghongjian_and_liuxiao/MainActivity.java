@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity
     HashSet<String> imageDisplayedSet;
     static Vector<String> searchHistory;
     static public Vector<String> viewHistory;
+    static public HashSet<String> keywordsBlacklist; // TODO: 19.9.8 this set contains all the key words to hide 
     SQLiteDao sql;
 
     Storage storage;
@@ -204,6 +205,7 @@ public class MainActivity extends AppCompatActivity
 
         newsList = new Vector<>();
         newsToAdd = new Vector<>();
+        keywordsBlacklist = new HashSet<>();
         context = this;
 
         api = new NewsAPI();

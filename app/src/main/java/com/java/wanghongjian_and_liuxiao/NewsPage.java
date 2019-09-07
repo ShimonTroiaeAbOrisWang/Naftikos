@@ -3,27 +3,33 @@ package com.java.wanghongjian_and_liuxiao;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,6 +49,8 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
+import com.nex3z.togglebuttongroup.button.LabelToggle;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
@@ -52,6 +60,7 @@ import com.snatik.storage.Storage;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -68,6 +77,8 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
     AppCompatImageView coverImage;
     CountDownTimer countDownTimer;
     Animation rotateOnce;
+    TextView textContent;
+    static final int KEY_HIDE_ID_OFFSET = 0xE29000;
 
     final Stack<Bitmap> shareBitmap = new Stack<>();
 
@@ -89,7 +100,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
 
         /* get news */
         news = MainActivity.newsToDisplay;
-        TextView textContent = findViewById(R.id.news_text);
+        textContent = findViewById(R.id.news_text);
         textContent.setText(news.content);
         final TextView textTitle = findViewById(R.id.news_page_title);
         textTitle.setText(news.title);
@@ -289,6 +300,77 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         sendBroadcast(mediaScanIntent);
+    }
+
+
+    public void doNotLikeIt (View view) {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle("Choose key words to hide");
+
+
+        final MultiSelectToggleGroup multi = new MultiSelectToggleGroup(this);
+        multi.setRowSpacing(0);
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(9, 10, 9, 0);
+
+        multi.setLayoutParams(params);
+        final HashSet<String> toHide = new HashSet<>();
+
+        for (int i = 0; i < news.keywords.size(); i += 1) {
+            LabelToggle toggle = new LabelToggle(this);
+            toggle.setLayoutParams(params);
+            toggle.setText(news.keywords.elementAt(i));
+
+            int color = ContextCompat.getColor(this, R.color.colorSecondary);
+            // Background for unchecked state
+            GradientDrawable unchecked = new GradientDrawable();
+            unchecked.setCornerRadius(40);
+            unchecked.setStroke(2, color);
+            toggle.getTextView().setBackgroundDrawable(unchecked);
+
+            // Background for checked state
+            GradientDrawable checked = new GradientDrawable();
+            checked.setColor(color);
+            checked.setCornerRadius(32);
+            checked.setStroke(2, color);
+            toggle.setCheckedImageDrawable(checked);
+
+            toggle.setId(KEY_HIDE_ID_OFFSET + i);
+            multi.addView(toggle);
+        }
+
+        multi.setOnCheckedChangeListener(new MultiSelectToggleGroup.OnCheckedStateChangeListener() {
+            @Override
+            public void onCheckedStateChanged(MultiSelectToggleGroup group, int checkedId, boolean isChecked) {
+                if (isChecked) {
+                    toHide.add(news.keywords.elementAt(checkedId - KEY_HIDE_ID_OFFSET));
+                } else {
+                    toHide.remove(news.keywords.elementAt(checkedId - KEY_HIDE_ID_OFFSET));
+                }
+            }
+        });
+
+        dialogBuilder.setView(multi);
+
+        dialogBuilder.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                /* add those key words to a set */
+                MainActivity.keywordsBlacklist.addAll(toHide);
+                Snackbar.make(textContent, toHide.size() + " key word(s) added to your blacklist.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        });
+
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return;
+            }
+        });
+
+        dialogBuilder.create().show();
+
     }
 
 

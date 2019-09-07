@@ -303,7 +303,6 @@ public class MainActivity extends AppCompatActivity
                 homePageMode = HOME_SEARCH;
                 title.setText("Search: " + searchString + ' ');
                 getNewsFromServer();
-                // loadNews();
             }
         });
 
@@ -374,7 +373,6 @@ public class MainActivity extends AppCompatActivity
         imageDisplayedSet = new HashSet<>();
 
         getNewsFromServer();
-        // loadNews();  // no longer needed
 
         if (!isAfterSearch) {
             Snackbar.make(title, "Welcome!", Snackbar.LENGTH_LONG).setAction("Action", null).setDuration(1500).show();
@@ -487,7 +485,6 @@ public class MainActivity extends AppCompatActivity
             isAfterSearch = false;
 
             getNewsFromServer();
-            // loadNews();  // no longer needed
         }
 
         return true;
@@ -647,18 +644,6 @@ public class MainActivity extends AppCompatActivity
                 openNewsByNumber(logicalNum, view, textInCard);
             }
         });
-
-        /***
-         * DEBUG
-         *      ***/
-        System.out.println(newsItem.title);
-        System.out.println("Logical #: " + (newsCounter + (toAdd ? newsCountBeforeSwipeMore: 0)));
-        for (int i = 0; i < newsList.size(); i += 1) {
-            if (newsList.elementAt(i).newsID == newsItem.newsID) {
-                System.out.println("Real #: " + i);
-            }
-        }
-
 
         return newCard;
     }

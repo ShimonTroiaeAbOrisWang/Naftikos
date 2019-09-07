@@ -1,5 +1,7 @@
 package com.java.wanghongjian_and_liuxiao;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -15,15 +17,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,10 +42,14 @@ import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
 import com.r0adkll.slidr.model.SlidrPosition;
+import com.snatik.storage.Storage;
+
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.File;
+import java.util.Stack;
+import java.util.Vector;
 
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
 
@@ -49,6 +63,8 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
     AppCompatImageView coverImage;
     CountDownTimer countDownTimer;
     Animation rotateOnce;
+
+    final Stack<Bitmap> shareBitmap = new Stack<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +110,24 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
                 @Override
                 public void onFinish() { }
             }.start();
+
+
+            /* save the last image to external storage for sharing */
+            String imgURL = news.imageURLs.elementAt(news.imageURLs.size() - 1);
+            Glide.with(this)
+                    .asBitmap()
+                    .load(imgURL)
+                    .into(new CustomTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                            shareBitmap.push(resource);
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                        }
+                    });
+
 
         } else {
             coverImage.setImageDrawable(getDrawable(R.drawable.testnewsbg));
@@ -171,60 +205,64 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
     }
 
     public void share (View view) {
-/*
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "I'm reading a Ναυτικός news!\n" + news.title);
-        sendIntent.setType("text/plain");
-
-        Intent shareIntent = Intent.createChooser(sendIntent, null);
-        startActivity(shareIntent);
-        */
-
-         /*
-        try {
-            Intent intent = new Intent();
-            ComponentName comp = new ComponentName("com.tencent.mm",
-                    "com.tencent.mm.ui.tools.ShareImgUI");
-            intent.setComponent(comp);
-            intent.setAction("android.intent.action.SEND");
-            intent.setType("image/*");
-            intent.putExtra(Intent.EXTRA_TEXT, "I'm reading...");
-            startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
 
         String shareText = "I'm reading a Ναυτικός news!\n";
         String shareURL = news.url;
 
-        OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
 
         if (news.imageURLs.size() > 0) {
-            // title标题，微信、QQ和QQ空间等平台使用
-            oks.setTitle(shareText);
-            // titleUrl QQ和QQ空间跳转链接
-            oks.setTitleUrl(shareURL);
-            // text是分享文本，所有平台都需要这个字段
-            oks.setText(shareText + "Title: " + news.title);
 
-            oks.setImageUrl(news.imageURLs.elementAt(0));
-            // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-            // oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-            // url在微信、微博，Facebook等平台中使用
-            oks.setUrl(shareURL);
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+
+            /* Save the image to external storage so as to share it */
+            String imgURL = news.imageURLs.elementAt(0);
+            // init
+            Storage storage = new Storage(getApplicationContext());
+            // get external storage
+            String externPath = storage.getExternalStorageDirectory() + File.separator + "Naftikos";
+            // new dir
+            if (!storage.isDirectoryExists(externPath)) {
+                storage.createDirectory(externPath);
+            }
+
+            if (imgURL.length() < 7) {
+                return;
+            }
+            String imagePath = externPath + File.separator + imgURL.substring(imgURL.length() - 7);
+
+            try {
+                storage.createFile(imagePath, shareBitmap.pop());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "I'm reading a Ναυτικός news!\n\n" + news.title + "\n\nLink: " + shareURL);
+            try {
+                System.out.println(imagePath);
+                sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(imagePath)));
+                sendIntent.setType("image/*");
+                sendIntent.putExtra("Kdescription", "I'm reading a Ναυτικός news!\n\n" + news.title + "\n\nLink: " + shareURL);
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(Intent.createChooser(shareIntent, "Share"));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } else {
-            oks.setTitle(shareText);
-            //oks.setTitleUrl(shareURL);
-            oks.setText(shareText + "Title: " + news.title + "\n" + "Link: " + shareURL);
-            //oks.setUrl(shareURL);
-            oks.setComment("");
-        }
 
-        // 启动分享GUI
-        oks.show(this);
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "I'm reading a Ναυτικός news!\n\n" + news.title + "\n\nLink: " + shareURL);
+            sendIntent.setType("text/plain");
+
+            Intent shareIntent = Intent.createChooser(sendIntent, null);
+            startActivity(shareIntent);
+        }
 
     }
 

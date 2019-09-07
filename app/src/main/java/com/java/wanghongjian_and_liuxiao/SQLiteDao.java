@@ -142,6 +142,7 @@ public class SQLiteDao {
                 raw_json.put("crawlTime", n.crawlTime);
                 raw_json.put("publisher", n.publisher);
                 raw_json.put("video", n.videoURL);
+                raw_json.put("url", n.url);
                 StringBuilder image = new StringBuilder();
                 for (int i=0;i<n.imageURLs.size();i++) {
                     if (i > 0)

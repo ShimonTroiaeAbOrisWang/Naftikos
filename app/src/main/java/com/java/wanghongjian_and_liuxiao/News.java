@@ -220,6 +220,7 @@ class Image extends AsyncTask<String, Integer, Void> implements java.io.Serializ
 }
 */
 
+/*
 class Video extends AsyncTask<String, Integer, Void> implements java.io.Serializable {
     //ProgressDialog progressDialog;
     String videoURL, newsID, dir, file_dir = null;
@@ -281,3 +282,5 @@ class Video extends AsyncTask<String, Integer, Void> implements java.io.Serializ
         return videoURL;
     }
 }
+
+*/

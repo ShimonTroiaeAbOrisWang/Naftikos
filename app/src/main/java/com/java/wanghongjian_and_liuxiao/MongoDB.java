@@ -59,8 +59,10 @@ public class MongoDB {
             doc = mc.target;
             if (doc == null) {
                 User newUser = register(userName, passwd);
-                if (newUser != null)
+                if (newUser != null) {
+                    Recommender.cleanCookie();
                     return REGISTER_SUCCESS;
+                }
                 else
                     return OFFLINE_OR_ERROR;
             } else if (!doc.getString("passwd").equals(passwd))

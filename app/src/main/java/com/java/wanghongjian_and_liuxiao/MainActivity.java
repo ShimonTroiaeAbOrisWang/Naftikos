@@ -866,11 +866,13 @@ public class MainActivity extends AppCompatActivity
                 storage.createFile(externPath + File.separator + "config.ini", SerializationUtils.serialize(isPreferredTopic));
                 if (refreshFlag) { getNewsFromServer(); }
             }
-        } else if (requestCode == LOGIN_REQUEST && email != null) {
+        } else if (requestCode == LOGIN_REQUEST) {
 
-            if (email.length() > 3) {
-                TextView emailText = findViewById(R.id.nav_header_email);
-                emailText.setText(email);
+            TextView emailText = findViewById(R.id.nav_header_email);
+            if (MongoDB.current_user == null) {
+                emailText.setText(R.string.please_log_in);
+            } else {
+                emailText.setText(MongoDB.current_user.userName);
             }
 
         }

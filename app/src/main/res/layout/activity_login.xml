@@ -13,9 +13,12 @@
 
 
 
+
+
 <androidx.appcompat.widget.LinearLayoutCompat
     android:layout_width="match_parent"
     android:layout_height="420dp"
+    android:id="@+id/login_layout"
     android:background="@drawable/searchbg"
     android:orientation="vertical">
 
@@ -158,5 +161,36 @@
         app:layout_constraintVertical_bias="0.3" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/layout_logged"
+        android:theme="@style/Theme.Design.Light"
+        android:visibility="gone"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="You've logged in. Greetings!"
+            android:textSize="20sp"
+            android:paddingVertical="20dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:onClick="logMeOut"
+            android:layout_gravity="center"
+            android:textAllCaps="true"
+            android:id="@+id/logout_button" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
 </com.google.android.material.card.MaterialCardView>

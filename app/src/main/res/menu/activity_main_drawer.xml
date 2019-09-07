@@ -19,62 +19,58 @@
             android:visible="false"/>
     </group>
 
-    <group
-        android:id="@+id/nav_preferences_group">
-
-        <item
-            android:id="@+id/nav_preferences"
-            android:icon="@drawable/ic_settings_black_24dp"
-            android:title="Topic Preferences" />
-
-    </group>
-
         <item android:title="Topics">
             <menu>
                 <item
-                    android:id="@+id/nav_finance"
-                    android:icon="@drawable/ic_timeline_black_24dp"
-                    android:title="Finance" />
-                <item
-                    android:id="@+id/nav_education"
-                    android:icon="@drawable/ic_school_black_24dp"
-                    android:title="Education" />
-                <item
-                    android:id="@+id/nav_entertainment"
-                    android:icon="@drawable/ic_beach_access_black_24dp"
-                    android:title="Entertainment" />
-                <item
-                    android:id="@+id/nav_sports"
-                    android:icon="@drawable/ic_pool_black_24dp"
-                    android:title="Sports" />
-                <item
-                    android:id="@+id/nav_technology"
-                    android:icon="@drawable/ic_developer_board_black_24dp"
-                    android:title="Technology" />
-                <item
-                    android:id="@+id/nav_military"
-                    android:icon="@drawable/ic_my_location_black_24dp"
-                    android:title="Military" />
-                <item
-                    android:id="@+id/nav_autos"
-                    android:icon="@drawable/ic_directions_car_black_24dp"
-                    android:title="Autos" />
-                <item
-                    android:id="@+id/nav_culture"
-                    android:icon="@drawable/ic_public_black_24dp"
-                    android:title="Culture" />
-                <item
-                    android:id="@+id/nav_society"
-                    android:icon="@drawable/ic_poll_black_24dp"
-                    android:title="Society" />
-                <item
-                    android:id="@+id/nav_health"
-                    android:icon="@drawable/ic_fitness_center_black_24dp"
-                    android:title="Health" />
-
-
+                    android:id="@+id/nav_preferences"
+                    android:icon="@drawable/ic_settings_black_24dp"
+                    android:title="Topic Preferences" />
             </menu>
         </item>
+
+    <group
+        android:id="@+id/topics_group">
+        <item
+            android:id="@+id/nav_finance"
+            android:icon="@drawable/ic_timeline_black_24dp"
+            android:title="Finance" />
+        <item
+            android:id="@+id/nav_education"
+            android:icon="@drawable/ic_school_black_24dp"
+            android:title="Education" />
+        <item
+            android:id="@+id/nav_entertainment"
+            android:icon="@drawable/ic_beach_access_black_24dp"
+            android:title="Entertainment" />
+        <item
+            android:id="@+id/nav_sports"
+            android:icon="@drawable/ic_pool_black_24dp"
+            android:title="Sports" />
+        <item
+            android:id="@+id/nav_technology"
+            android:icon="@drawable/ic_developer_board_black_24dp"
+            android:title="Technology" />
+        <item
+            android:id="@+id/nav_military"
+            android:icon="@drawable/ic_my_location_black_24dp"
+            android:title="Military" />
+        <item
+            android:id="@+id/nav_autos"
+            android:icon="@drawable/ic_directions_car_black_24dp"
+            android:title="Autos" />
+        <item
+            android:id="@+id/nav_culture"
+            android:icon="@drawable/ic_public_black_24dp"
+            android:title="Culture" />
+        <item
+            android:id="@+id/nav_society"
+            android:icon="@drawable/ic_poll_black_24dp"
+            android:title="Society" />
+        <item
+            android:id="@+id/nav_health"
+            android:icon="@drawable/ic_fitness_center_black_24dp"
+            android:title="Health" />
+    </group>
 
         <group
             android:id="@+id/nav_about_group">

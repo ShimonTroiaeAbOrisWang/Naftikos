@@ -19,6 +19,7 @@ import com.java.wanghongjian_and_liuxiao.ui.login.LoginActivity;
 import com.google.android.material.card.MaterialCardView;
 
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -81,7 +82,10 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_BOOKMARKS = "com.naftikos.BOOKMARKS";
     public static final String EXTRA_HISTORY = "com.naftikos.HISTORY";
     public static final String EXTRA_VIDEO_URL = "com.naftikos.VIDEO_URL";
+    public static final String EXTRA_USERNAME = "com.naftikos.USERNAME";
+    public static final String EXTRA_EMAIL = "com.naftikos.EMAIL";
     static final int CATEGORIES_REQUEST = 0xD000;
+    static final int LOGIN_REQUEST = 0xD001;
     public static final int UPDATE_NEWS = 1, LOAD_NEWS_BEFORE = 2, OTHERS = 3;
 
     /* constants for home page mode */
@@ -139,6 +143,8 @@ public class MainActivity extends AppCompatActivity
 
     Storage storage;
     String externPath;
+
+    public static String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -516,7 +522,8 @@ public class MainActivity extends AppCompatActivity
 
     public void showLogin(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, LOGIN_REQUEST);
+        overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
     }
 
     public void getNewsFromServer () {getNewsFromServer(OTHERS);}
@@ -804,13 +811,25 @@ public class MainActivity extends AppCompatActivity
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 boolean[] resultArray = data.getBooleanArrayExtra(EXTRA_PREFERRED_II);
+                boolean refreshFlag = false;
                 for (int j = HOME_FINANCE; j <= HOME_HEALTH; j += 1) {
+                    if (isPreferredTopic[j] != resultArray[j]) {
+                        refreshFlag = true;
+                    }
                     isPreferredTopic[j] = resultArray[j];
                     navItems[j].setVisible(isPreferredTopic[j]);
                 }
                 /* store the config locally */
                 storage.createFile(externPath + File.separator + "config.ini", SerializationUtils.serialize(isPreferredTopic));
+                if (refreshFlag) { getNewsFromServer(); }
             }
+        } else if (requestCode == LOGIN_REQUEST && email != null) {
+
+            if (email.length() > 3) {
+                TextView emailText = findViewById(R.id.nav_header_email);
+                emailText.setText(email);
+            }
+
         }
     }
 

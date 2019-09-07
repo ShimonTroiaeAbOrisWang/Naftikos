@@ -20,6 +20,7 @@ import com.google.android.material.card.MaterialCardView;
 
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity
     TextView textSwipeMore;
     int newsCountBeforeSwipeMore = 0;
 
+    float titleOriginalSize;
 
     static NavigationView navigationView;
     static Menu nav_menu;
@@ -145,6 +147,7 @@ public class MainActivity extends AppCompatActivity
     String externPath;
 
     public static String email;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,6 +225,7 @@ public class MainActivity extends AppCompatActivity
 
 
         title = findViewById(R.id.home_title);
+        titleOriginalSize = title.getTextSize();
 
         /* add fonts */
         ubuntuMidItalic = Typeface.createFromAsset(getAssets(), "Ubuntu-MediumItalic.ttf");
@@ -230,10 +234,19 @@ public class MainActivity extends AppCompatActivity
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_SEARCH_WORDS)) {
             // this means this page is created after search
+            // obsolete
             isAfterSearch = true;
             searchString = intent.getStringExtra(EXTRA_SEARCH_WORDS);
             homePageMode = HOME_SEARCH;
             title.setText("Search: " + searchString + ' ');
+
+            if (searchString.length() < 5) {
+                title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleOriginalSize);
+            } else if (searchString.length() < 8){
+                title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleOriginalSize * 0.7f);
+            } else {
+                title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleOriginalSize * 0.5f);
+            }
 
             // TODO: 19.8.12 dynamically change the size of the title bar w.r.t the length of the title string
 
@@ -242,6 +255,8 @@ public class MainActivity extends AppCompatActivity
             searchString = "";
             homePageMode = HOME_LATEST;
             title.setText(homepageModeTitles[homePageMode] + ' ');
+            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleOriginalSize);
+
         }
 
         //dimmer = findViewById(R.id.dimmer);
@@ -308,6 +323,14 @@ public class MainActivity extends AppCompatActivity
                 isAfterSearch = true;
                 homePageMode = HOME_SEARCH;
                 title.setText("Search: " + searchString + ' ');
+                if (searchString.length() < 5) {
+                    title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleOriginalSize);
+                } else if (searchString.length() < 8){
+                    title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleOriginalSize * 0.7f);
+                } else {
+                    title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleOriginalSize * 0.5f);
+                }
+
                 getNewsFromServer();
             }
         });
@@ -340,6 +363,14 @@ public class MainActivity extends AppCompatActivity
                         isAfterSearch = true;
                         homePageMode = HOME_SEARCH;
                         title.setText("Search: " + searchString + ' ');
+                        if (searchString.length() < 5) {
+                            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleOriginalSize);
+                        } else if (searchString.length() < 8){
+                            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleOriginalSize * 0.7f);
+                        } else {
+                            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleOriginalSize * 0.5f);
+                        }
+
                         getNewsFromServer();
                     }
                 });
@@ -482,8 +513,11 @@ public class MainActivity extends AppCompatActivity
             }
 
             /* change home page according to mode */
-            TextView title = findViewById(R.id.home_title);
+            title = findViewById(R.id.home_title);
             title.setText(homepageModeTitles[homePageMode] + ' ');
+            title.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleOriginalSize);
+
+
 
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
@@ -521,6 +555,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showLogin(View view) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, LOGIN_REQUEST);
         overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);

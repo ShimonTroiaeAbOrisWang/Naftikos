@@ -89,7 +89,7 @@
                 android:text="Latest "
                 android:paddingHorizontal="20dp"
                 android:layout_marginRight="28dp"
-                android:layout_marginLeft="7dp"
+                android:layout_marginLeft="3dp"
                 android:textSize="32dp"
                 android:textColor="#FFFFFF"
                 android:textAllCaps="true"

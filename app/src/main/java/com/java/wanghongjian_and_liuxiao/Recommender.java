@@ -22,7 +22,7 @@ public class Recommender {
             }else{
                 Pair p = _k.get(w);
                 keywords.remove(p);
-                p.value++;
+                p.value += 1;
                 keywords.add(p);
             }
         }
@@ -35,7 +35,7 @@ public class Recommender {
         }else{
             Pair p = _k.get(new_category);
             category.remove(p);
-            p.value++;
+            p.value += 1;
             category.add(p);
         }
     }
@@ -53,11 +53,18 @@ public class Recommender {
         else
             return null;
     }
+
+    static void cleanCookie(){
+        keywords.clear();
+        category.clear();
+        _k.clear();
+        _c.clear();
+    }
 }
 
 class Pair implements Comparable<Pair> {
     public String key;
-    public int value;
+    public float value;
 
     Pair(String _key) {
         key = _key;
@@ -66,6 +73,6 @@ class Pair implements Comparable<Pair> {
 
     @Override
     public int compareTo(Pair o) {
-        return Integer.compare(this.value, o.value);
+        return Float.compare(this.value, o.value);
     }
 }

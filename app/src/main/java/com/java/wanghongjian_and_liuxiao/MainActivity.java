@@ -697,6 +697,7 @@ public class MainActivity extends AppCompatActivity
     private void openNewsByNumber(int newsNumber, View view, TextView textToDim) {
         Intent intent = new Intent(this, NewsPage.class);
         newsToDisplay = newsList.elementAt(newsNumber);
+        Recommender.update(newsToDisplay);
 
         if (viewHistory.contains(newsToDisplay.newsID)) {
             viewHistory.remove(newsToDisplay.newsID);
@@ -769,7 +770,7 @@ public class MainActivity extends AppCompatActivity
 
             if (mode == UPDATE_NEWS) {
                 for (News news: newsList) {
-                    v.add(0, news);
+                    v.add(news);
                     if (v.size() > 100) {
                         break;
                     }

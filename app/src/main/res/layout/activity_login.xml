@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
         android:onClick="goBack"
+        android:id="@+id/login_page_goback"
         android:src="@drawable/ic_arrow_back_black_24dp"/>
 
     <com.google.android.material.textfield.TextInputLayout

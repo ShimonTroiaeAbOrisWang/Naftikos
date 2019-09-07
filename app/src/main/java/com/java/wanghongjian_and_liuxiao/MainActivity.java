@@ -778,7 +778,7 @@ public class MainActivity extends AppCompatActivity
                     searchHistory.add(searchString);
                     storage.createFile(externPath + File.separator + "search.history", SerializationUtils.serialize(searchHistory));
 
-                    Vector<News> vGet = api.getNews(searchString, null, mode);
+                    Vector<News> vGet = api.getNews(searchString, null, mode, homePageMode == HOME_PERSONAL);
                     if (vGet == null) {
                         return new Vector<>();
                     } else {
@@ -787,7 +787,7 @@ public class MainActivity extends AppCompatActivity
                 } else {
 
                     //return api.testGetNews("https://api2.newsminer.net/svc/news/queryNewsList?words=野熊&size=1&startDate=2018-08-15&endDate=2018-08-21");
-                    Vector<News> vGet = api.getNews("", categories[homePageMode], mode);     // refer to the top for modes
+                    Vector<News> vGet = api.getNews("", categories[homePageMode], mode, homePageMode == HOME_PERSONAL);     // refer to the top for modes
                     if (vGet == null) {
                         return new Vector<>();
                     } else {

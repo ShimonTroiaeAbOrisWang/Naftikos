@@ -22,6 +22,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -67,8 +68,10 @@ public class LoginActivity extends AppCompatActivity {
 
 
         if (MongoDB.current_user != null) {
+            ImageButton backButton = findViewById(R.id.login_page_goback);
             LinearLayoutCompat layout = findViewById(R.id.login_layout);
             layout.removeAllViews();
+            layout.addView(backButton);
             LinearLayoutCompat loggedLayout = findViewById(R.id.layout_logged);
             loggedLayout.setVisibility(View.VISIBLE);
             

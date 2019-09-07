@@ -670,7 +670,7 @@ public class MainActivity extends AppCompatActivity
         TextView postscriptText = new TextView(this);
         params.setMargins(40, 8, 40, 18);
         postscriptText.setLayoutParams(params);
-        postscriptText.setText("1 hr ago           " + newsItem.category); // TODO: 19.8.30 specify time
+        postscriptText.setText(newsItem.publishTime + "           " + newsItem.category); // TODO: 19.8.30 specify time
         postscriptText.setTextSize(12);
         postscriptText.setTextColor(Color.rgb(0x90, 0x90, 0x90));
         inCardLayout.addView(postscriptText);

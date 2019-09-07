@@ -35,7 +35,7 @@ import java.util.concurrent.ExecutionException;
 public class MongoDB {
     static MongoConnection mc;
     static final int OFFLINE_OR_ERROR = 0, LOGIN_SUCESS = 1, REGISTER_SUCCESS = 2, WRONG_PASSWD = 3;
-    static User current_user = null;
+    public static User current_user = null;
     static SQLiteDao sql = new SQLiteDao();
 
     MongoDB() {
@@ -76,7 +76,7 @@ public class MongoDB {
         }
     }
 
-    static void logout() {
+    public static void logout() {
         sql.clearCollection();
         updateUser(current_user);
         current_user = null;

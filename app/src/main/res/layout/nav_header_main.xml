@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
-                android:text="Log in to Ναυτικός Cloud" />
+                android:text="@string/please_log_in" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

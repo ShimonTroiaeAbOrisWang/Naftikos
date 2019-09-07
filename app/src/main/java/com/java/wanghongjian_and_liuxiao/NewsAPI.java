@@ -80,47 +80,6 @@ public class NewsAPI {
         return news_list;
     }
 
-    public boolean getCoverImage(){
-        /*
-        for (News n: newsList){
-            if (n.image.size() > 0)
-                n.image.firstElement().getImage();
-        }*/
-        return true;
-    }
-
-    public Vector<News> testGetNews(String request) {
-        Vector<News> news_list = new Vector<>();
-        last_request = request;
-        parseJSON(last_request);
-
-        JSONObject news = last_json;
-
-        if (news == null)
-            return news_list;
-        try {
-            JSONArray data = news.getJSONArray("data");
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject n = new JSONObject(data.get(i).toString());
-                JSONArray keywords_json = n.getJSONArray("keywords");
-                Vector<String> keywords = new Vector<>();
-                for (int j = 0; j < keywords_json.length(); j++)
-                    keywords.add(keywords_json.getJSONObject(j).getString("word"));
-                News _news = new News(n.getString("newsID"), n.getString("title"), n.getString("content"), n.getString("publishTime"), n.getString("category"), keywords, n.getString("publisher"));
-                if (n.getString("image") != null && !n.getString("image").equals("[]") && !n.getString("image").equals("")) {
-                    String image = n.getString("image");
-                    _news.setImage(image.substring(1, image.length() - 1));
-                }
-                if (n.getString("video") != null)
-                    _news.setVideo(n.getString("video"));
-                news_list.add(_news);
-                db.add(_news);
-            }
-        } catch (JSONException e) {
-        }
-        return news_list;
-    }
-
     private News parseNews(JSONObject n) {
         News _news = null;
         try {
@@ -174,6 +133,9 @@ public class NewsAPI {
         if (category != null) {
             request.append("&categories=" + category);
             categories = category;
+        }
+        if (keyword == null && category == null) {
+
         }
         return request.toString();
     }

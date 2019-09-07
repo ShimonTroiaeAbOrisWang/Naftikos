@@ -43,7 +43,8 @@ public class MongoDB {
 
     static User register(String userName, String passwd) {
         User newUser = new User(userName, passwd);
-        sql.updateCollection(newUser.collection);
+        newUser.history = (Vector<String>) MainActivity.viewHistory.clone();
+        newUser.setCollection(sql.findAllInCollection());
         if (addUser(newUser))
             return newUser;
         else

@@ -57,14 +57,14 @@ public class NewsAPI {
         return search_history;
     }
 
-    public Vector<News> getNews(String keyword, String category, int mode) {
+    public Vector<News> getNews(String keyword, String category, int mode, boolean recommend) {
         //Thread connect = new Thread(this);
         Vector<News> news_list = new Vector<>();
         int iteration = 0;
         words = keyword;
         categories = category;
         while (news_list.size() < 15 && iteration++ < 60) {
-            last_request = formRequest(words, categories, mode, news_list.size() == 0);
+            last_request = formRequest(words, categories, mode, recommend);
             parseJSON(last_request);
             JSONObject news = last_json;
             if (news == null)
@@ -117,7 +117,7 @@ public class NewsAPI {
         return _news;
     }
 
-    private String formRequest(String keyword, String category, int mode, boolean recursive) {
+    private String formRequest(String keyword, String category, int mode, boolean recommend) {
         StringBuilder request = new StringBuilder(rawAPI);
         if (size != 0)
             request.append("&size=" + size);
@@ -154,8 +154,8 @@ public class NewsAPI {
             request.append("&categories=" + category);
             categories = category;
         }
-        if (mode == 4 && recursive) {
-            if (Math.random() > 0.2) {
+        if (recommend) {
+            if (Math.random() > 0.4) {
                 if (Recommender.getTopKeyword() != null) {
                     words = Recommender.getTopKeyword();
                     request.append("&words=" + Recommender.getTopKeyword());

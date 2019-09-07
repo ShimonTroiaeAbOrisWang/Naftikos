@@ -700,11 +700,16 @@ public class MainActivity extends AppCompatActivity
 
         if (viewHistory.contains(newsToDisplay.newsID)) {
             viewHistory.remove(newsToDisplay.newsID);
+            MongoDB.deleteHistory(newsToDisplay.newsID);
         }
         if (viewHistory.size() == 50) {
             viewHistory.remove(0);
+            if (MongoDB.current_user != null)
+                MongoDB.deleteHistory(newsToDisplay.newsID);
         }
         viewHistory.add(newsToDisplay.newsID);
+        if (MongoDB.current_user != null)
+            MongoDB.addHistory(newsToDisplay.newsID);
         storage.createFile(externPath + File.separator + "view.history", SerializationUtils.serialize(viewHistory));
 
         startActivity(intent);

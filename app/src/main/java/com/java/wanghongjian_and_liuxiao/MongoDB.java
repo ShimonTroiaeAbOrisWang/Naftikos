@@ -43,6 +43,7 @@ public class MongoDB {
 
     static User register(String userName, String passwd) {
         User newUser = new User(userName, passwd);
+        sql.updateCollection(newUser.collection);
         if (addUser(newUser))
             return newUser;
         else
@@ -107,6 +108,19 @@ public class MongoDB {
         }
         current_user._his.remove(n.newsID);
         updateUser(current_user);
+    }
+
+    static void addHistory(String newsID){
+        if (current_user != null) {
+            current_user.history.add(newsID);
+            updateUser(current_user);
+        }
+    }
+
+    static void deleteHistory(String newsID){
+        if (current_user != null){
+            current_user.history.remove(newsID);
+        }
     }
 
     static void updateHistory() {
@@ -255,6 +269,7 @@ class User {
         _his = new HashSet<>(history);
         _col = new HashSet<>((List<String>) userDoc.get("collection"));
         sql.updateCollection(collection);
+        MainActivity.viewHistory = (Vector<String>) history.clone();
     }
 
     User(final String _userName, final String _passwd) {

@@ -14,6 +14,7 @@ public class Recommender {
 
     static void update(News newstoDisplay) {
         for (String w: newstoDisplay.keywords){
+            // for keywords recommendation
             if (!_k.containsKey(w)){
                 Pair p = new Pair(w);
                 keywords.add(p);
@@ -25,6 +26,32 @@ public class Recommender {
                 keywords.add(p);
             }
         }
+        //for category recommendation
+        String new_category = newstoDisplay.category;
+        if (!_c.containsKey(new_category)){
+            Pair p = new Pair(new_category);
+            category.add(p);
+            _k.put(new_category, p);
+        }else{
+            Pair p = _k.get(new_category);
+            category.remove(p);
+            p.value++;
+            category.add(p);
+        }
+    }
+
+    static String getTopKeyword(){
+        if (keywords.peek() != null)
+            return keywords.peek().key;
+        else
+            return null;
+    }
+
+    static String getTopCateogry(){
+        if (category.peek() != null)
+            return category.peek().key;
+        else
+            return null;
     }
 }
 

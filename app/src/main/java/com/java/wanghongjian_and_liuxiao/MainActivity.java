@@ -87,6 +87,9 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_EMAIL = "com.naftikos.EMAIL";
     static final int CATEGORIES_REQUEST = 0xD000;
     static final int LOGIN_REQUEST = 0xD001;
+    static final int CARD_ID_OFFSET = 0xA83000;
+    static final int NEWSTITLE_ID_OFFSET = 0xA9B000;
+    static final int PUBLISHER_ID_OFFSET = 0xAC2000;
     public static final int UPDATE_NEWS = 1, LOAD_NEWS_BEFORE = 2, OTHERS = 3;
 
     /* constants for home page mode */
@@ -111,12 +114,18 @@ public class MainActivity extends AppCompatActivity
     private MenuItem[] navItems = { null, null, null, null, null, null, null, null, null, null, null, null, null };
     private static final int DIM_TITLE_COLOR = Color.rgb(0x6A, 0x6A, 0x6A);
     private static final int TITLE_COLOR = Color.rgb(0x23, 0x23, 0x23);
+    private static final int TITLE_DARK_COLOR = Color.rgb(0xA2, 0xA2, 0xA2);
+    private static final int CARD_DARK = Color.rgb(0x16, 0x16, 0x2A);
+    private static final int CARD_LIGHT = Color.rgb(0xFF, 0xFF, 0xFF);
+    private static final int PUB_CARD_LIGHT = Color.rgb(0xEE, 0xEE, 0xF2);
+    private static final int PUB_CARD_DARK = Color.rgb(0x00, 0x00, 0x00);
 
     public static Context context;
     TextView title;
     int homePageMode;
     static Typeface ubuntuMidItalic;
     boolean isAfterSearch = false;
+    static boolean nightShift = false;
     String searchString;
     //static FrameLayout dimmer;
     AlertDialog searchDialog;
@@ -407,6 +416,9 @@ public class MainActivity extends AppCompatActivity
 
 
         viewedNewsSet = new HashSet<>();
+        for (String id: viewHistory) {
+            viewedNewsSet.add(id);
+        }
         imageDisplayedSet = new HashSet<>();
 
         getNewsFromServer();
@@ -443,6 +455,29 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             categorySetting();
+            return true;
+        } else if (id == R.id.action_toggle_dark) {
+            nightShift = !nightShift;
+
+
+
+
+            for (int i = 0; i < newsList.size(); i += 1) {
+                MaterialCardView card = findViewById(CARD_ID_OFFSET + i);
+                card.setBackgroundColor(nightShift ? CARD_DARK: CARD_LIGHT);
+
+                TextView text = findViewById(NEWSTITLE_ID_OFFSET + i);
+                if (viewedNewsSet.contains(newsList.elementAt(i).newsID)) {
+                    text.setTextColor(DIM_TITLE_COLOR);
+                } else {
+                    text.setTextColor(nightShift ? TITLE_DARK_COLOR : TITLE_COLOR);
+                }
+
+                MaterialCardView pubCard = findViewById(PUBLISHER_ID_OFFSET + i);
+                pubCard.setBackgroundColor(nightShift ? PUB_CARD_DARK: PUB_CARD_LIGHT);
+            }
+
+
             return true;
         }
 
@@ -615,6 +650,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private MaterialCardView generateHomeNewsCard(final int newsCounter, News newsItem, final boolean toAdd) {
+        final int logicalNum = newsCounter + (toAdd ? newsCountBeforeSwipeMore: 0);
+
         MaterialCardView newCard = new MaterialCardView(this);
         // modelCard: pre-drawn news card (created with XML but removed in run time)
         MaterialCardView modelCard = (newsCounter == 0) ? newsCardModelFirst : newsCardModel;
@@ -629,7 +666,7 @@ public class MainActivity extends AppCompatActivity
 
         MaterialCardView publisherCard = new MaterialCardView(this);
         publisherCard.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        publisherCard.setBackgroundColor(Color.rgb(0xEE, 0xEE, 0xF2));
+        publisherCard.setBackgroundColor(nightShift? PUB_CARD_DARK: PUB_CARD_LIGHT);
         publisherCard.setCardElevation(6);
 
 
@@ -642,6 +679,7 @@ public class MainActivity extends AppCompatActivity
         publisherText.setTextColor(Color.rgb(0x50, 0x68, 0x86));
 
         publisherCard.addView(publisherText);
+        publisherCard.setId(PUBLISHER_ID_OFFSET + logicalNum);
         inCardLayout.addView(publisherCard);
 
         View lineView = new View (this);
@@ -661,10 +699,11 @@ public class MainActivity extends AppCompatActivity
         if (viewedNewsSet.contains(newsItem.newsID)) {
             textInCard.setTextColor(DIM_TITLE_COLOR);
         } else {
-            textInCard.setTextColor(TITLE_COLOR);
+            textInCard.setTextColor(nightShift ? TITLE_DARK_COLOR : TITLE_COLOR);
         }
-        textInCard.setTextSize(17);
 
+        textInCard.setTextSize(17);
+        textInCard.setId(NEWSTITLE_ID_OFFSET + logicalNum);
         inCardLayout.addView(textInCard);
 
         TextView postscriptText = new TextView(this);
@@ -679,8 +718,8 @@ public class MainActivity extends AppCompatActivity
         newsItem.layout = inCardLayout;
 
         newCard.addView(inCardLayout);
+        newCard.setBackgroundColor(nightShift ? CARD_DARK: CARD_LIGHT);
 
-        final int logicalNum = newsCounter + (toAdd ? newsCountBeforeSwipeMore: 0);
 
         newCard.setClickable(true);
         newCard.setOnClickListener(new View.OnClickListener() {
@@ -690,6 +729,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        newCard.setId(CARD_ID_OFFSET + logicalNum);
         return newCard;
     }
 

@@ -80,6 +80,7 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/news_page_layout"
             android:orientation="vertical">
 
 
@@ -172,6 +173,7 @@
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:id="@+id/sub_content_card"
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton

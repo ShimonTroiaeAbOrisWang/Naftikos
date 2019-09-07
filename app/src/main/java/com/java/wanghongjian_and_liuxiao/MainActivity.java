@@ -115,10 +115,10 @@ public class MainActivity extends AppCompatActivity
     private static final int DIM_TITLE_COLOR = Color.rgb(0x6A, 0x6A, 0x6A);
     private static final int TITLE_COLOR = Color.rgb(0x23, 0x23, 0x23);
     private static final int TITLE_DARK_COLOR = Color.rgb(0xA2, 0xA2, 0xA2);
-    private static final int CARD_DARK = Color.rgb(0x16, 0x16, 0x2A);
+    private static final int CARD_DARK = Color.rgb(0x0B, 0x0B, 0x19);
     private static final int CARD_LIGHT = Color.rgb(0xFF, 0xFF, 0xFF);
     private static final int PUB_CARD_LIGHT = Color.rgb(0xEE, 0xEE, 0xF2);
-    private static final int PUB_CARD_DARK = Color.rgb(0x00, 0x00, 0x00);
+    private static final int PUB_CARD_DARK = Color.rgb(0x16, 0x16, 0x2A);
 
     public static Context context;
     TextView title;
@@ -459,8 +459,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.action_toggle_dark) {
             nightShift = !nightShift;
 
-
-
+            LinearLayout linearLayout = findViewById(R.id.home_news_container);
+            linearLayout.setBackgroundColor(nightShift ? getResources().getColor(android.R.color.black): getResources().getColor(R.color.colorPrimary));
 
             for (int i = 0; i < newsList.size(); i += 1) {
                 MaterialCardView card = findViewById(CARD_ID_OFFSET + i);

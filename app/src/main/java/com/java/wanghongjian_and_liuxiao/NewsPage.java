@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
@@ -12,6 +14,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -36,6 +40,7 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.r0adkll.slidr.Slidr;
@@ -175,6 +180,17 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
         button.hide();
         button.setImageDrawable(addedToFavourite ? added_icon: not_added_icon);
         button.show();
+
+        /* toggle night shift */
+        if (MainActivity.nightShift) {
+            textContent.setBackgroundColor(Color.BLACK);
+            textContent.setTextColor(Color.rgb(0xAD, 0xAD, 0xAD));
+            CoordinatorLayout layout = findViewById(R.id.news_page_content_container);
+            layout.setBackgroundColor(Color.BLACK);
+
+            LinearLayout card = findViewById(R.id.sub_content_card);
+            card.setBackgroundColor(Color.rgb(0x3D, 0x3D, 0x3D));
+        }
     }
 
     public void toggleFavourite (View view) {

@@ -83,14 +83,13 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_BOOKMARKS = "com.naftikos.BOOKMARKS";
     public static final String EXTRA_HISTORY = "com.naftikos.HISTORY";
     public static final String EXTRA_VIDEO_URL = "com.naftikos.VIDEO_URL";
-    public static final String EXTRA_USERNAME = "com.naftikos.USERNAME";
-    public static final String EXTRA_EMAIL = "com.naftikos.EMAIL";
+
     static final int CATEGORIES_REQUEST = 0xD000;
     static final int LOGIN_REQUEST = 0xD001;
     static final int CARD_ID_OFFSET = 0xA83000;
     static final int NEWSTITLE_ID_OFFSET = 0xA9B000;
     static final int PUBLISHER_ID_OFFSET = 0xAC2000;
-    public static final int UPDATE_NEWS = 1, LOAD_NEWS_BEFORE = 2, OTHERS = 3;
+    public static final int NAVIGATE_NEWS = 0, UPDATE_NEWS = 1, LOAD_NEWS_BEFORE = 2, OTHERS = 3;
 
     /* constants for home page mode */
     static final int HOME_SEARCH = -1;
@@ -601,7 +600,7 @@ public class MainActivity extends AppCompatActivity
         overridePendingTransition(R.anim.push_down_in, R.anim.push_up_out);
     }
 
-    public void getNewsFromServer () {getNewsFromServer(OTHERS);}
+    public void getNewsFromServer () { getNewsFromServer(isAfterSearch? OTHERS : NAVIGATE_NEWS); }
 
     public void getNewsFromServer(int getMode) {
         AsyncNewsRetriever retriever = new AsyncNewsRetriever();
@@ -766,7 +765,7 @@ public class MainActivity extends AppCompatActivity
     private class AsyncNewsRetriever extends AsyncTask<String, String, Vector<News>> {
 
         ProgressDialog progressDialog;
-        public int mode = OTHERS;
+        public int mode = isAfterSearch? OTHERS : NAVIGATE_NEWS;
 
         @Override
         protected Vector<News> doInBackground(String... params) {

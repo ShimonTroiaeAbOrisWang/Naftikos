@@ -305,7 +305,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
 
     public void doNotLikeIt (View view) {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle("Choose key words to hide");
+        dialogBuilder.setTitle("Choose keywords to block");
 
 
         final MultiSelectToggleGroup multi = new MultiSelectToggleGroup(this);
@@ -358,7 +358,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
             public void onClick(DialogInterface dialog, int which) {
                 /* add those key words to a set */
                 MainActivity.keywordsBlacklist.addAll(toHide);
-                Snackbar.make(textContent, toHide.size() + " key word(s) added to your blacklist.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                Snackbar.make(textContent, toHide.size() + " keyword(s) added to your blacklist.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
 

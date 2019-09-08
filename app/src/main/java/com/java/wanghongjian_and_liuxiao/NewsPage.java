@@ -305,7 +305,7 @@ public class NewsPage extends FragmentActivity /*AppCompatActivity*/ {
 
     public void doNotLikeIt (View view) {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle("Choose key words to hide");
+        dialogBuilder.setTitle("Choose keywords to hide");
 
 
         final MultiSelectToggleGroup multi = new MultiSelectToggleGroup(this);

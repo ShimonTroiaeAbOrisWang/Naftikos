@@ -45,7 +45,7 @@ public class NewsAPI {
         Date now = new Date();
         cal = Calendar.getInstance();
         cal.setTime(now);
-        cal.add(Calendar.DATE, -100);
+        cal.add(Calendar.DATE, /*-100*/ -1);
         endDate = cal.getTime();
         cal.add(Calendar.DATE, -3);
         startDate = cal.getTime();
@@ -95,8 +95,9 @@ public class NewsAPI {
             }
         }
         newsList = new Vector<>();//(Vector<News>) news_list.clone();
-        for (int i = news_list.size() - 1; i >=0  ; i--)
+        for (int i = news_list.size() - 1; i >=0  ; i--) {
             newsList.add(news_list.get(i));
+        }
         words = null;
         categories = null;
         return (Vector<News>) newsList.clone();

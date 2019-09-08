@@ -765,7 +765,7 @@ public class MainActivity extends AppCompatActivity
     private class AsyncNewsRetriever extends AsyncTask<String, String, Vector<News>> {
 
         ProgressDialog progressDialog;
-        public int mode = isAfterSearch? OTHERS : NAVIGATE_NEWS;
+        public int mode = NAVIGATE_NEWS;
 
         @Override
         protected Vector<News> doInBackground(String... params) {

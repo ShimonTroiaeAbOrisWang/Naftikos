@@ -73,6 +73,7 @@ public class News implements java.io.Serializable {
 
 
             if (raw_json.getString("image") != null && !raw_json.getString("image").equals("")){
+
                 String[] strippedURLs = raw_json.getString("image").split(", ");
                 for (String _url: strippedURLs) {
                     imageURLs.add(_url);

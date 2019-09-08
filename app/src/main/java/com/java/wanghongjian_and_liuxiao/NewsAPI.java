@@ -75,7 +75,7 @@ public class NewsAPI {
         words = keyword;
         categories = category;
         while (news_list.size() < 15 && iteration++ < 5) {
-            last_request = formRequest(words, categories, mode, recommend, news_list.size() > 0);
+            last_request = formRequest(words, categories, mode, recommend, iteration > 1);
             parseJSON(last_request);
             JSONObject news = last_json;
             if (news == null)
@@ -149,16 +149,16 @@ public class NewsAPI {
             if (!is_recursive){
                 Date now = new Date();
                 cal.setTime(now);
-                cal.add(Calendar.DATE, -100);
+                cal.add(Calendar.HOUR, 0);
                 endDate = cal.getTime();
                 cal.add(Calendar.DATE, -3);
                 startDate = cal.getTime();
             }else{
                 cal.setTime(startDate);
-                cal.add(Calendar.HOUR, +6);
+                cal.add(Calendar.HOUR, -6);
                 startDate = cal.getTime();
                 cal.setTime(endDate);
-                cal.add(Calendar.HOUR, +6);
+                cal.add(Calendar.HOUR, -6);
                 endDate = cal.getTime();
             }
             request.append("&startDate=" + df.format(startDate));

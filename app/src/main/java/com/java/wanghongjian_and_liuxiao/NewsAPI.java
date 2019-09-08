@@ -26,9 +26,9 @@ import java.util.Vector;
 public class NewsAPI {
     private final String rawAPI = "https://api2.newsminer.net/svc/news/queryNewsList?";
     private Vector<String> search_history = new Vector<>();
-    private Integer size;
+    private Integer size, lastmode;
     private String words = null, categories = null;
-    private Date endDate, startDate;
+    private Date endDate, startDate, savedendDate, savedStartDate;
     private JSONObject last_json;
     private String last_request;
     private Calendar cal;
@@ -75,7 +75,7 @@ public class NewsAPI {
         words = keyword;
         categories = category;
         while (news_list.size() < 15 && iteration++ < 5) {
-            last_request = formRequest(words, categories, mode, recommend);
+            last_request = formRequest(words, categories, mode, recommend, news_list.size() > 0);
             parseJSON(last_request);
             JSONObject news = last_json;
             if (news == null)
@@ -128,11 +128,11 @@ public class NewsAPI {
         return _news;
     }
 
-    private String formRequest(String keyword, String category, int mode, boolean recommend) {
+    private String formRequest(String keyword, String category, int mode, boolean recommend, boolean is_recursive) {
         StringBuilder request = new StringBuilder(rawAPI);
         if (size != 0)
             request.append("&size=" + size);
-        if (mode == 1) {                                // 1 means to update news
+        if (mode == 1) {                                  // 1 means to update news
             request.append("&startDate=" + df.format(endDate));
             cal.setTime(endDate);
             cal.add(Calendar.HOUR, +6);
@@ -144,16 +144,25 @@ public class NewsAPI {
             cal.add(Calendar.HOUR, -6);
             startDate = cal.getTime();
             request.append("&startDate=" + df.format(startDate));
-        } else if (mode == 0){
-            cal.setTime(startDate);
-            cal.add(Calendar.HOUR, +6);
-            startDate = cal.getTime();
+        } else if (mode == 0){                            // 0 for latest homepage mode
+            if (!is_recursive){
+                Date now = new Date();
+                cal.setTime(now);
+                cal.add(Calendar.DATE, -100);
+                endDate = cal.getTime();
+                cal.add(Calendar.DATE, -3);
+                startDate = cal.getTime();
+            }else{
+                cal.setTime(startDate);
+                cal.add(Calendar.HOUR, +6);
+                startDate = cal.getTime();
+                cal.setTime(endDate);
+                cal.add(Calendar.HOUR, +6);
+                endDate = cal.getTime();
+            }
             request.append("&startDate=" + df.format(startDate));
-            cal.setTime(endDate);
-            cal.add(Calendar.HOUR, +6);
-            endDate = cal.getTime();
             request.append("&endDate=" + df.format(endDate));
-        }
+        }                                                  // 3 for searching
         if (keyword != null && !keyword.equals("")) {
             request.append("&words=" + keyword);
             search_history.add(keyword);

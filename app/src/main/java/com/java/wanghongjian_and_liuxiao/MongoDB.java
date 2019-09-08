@@ -80,6 +80,7 @@ public class MongoDB {
 
     public static void logout() {
         sql.clearCollection();
+        MainActivity.viewHistory.clear();
         updateUser(current_user);
         current_user = null;
     }

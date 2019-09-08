@@ -144,7 +144,7 @@ public class NewsAPI {
             cal.add(Calendar.HOUR, -6);
             startDate = cal.getTime();
             request.append("&startDate=" + df.format(startDate));
-        } else {
+        } else if (mode == 0){
             cal.setTime(startDate);
             cal.add(Calendar.HOUR, +6);
             startDate = cal.getTime();

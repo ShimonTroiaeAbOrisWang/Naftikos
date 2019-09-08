@@ -45,7 +45,7 @@ public class NewsAPI {
         Date now = new Date();
         cal = Calendar.getInstance();
         cal.setTime(now);
-        cal.add(Calendar.DATE, /*-100*/ -1);
+        cal.add(Calendar.HOUR, -5);
         endDate = cal.getTime();
         cal.add(Calendar.DATE, -3);
         startDate = cal.getTime();

@@ -66,20 +66,23 @@ public class News implements java.io.Serializable {
             title = raw_json.getString("title");
             content = raw_json.getString("content");
             publishTime = raw_json.getString("publishTime");
-            language = raw_json.getString("language");
-            url = raw_json.getString("url");
-            crawlTime = raw_json.getString("crawlTime");
+
             publisher = raw_json.getString("publisher");
             // video = new Video(raw_json.getString("video"), newsID, dir);
             videoURL = raw_json.getString("video");
 
-            /*
+
             if (raw_json.getString("image") != null && !raw_json.getString("image").equals("")){
-                String[] images = raw_json.getString("iamge").split(", ");
-                for (int i=0;i<images.length;i++)
-                    image.add(new Image(images[i], i, newsID, dir));
+                String[] strippedURLs = raw_json.getString("image").split(", ");
+                for (String _url: strippedURLs) {
+                    imageURLs.add(_url);
+                }
             }
-             */
+
+            language = raw_json.getString("language");
+            url = raw_json.getString("url");
+            crawlTime = raw_json.getString("crawlTime");
+
         } catch (JSONException e) {}
     }
 

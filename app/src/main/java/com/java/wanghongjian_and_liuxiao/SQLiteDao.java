@@ -137,19 +137,19 @@ public class SQLiteDao {
                 raw_json.put("title", n.title);
                 raw_json.put("content", n.content);
                 raw_json.put("publishTime", n.publishTime);
+                raw_json.put("publisher", n.publisher);
+                raw_json.put("video", n.videoURL);
+                StringBuilder image = new StringBuilder();
+                for (int i=0;i<n.imageURLs.size();i++) {
+                    if (i > 0) {
+                        image.append(", ");
+                    }
+                    image.append(n.imageURLs.elementAt(i));
+                }
+                raw_json.put("image", image.toString());
                 raw_json.put("language", n.language);
                 raw_json.put("url", n.url);
                 raw_json.put("crawlTime", n.crawlTime);
-                raw_json.put("publisher", n.publisher);
-                raw_json.put("video", n.videoURL);
-                raw_json.put("url", n.url);
-                StringBuilder image = new StringBuilder();
-                for (int i=0;i<n.imageURLs.size();i++) {
-                    if (i > 0)
-                        image.append(", ");
-                    image.append(n.imageURLs.get(i));
-                }
-                raw_json.put("image", image.toString());
                 jsonData = raw_json.toString();
             }catch (JSONException e) {}
         }
